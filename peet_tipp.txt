@@ -1,0 +1,3 @@
+falls jemand schon bei video 10 ist, das mit dem "let self" was Junus macht kann man weglassen, 
+wenn man einfach eine arrow benutzt, dadurch wird der scope nicht so hart gebrochen und man kann 
+die 4 Zeilen auf 1 Zeile kürzen: requestAnimationFrame( () => this.draw());
