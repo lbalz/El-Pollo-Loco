@@ -9,14 +9,33 @@ class World {
         new Cloud()
     ];
     backgroundObjects = [
+        //! Hier kann man das evtl. mit einer for loop machen um das lvl variabel groß zu machen
+        //! und damit hier nicht so viel code in dem array steht, das ist nicht clean
+        new BackgroundObject('../img/5_background/layers/air.png', -1079 * 2),
+        new BackgroundObject('../img/5_background/layers/3_third_layer/1.png', -1079 * 2),
+        new BackgroundObject('../img/5_background/layers/2_second_layer/1.png', -1079 * 2),
+        new BackgroundObject('../img/5_background/layers/1_first_layer/1.png', -1079 * 2),
+        new BackgroundObject('../img/5_background/layers/air.png', -1079),
+        new BackgroundObject('../img/5_background/layers/3_third_layer/2.png', -1079),
+        new BackgroundObject('../img/5_background/layers/2_second_layer/2.png', -1079),
+        new BackgroundObject('../img/5_background/layers/1_first_layer/2.png', -1079),
         new BackgroundObject('../img/5_background/layers/air.png', 0),
         new BackgroundObject('../img/5_background/layers/3_third_layer/1.png', 0),
         new BackgroundObject('../img/5_background/layers/2_second_layer/1.png', 0),
         new BackgroundObject('../img/5_background/layers/1_first_layer/1.png', 0),
+        new BackgroundObject('../img/5_background/layers/air.png', 1079),
+        new BackgroundObject('../img/5_background/layers/3_third_layer/2.png', 1079),
+        new BackgroundObject('../img/5_background/layers/2_second_layer/2.png', 1079),
+        new BackgroundObject('../img/5_background/layers/1_first_layer/2.png', 1079),
+        new BackgroundObject('../img/5_background/layers/air.png', 1079 * 2),
+        new BackgroundObject('../img/5_background/layers/3_third_layer/1.png', 1079 * 2),
+        new BackgroundObject('../img/5_background/layers/2_second_layer/1.png', 1079 * 2),
+        new BackgroundObject('../img/5_background/layers/1_first_layer/1.png', 1079 * 2),
     ]
     canvas;
     ctx;
     keyboard;
+    camPosX = 0;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -40,6 +59,8 @@ class World {
             this.canvas.height
         );
 
+        this.ctx.translate(this.camPosX, 0);
+
         // Add Images to Map
         this.addObjectsToMap(this.backgroundObjects);
         this.addObjectsToMap(this.backgroundObjects);
@@ -48,6 +69,8 @@ class World {
         this.addToMap(this.character);
         this.addObjectsToMap(this.enemies);
         this.addObjectsToMap(this.clouds);
+
+        this.ctx.translate(-this.camPosX, 0);
         
 
         // draw() wird immer wieder aufgerufen
@@ -64,6 +87,13 @@ class World {
 
     // Draw image canvas function to draw all images in to Map
     addToMap(movableObject) {
+        if (movableObject.otherDirection) {
+            this.ctx.save();
+            this.ctx.translate(movableObject.width, 0);
+            this.ctx.scale(-1, 1);
+            movableObject.positionX = movableObject.positionX * -1;
+        }
+
         this.ctx.drawImage(
             movableObject.image,
             movableObject.positionX, 
@@ -71,5 +101,10 @@ class World {
             movableObject.width, 
             movableObject.height
         );
+
+        if (movableObject.otherDirection) {
+            movableObject.positionX = movableObject.positionX * -1;
+            this.ctx.restore();
+        }
     }
 }

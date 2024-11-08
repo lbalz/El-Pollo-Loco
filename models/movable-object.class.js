@@ -7,12 +7,8 @@ class MovableObject {
     imageCache = {};
     currentImage = 0;
     movingSpeed = 0.15;
-
-    // constructor(x, y, img) {
-    //     this.positionX = x;
-    //     this.positionY = y;
-    //     this.image = img;
-    // }
+    otherDirection = false;
+    
 
 
     loadImage(path) {
