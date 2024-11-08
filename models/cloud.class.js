@@ -2,27 +2,17 @@ class Cloud extends MovableObject {
     positionY = 20;
     width = 500;
     height = 250;
-    cloudIntervalID;
+    cloudIntervalID; // Wird benötigt, wenn cloud animation mit clearInterval() gestoppt werden soll
 
     constructor() {
         super().loadImage('../img/5_background/layers/4_clouds/1.png');
 
         this.positionX = Math.random() * 500;
-        this.startMovingClouds();
+        this.startAnimate();
     }
 
     // 
-    startMovingClouds() {
-        this.cloudIntervalID = setInterval(() => {
-            this.movingClouds();
-        }, 1000 / 60);
-    }
-
-    movingClouds() {
-        this.positionX -= 0.2;
-
-        if(this.positionX < 0) {
-            this.positionX += 1060;
-        }
+    startAnimate() {
+        this.movingLeft();
     }
 }

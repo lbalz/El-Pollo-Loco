@@ -6,6 +6,7 @@ class MovableObject {
     width = 100;
     imageCache = {};
     currentImage = 0;
+    movingSpeed = 0.15;
 
     // constructor(x, y, img) {
     //     this.positionX = x;
@@ -32,7 +33,13 @@ class MovableObject {
         console.log("Moving right!");
     }
 
-    moveLeft() {
-        console.log("Moving left!");
+    movingLeft() {
+        this.cloudIntervalID = setInterval(() => {
+            this.positionX -= this.movingSpeed;
+
+            if(this.positionX < -490) {
+                this.positionX += 1550;
+            }
+        }, 1000 / 60);
     }
 }
