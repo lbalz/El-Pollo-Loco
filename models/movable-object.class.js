@@ -5,6 +5,7 @@ class MovableObject {
     height = 150;
     width = 100;
     imageCache = {};
+    currentImage = 0;
 
     // constructor(x, y, img) {
     //     this.positionX = x;
@@ -22,7 +23,7 @@ class MovableObject {
         array.forEach(path => {
             let img = new Image();
             img.src = path;
-            this.imageCache[path] = path;
+            this.imageCache[path] = img;
         });
         console.log(this.imageCache)
     }

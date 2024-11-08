@@ -4,18 +4,28 @@ class Character extends MovableObject {
     height = 400;
     width = 200;
 
-    IMAGE_PATHS = [
+    PEPE_WALKING_IMAGE_PATHS = [
         '../img/2_character_pepe/2_walk/W-21.png',
         '../img/2_character_pepe/2_walk/W-22.png',
         '../img/2_character_pepe/2_walk/W-23.png',
         '../img/2_character_pepe/2_walk/W-24.png',
         '../img/2_character_pepe/2_walk/W-25.png',
         '../img/2_character_pepe/2_walk/W-26.png'
-    ]
+    ];
     
     constructor() {
         super().loadImage('../img/2_character_pepe/2_walk/W-21.png');
-        this.loadImages(this.IMAGE_PATHS);
+        this.loadImages(this.PEPE_WALKING_IMAGE_PATHS);
+        this.animate();
+    }
+
+    animate() {
+        setInterval(() => {
+            let pepeWalkingImagesIndex = this.currentImage % this.PEPE_WALKING_IMAGE_PATHS.length;
+            let imagePath = this.PEPE_WALKING_IMAGE_PATHS[pepeWalkingImagesIndex];
+            this.image = this.imageCache[imagePath];
+            this.currentImage++;
+        }, 250);
     }
     
     jump() {
