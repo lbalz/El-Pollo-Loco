@@ -1,37 +1,8 @@
 class World {
     character = new Character();
-    enemies = [
-        new Chicken(),
-        new Chicken(),
-        new Chicken()
-    ];
-    clouds = [
-        new Cloud()
-    ];
-    backgroundObjects = [
-        //! Hier kann man das evtl. mit einer for loop machen um das lvl variabel groß zu machen
-        //! und damit hier nicht so viel code in dem array steht, das ist nicht clean
-        new BackgroundObject('../img/5_background/layers/air.png', -1079 * 2),
-        new BackgroundObject('../img/5_background/layers/3_third_layer/1.png', -1079 * 2),
-        new BackgroundObject('../img/5_background/layers/2_second_layer/1.png', -1079 * 2),
-        new BackgroundObject('../img/5_background/layers/1_first_layer/1.png', -1079 * 2),
-        new BackgroundObject('../img/5_background/layers/air.png', -1079),
-        new BackgroundObject('../img/5_background/layers/3_third_layer/2.png', -1079),
-        new BackgroundObject('../img/5_background/layers/2_second_layer/2.png', -1079),
-        new BackgroundObject('../img/5_background/layers/1_first_layer/2.png', -1079),
-        new BackgroundObject('../img/5_background/layers/air.png', 0),
-        new BackgroundObject('../img/5_background/layers/3_third_layer/1.png', 0),
-        new BackgroundObject('../img/5_background/layers/2_second_layer/1.png', 0),
-        new BackgroundObject('../img/5_background/layers/1_first_layer/1.png', 0),
-        new BackgroundObject('../img/5_background/layers/air.png', 1079),
-        new BackgroundObject('../img/5_background/layers/3_third_layer/2.png', 1079),
-        new BackgroundObject('../img/5_background/layers/2_second_layer/2.png', 1079),
-        new BackgroundObject('../img/5_background/layers/1_first_layer/2.png', 1079),
-        new BackgroundObject('../img/5_background/layers/air.png', 1079 * 2),
-        new BackgroundObject('../img/5_background/layers/3_third_layer/1.png', 1079 * 2),
-        new BackgroundObject('../img/5_background/layers/2_second_layer/1.png', 1079 * 2),
-        new BackgroundObject('../img/5_background/layers/1_first_layer/1.png', 1079 * 2),
-    ]
+    enemies = level_1.enemies;
+    clouds = level_1.clouds;
+    backgroundObjects = level_1.backgroundObjects;
     canvas;
     ctx;
     keyboard;
@@ -59,6 +30,9 @@ class World {
             this.canvas.height
         );
 
+        //! Nochmal genau schauen wo man das so machen kann, dass Pepe nicht außerhalb
+        //! des lvls kann und evtl. mit einer if-abfrage testen, dass ab einer gewissen
+        //! px pos die cam nicht mehr weiter sich bewegt sondern stoppt
         this.ctx.translate(this.camPosX, 0);
 
         // Add Images to Map
