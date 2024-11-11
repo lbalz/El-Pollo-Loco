@@ -1,8 +1,6 @@
 class World {
     character = new Character();
-    enemies = level_1.enemies;
-    clouds = level_1.clouds;
-    backgroundObjects = level_1.backgroundObjects;
+    level = level_1;
     canvas;
     ctx;
     keyboard;
@@ -36,13 +34,10 @@ class World {
         this.ctx.translate(this.camPosX, 0);
 
         // Add Images to Map
-        this.addObjectsToMap(this.backgroundObjects);
-        this.addObjectsToMap(this.backgroundObjects);
-        this.addObjectsToMap(this.backgroundObjects);
-        this.addObjectsToMap(this.backgroundObjects);
+        this.addObjectsToMap(this.level.backgroundObjects);
         this.addToMap(this.character);
-        this.addObjectsToMap(this.enemies);
-        this.addObjectsToMap(this.clouds);
+        this.addObjectsToMap(this.level.enemies);
+        this.addObjectsToMap(this.level.clouds);
 
         this.ctx.translate(-this.camPosX, 0);
         
