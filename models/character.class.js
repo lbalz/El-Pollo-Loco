@@ -58,10 +58,7 @@ class Character extends MovableObject {
         setInterval(() => {
             if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
                 // Walk animation
-                let pepeWalkingImagesIndex = this.currentImage % this.PEPE_WALKING_IMAGE_PATHS.length;
-                let imagePath = this.PEPE_WALKING_IMAGE_PATHS[pepeWalkingImagesIndex];
-                this.image = this.imageCache[imagePath];
-                this.currentImage++;
+                this.playAnimation(this.PEPE_WALKING_IMAGE_PATHS);
             }
         }, 25);
     }
