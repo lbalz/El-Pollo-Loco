@@ -12,6 +12,31 @@ class MovableObject {
     characterAcceleration = 2.5; // Beschleunigung
 
 
+    draw(ctx) {
+        ctx.drawImage(
+            this.image,
+            this.positionX, 
+            this.positionY, 
+            this.width, 
+            this.height
+        );
+    }
+
+    drawFrame(ctx) {
+        if(this instanceof Character || this instanceof Chicken /*|| this instanceof Endboss*/) {
+            ctx.beginPath();
+            ctx.lineWidth = "5";
+            ctx.strokeStyle = "blue";
+            ctx.rect(
+                this.positionX,
+                this.positionY,
+                this.width,
+                this.height
+            );
+            ctx.stroke();
+        }
+    }
+
     applyGravity() {
         setInterval(() => {
             if(this.isNotOnGround() || this.speedPosY > 0) {

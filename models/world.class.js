@@ -57,23 +57,26 @@ class World {
     // Draw image canvas function to draw all images in to Map
     addToMap(movableObject) {
         if (movableObject.otherDirection) {
-            this.ctx.save();
-            this.ctx.translate(movableObject.width, 0);
-            this.ctx.scale(-1, 1);
-            movableObject.positionX = movableObject.positionX * -1;
+            this.flipImage(movableObject);
         }
 
-        this.ctx.drawImage(
-            movableObject.image,
-            movableObject.positionX, 
-            movableObject.positionY, 
-            movableObject.width, 
-            movableObject.height
-        );
+        movableObject.draw(this.ctx);
+        movableObject.drawFrame(this.ctx);
 
         if (movableObject.otherDirection) {
-            movableObject.positionX = movableObject.positionX * -1;
-            this.ctx.restore();
+            this.restoreFlippedImage(movableObject);
         }
+    }
+
+    flipImage(movableObject) {
+        this.ctx.save();
+        this.ctx.translate(movableObject.width, 0);
+        this.ctx.scale(-1, 1);
+        movableObject.positionX = movableObject.positionX * -1;
+    }
+
+    restoreFlippedImage(movableObject) {
+        movableObject.positionX = movableObject.positionX * -1;
+        this.ctx.restore();
     }
 }
