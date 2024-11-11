@@ -8,8 +8,22 @@ class MovableObject {
     currentImage = 0;
     movingSpeed = 0.15;
     otherDirection = false;
-    
+    speedPosY = 0;
+    characterAcceleration = 2.5; // Beschleunigung
 
+
+    applyGravity() {
+        setInterval(() => {
+            if(this.isNotOnGround() || this.speedPosY > 0) {
+                this.positionY -= this.speedPosY;
+                this.speedPosY -= this.characterAcceleration;
+            }
+        }, 1000 / 25);
+    }
+
+    isNotOnGround() {
+        return this.positionY < 250;
+    }
 
     loadImage(path) {
         this.image = new Image(); // creates new <img> Tag
@@ -25,18 +39,16 @@ class MovableObject {
         console.log(this.imageCache)
     }
 
-    moveRight() {
-        console.log("Moving right!");
+    movingRight() {
+        this.positionX += this.movingSpeed;
     }
 
     movingLeft() {
-        this.cloudIntervalID = setInterval(() => {
-            this.positionX -= this.movingSpeed;
+        this.positionX -= this.movingSpeed;
+    }
 
-            if(this.positionX < -490) {
-                this.positionX += 1550;
-            }
-        }, 1000 / 60);
+    jump() {
+        this.speedPosY = 35;
     }
 
     playAnimation(images) {
