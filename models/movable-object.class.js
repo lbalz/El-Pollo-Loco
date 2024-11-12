@@ -6,10 +6,12 @@ class MovableObject {
     width = 100;
     imageCache = {};
     currentImage = 0;
-    movingSpeed = 0.15;
+    movingSpeed = 0.25;
     otherDirection = false;
     speedPosY = 0;
     characterAcceleration = 2.5; // Beschleunigung
+    healthPoints = 100;
+    lastHit = 0;
 
 
     draw(ctx) {
@@ -35,6 +37,34 @@ class MovableObject {
             );
             ctx.stroke();
         }
+    }
+
+    isColliding(movableObject) {
+        return this.positionX + this.width > movableObject.positionX &&
+            this.positionY + this.height > movableObject.positionY &&
+            this.positionX < movableObject.positionX &&
+            this.positionY < movableObject.positionY + movableObject.height;
+    }
+
+    getHit() {
+        this.healthPoints -= 5;
+        
+        if(this.healthPoints < 0) {
+            this.healthPoints = 0;
+        } else {
+            this.lastHit = new Date().getTime(); // Time in ms since 01.01.1970
+        }
+        
+    }
+
+    isHurt() {
+        let timePassed = new Date().getTime() - this.lastHit; // Difference in ms
+        timePassed = timePassed / 1000; // Difference in s
+        return timePassed < 0.5;
+    }
+
+    isDead() {
+        return this.healthPoints == 0;
     }
 
     applyGravity() {

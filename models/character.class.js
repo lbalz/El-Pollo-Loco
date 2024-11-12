@@ -28,6 +28,22 @@ class Character extends MovableObject {
         '../img/2_character_pepe/3_jump/J-39.png'
     ];
 
+    PEPE_DYING_IMAGE_PATHS = [
+        '../img/2_character_pepe/5_dead/D-51.png',
+        '../img/2_character_pepe/5_dead/D-52.png',
+        '../img/2_character_pepe/5_dead/D-53.png',
+        '../img/2_character_pepe/5_dead/D-54.png',
+        '../img/2_character_pepe/5_dead/D-55.png',
+        '../img/2_character_pepe/5_dead/D-56.png',
+        '../img/2_character_pepe/5_dead/D-57.png',
+    ];
+
+    PEPE_HURT_IMAGE_PATHS = [
+        '../img/2_character_pepe/4_hurt/H-41.png',
+        '../img/2_character_pepe/4_hurt/H-42.png',
+        '../img/2_character_pepe/4_hurt/H-43.png'
+    ]
+
     walkingSound = new Audio('../audio/walking_steps.mp3');
     walkingSoundLoopStart = 3.1;
     walkingSoundLoopEnd = 4;
@@ -41,6 +57,8 @@ class Character extends MovableObject {
         super().loadImage('../img/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.PEPE_WALKING_IMAGE_PATHS);
         this.loadImages(this.PEPE_JUMPING_IMAGE_PATHS);
+        this.loadImages(this.PEPE_DYING_IMAGE_PATHS);
+        this.loadImages(this.PEPE_HURT_IMAGE_PATHS);
         this.applyGravity();
         this.animate();
     }
@@ -93,7 +111,12 @@ class Character extends MovableObject {
         }, 1000 / 60);
 
         setInterval(() => {
-            if(this.isNotOnGround()) {
+
+            if (this.isDead()) {
+                this.playAnimation(this.PEPE_DYING_IMAGE_PATHS);
+            } else if (this.isHurt()) {
+                this.playAnimation(this.PEPE_HURT_IMAGE_PATHS);
+            } else if(this.isNotOnGround()) {
                 this.playAnimation(this.PEPE_JUMPING_IMAGE_PATHS);
             } else {
                 if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
@@ -101,7 +124,7 @@ class Character extends MovableObject {
                     this.playAnimation(this.PEPE_WALKING_IMAGE_PATHS);
                 }
             }
-        }, 25);
+        }, 50);
     }
     
     jump() {
