@@ -1,18 +1,20 @@
-//TODO: FIX -> Need to fix this count & code to just add like 5/6 chicken and after those 
-//TODO: FIX -> got killed, generate new chickens
 let numOfEnemies = 15; 
 let numOfBackgroundObjectGroups = 10;
 let numOfClouds = 10;
 let imagePositionX = 1079;
 
-
+//! TODO: Add coins & Bottles
 const level_1 = new Level(
     [
+        //TODO: FIX -> Need to fix numOfEnemies count & code to just add like 5/6 chicken 
+        //TODO: FIX -> and after those got killed, generate new chickens
         ...generateEnemies(numOfEnemies)
     ],
     [
         //TODO: FIX -> Need to update code to show endboss again, 
         //TODO: FIX -> code doenst match atm, thats why there is no endboss
+        //TODO: FIX -> Mby add params to Endboss Class to set hp etc. mby variable,
+        //TODO: FIX -> Pos need to be variable to set Endboss pos, which depends on map size
         new Endboss()
     ],
     [
@@ -21,10 +23,12 @@ const level_1 = new Level(
     ],
     [
 
+        //TODO: FIX -> BGObjects loading right, but doenst get shown right, need to fix this
+        //TODO: FIX -> mby dont need to load a first layer to add more after this, seems like this
+        //TODO: FIX -> is a useless function and can gets deleted?
         // ...generateFirstPlaygroundBGObjectGroupLayer(),
         ...generatePlaygroundBackgroundObjectGroups(numOfBackgroundObjectGroups)
-        //! Hier kann man das evtl. mit einer for loop machen um das lvl variabel groß zu machen
-        //! und damit hier nicht so viel code in dem array steht, das ist nicht clean
+        
         
         // new BackgroundObject('./img/5_background/layers/air.png', -1079),
         // new BackgroundObject('./img/5_background/layers/3_third_layer/2.png', -1079),

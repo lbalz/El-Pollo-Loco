@@ -1,0 +1,3 @@
+class BottleStatusBar extends StatusBar {
+    
+}

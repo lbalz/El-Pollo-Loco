@@ -1,0 +1,3 @@
+class HealthStatusBar extends StatusBar {
+    
+}

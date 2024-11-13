@@ -1,10 +1,10 @@
 class StatusBar extends DrawableObject {
     
-    //! Refactor StatusBar class to create a new StatusBar with Input
-    //! instead of hardcoding all statusbars in this class
+    //TODO: FIX -> Refactor StatusBar class to create a new StatusBar with Input
+    //TODO: FIX -> instead of hardcoding all statusbars in this class
 
-    //! StatusBar as super() class and create individual statusbars for
-    //! coins, health & bottles
+    //TODO: FIX -> StatusBar as super() class and create individual statusbars for
+    //TODO: FIX -> coins, health & bottles
     HEALTH_POINTS_IMAGES = [
         './img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png',
         './img/7_statusbars/1_statusbar/2_statusbar_health/blue/20.png',
