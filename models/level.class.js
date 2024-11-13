@@ -1,11 +1,13 @@
 class Level {
     enemies;
+    endboss;
     clouds;
     backgroundObjects;
-    levelEndPosX = 2200;
+    levelEndPosX = 10000;
 
-    constructor(enemies, clouds, backgroundObjects) {
+    constructor(enemies, endboss, clouds, backgroundObjects) {
         this.enemies = enemies;
+        this.endboss = endboss; //TODO: FIX -> Check endboss, was in enemies before!
         this.clouds = clouds;
         this.backgroundObjects = backgroundObjects;
     }

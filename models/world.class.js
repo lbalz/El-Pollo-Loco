@@ -5,6 +5,7 @@ class World {
     ctx;
     keyboard;
     camPosX = 0;
+    statusBar = new StatusBar();
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -24,8 +25,7 @@ class World {
             this.level.enemies.forEach( enemy => {
                 if (this.character.isColliding(enemy)) {
                     this.character.getHit();
-                    console.log("Pepe colliding", this.character.healthPoints);
-                    
+                    this.statusBar.setHealthPercentage(this.character.healthPoints);
                 }
             })
         }, 200);
@@ -48,9 +48,15 @@ class World {
 
         // Add Images to Map
         this.addObjectsToMap(this.level.backgroundObjects);
+        this.addObjectsToMap(this.level.clouds);
+
+        this.ctx.translate(-this.camPosX, 0);
+        this.addToMap(this.statusBar);
+        this.ctx.translate(this.camPosX, 0);
+
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.enemies);
-        this.addObjectsToMap(this.level.clouds);
+        
 
         this.ctx.translate(-this.camPosX, 0);
         
