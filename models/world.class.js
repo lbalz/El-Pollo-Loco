@@ -6,6 +6,8 @@ class World {
     keyboard;
     camPosX = 0;
     healthStatusBar = new HealthStatusBar();
+    coinStatusBar = new CoinStatusBar();
+    bottleStatusBar = new BottleStatusBar();
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -52,8 +54,8 @@ class World {
 
         this.ctx.translate(-this.camPosX, 0);
         this.addToMap(this.healthStatusBar);
-        // this.addToMap(this.coinStatusBar);
-        // this.addToMap(this.bottleStatusBar);
+        this.addToMap(this.coinStatusBar);
+        this.addToMap(this.bottleStatusBar);
         this.ctx.translate(this.camPosX, 0);
 
         this.addToMap(this.character);

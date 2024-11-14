@@ -13,10 +13,10 @@ class HealthStatusBar extends StatusBar {
         super();
         this.loadImage('./img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png');
         this.loadImages(this.HEALTH_POINTS_IMAGES);
-        this.positionX = 25;
+        this.positionX = 15;
         this.positionY = 0;
         this.width = 300;
-        this.height = 100;
+        this.height = 75;
         this.setHealthPercentage(100);
     }
 }
