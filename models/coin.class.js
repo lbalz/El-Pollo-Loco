@@ -3,14 +3,12 @@ class Coin extends DrawableObject {
     positionY = 500;
     width = 225;
     height = 225;
-    numOfCoins = 0;
 
+    //! TODO: Need collision detections for Coins to collect 
     constructor(randomPosX, randomPosY) {
         super()
         this.loadImage('../img/8_coin/coin_1.png');
-        this.numOfCoins = numOfCoins;
         this.positionX = randomPosX;
         this.positionY = randomPosY;
-        this.numOfCoins++;
     }
 }
