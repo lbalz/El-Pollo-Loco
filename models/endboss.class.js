@@ -25,7 +25,7 @@ class Endboss extends MovableObject {
     constructor() {
         super().loadImage(this.ENDBOSS_IMAGES_WALKING_PATH[1]);
         this.loadImages(this.ENDBOSS_IMAGES_WALKING_PATH);
-        this.positionX = 700;
+        this.positionX = 10300;
         this.animateWalkingChickenEndboss();
     }
 

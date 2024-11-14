@@ -1,5 +1,4 @@
 class HealthStatusBar extends StatusBar {
-    //TODO: FIX -> Need to check how to plan this 3 sub classes 
     healthPercentage = 0;
     HEALTH_POINTS_IMAGES = [
         './img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png',
