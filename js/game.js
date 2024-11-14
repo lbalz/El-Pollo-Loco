@@ -35,6 +35,11 @@ window.addEventListener('keypress', event => {
             keyboard.SPACE = true;
             break;
 
+        case "KeyF":
+            keyboard.THROW = true;
+            console.log(keyboard.THROW);
+            break;
+
         default:
             break;
     }
@@ -110,6 +115,11 @@ window.addEventListener('keyup', event => {
 
         case "KeyD":
             keyboard.RIGHT = false;
+            break;
+
+        case "KeyF":
+            keyboard.THROW = false;
+            console.log(keyboard.THROW);
             break;
         default:
             break;

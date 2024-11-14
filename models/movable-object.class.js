@@ -51,7 +51,11 @@ class MovableObject extends DrawableObject{
     }
 
     isNotOnGround() {
-        return this.positionY < 250;
+        if (this instanceof ThrowableObject) { // Throwable Objects shoulds always falls
+            return true;
+        } else {
+            return this.positionY < 250;
+        }
     }
 
     playAnimation(images) {
