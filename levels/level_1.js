@@ -1,5 +1,5 @@
-let numOfBigChicken = 5;
-let numOfLittleChicken  = 5;
+let numOfBigChicken = 15;
+let numOfLittleChicken  = 15;
 let numOfBackgroundObjectGroups = 10;
 let numOfClouds = 10;
 let imagePositionX = 1079;
@@ -7,10 +7,9 @@ let imagePositionX = 1079;
 //! TODO: Add coins & Bottles
 const level_1 = new Level(
     [
-        //TODO: FIX -> Need to fix numOfEnemies count & code to just add like 5/6 chicken 
-        //TODO: FIX -> and after those got killed, generate new chickens
-        ...generateEnemies(numOfBigChicken),
-
+        // ...generateEnemies(numOfBigChicken),
+        ...generateBigChicken(numOfBigChicken),
+        ...generateSmallChicken(numOfLittleChicken)
     ],
     [
         new Endboss()
@@ -24,6 +23,22 @@ const level_1 = new Level(
         ...generatePlaygroundBackgroundObjectGroups(numOfBackgroundObjectGroups)
     ]
 );
+
+function generateBigChicken(num) {
+    const bigChicken = [];
+    for (let i = 0; i < num; i++) {
+        bigChicken.push(new BigChicken());
+    }
+    return bigChicken;
+}
+
+function generateSmallChicken(num) {
+    const smallChicken = [];
+    for (let i = 0; i < num; i++) {
+        smallChicken.push(new SmallChicken());
+    }
+    return smallChicken;
+}
 
 function generateEnemies(num) {
     const enemies = [];
