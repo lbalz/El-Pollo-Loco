@@ -25,7 +25,7 @@ const level_1 = new Level(
         ...generatePlaygroundBackgroundObjectGroups(numOfBackgroundObjectGroups)
     ],
     [
-        generateCoins(numOfCoins)
+        ...generateCoins(numOfCoins)
     ],
     [
         // ...generateBottles(numOfBottles)
@@ -89,8 +89,21 @@ function generatePlaygroundBackgroundObjectGroups(num) {
     return pbgObjectGroups;
 }
 
+//TODO: For now its just random generated Coins over the whole world,
+//TODO: mby refactor lator to make Coin Groups where for e.g. 5 Coins are in a row
+//TODO: and this in different y directions to collect 
 function generateCoins(num) {
-    return new Coin(num);
+    const coins = []
+    for (let i = 0; i < num; i++) {
+        let posX = Math.floor(500 + Math.random() * 8500); // Random number between 1000 - 9000
+        let posY = Math.floor(200 + Math.random() * 250); // Random number between 200 - 450
+        coins.push(
+            new Coin(posX, posY)
+        );
+        console.log(`Coin Nr. ${i + 1} Pos: `, posX, posY);
+    }
+
+    return coins;
 }
 
 function generateBottles() {
