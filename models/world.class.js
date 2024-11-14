@@ -61,6 +61,7 @@ class World {
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.endboss);
+        this.addObjectsToMap(this.level.coins);
         
 
         this.ctx.translate(-this.camPosX, 0);

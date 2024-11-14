@@ -2,6 +2,8 @@ let numOfBigChicken = 15;
 let numOfLittleChicken  = 15;
 let numOfBackgroundObjectGroups = 10;
 let numOfClouds = 10;
+let numOfCoins = 20;
+let numOfBottles = 10;
 let imagePositionX = 1079;
 
 //! TODO: Add coins & Bottles
@@ -21,6 +23,12 @@ const level_1 = new Level(
     [
         ...generateFirstPlaygroundBGObjectGroupLayer(),
         ...generatePlaygroundBackgroundObjectGroups(numOfBackgroundObjectGroups)
+    ],
+    [
+        generateCoins(numOfCoins)
+    ],
+    [
+        // ...generateBottles(numOfBottles)
     ]
 );
 
@@ -79,4 +87,12 @@ function generatePlaygroundBackgroundObjectGroups(num) {
         );
     }
     return pbgObjectGroups;
+}
+
+function generateCoins(num) {
+    return new Coin(num);
+}
+
+function generateBottles() {
+    // Wait for Video
 }
