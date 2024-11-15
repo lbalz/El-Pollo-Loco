@@ -32,10 +32,20 @@ class World {
     }
 
     checkThrowBottle() {
-        if (this.keyboard.THROW) {
-            let throwableBottle = new ThrowableObject(this.character.positionX + 125, this.character.positionY + 175);
-            this.throwableObjects.push(throwableBottle);
-            console.log(this.keyboard)
+
+        if (this.character.otherDirection) {
+            if (this.keyboard.THROW) {
+                let throwableBottle = new ThrowableObject(this.character.positionX, this.character.positionY + 175, this.character.otherDirection);
+                this.throwableObjects.push(throwableBottle);
+                console.log(this.keyboard);
+            }
+
+        } else {
+            if (this.keyboard.THROW) {
+                let throwableBottle = new ThrowableObject(this.character.positionX + 125, this.character.positionY + 175, this.character.otherDirection);
+                this.throwableObjects.push(throwableBottle);
+                console.log(this.keyboard)
+            }
         }
     }
 
