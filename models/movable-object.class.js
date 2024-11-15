@@ -1,4 +1,4 @@
-class MovableObject extends DrawableObject{
+class MovableObject extends DrawableObject {
     movingSpeed = 0.25;
     otherDirection = false;
     speedPosY = 0;
@@ -7,28 +7,29 @@ class MovableObject extends DrawableObject{
     lastHit = 0;
 
 
+
     constructor() {
         super();
     }
 
-    
+
 
     isColliding(movableObject) {
-        return this.positionX + this.width > movableObject.positionX &&
-            this.positionY + this.height > movableObject.positionY &&
-            this.positionX < movableObject.positionX &&
-            this.positionY < movableObject.positionY + movableObject.height;
+        return this.positionX + this.width - this.offset.right > movableObject.positionX + movableObject.offset.left &&
+            this.positionY + this.height - this.offset.bottom > movableObject.positionY + movableObject.offset.top &&
+            this.positionX + this.offset.left < movableObject.positionX + movableObject.width - movableObject.offset.right &&
+            this.positionY + this.offset.top < movableObject.positionY + movableObject.height - movableObject.offset.bottom;
     }
 
     getHit() {
         this.healthPoints -= 5;
-        
-        if(this.healthPoints < 0) {
+
+        if (this.healthPoints < 0) {
             this.healthPoints = 0;
         } else {
             this.lastHit = new Date().getTime(); // Time in ms since 01.01.1970
         }
-        
+
     }
 
     isHurt() {
@@ -43,7 +44,7 @@ class MovableObject extends DrawableObject{
 
     applyGravity() {
         setInterval(() => {
-            if(this.isNotOnGround() || this.speedPosY > 0) {
+            if (this.isNotOnGround() || this.speedPosY > 0) {
                 this.positionY -= this.speedPosY;
                 this.speedPosY -= this.characterAcceleration;
             }

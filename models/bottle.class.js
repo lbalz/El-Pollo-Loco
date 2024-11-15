@@ -5,6 +5,13 @@ class Bottle extends DrawableObject {
     width = 100;
     height = 100;
 
+    offset = {
+        top: 20,
+        right: 25,
+        bottom: 10,
+        left: 25
+    };
+
     //! TODO: Need collision detections for Bottles to collect 
     constructor(randomPosX) {
         super();

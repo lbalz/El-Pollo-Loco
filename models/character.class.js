@@ -5,6 +5,13 @@ class Character extends MovableObject {
     width = 200;
     movingSpeed = 15;
 
+    offset = {
+        top: 150,
+        right: 30,
+        bottom: 20,
+        left: 30
+    };
+
     world;
 
     PEPE_WALKING_IMAGE_PATHS = [

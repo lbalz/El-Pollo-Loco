@@ -3,6 +3,13 @@ class BigChicken extends Chicken {
     height = 100;
     width = 100;
 
+    offset = {
+        top: 5,
+        right: 0,
+        bottom: 5,
+        left: 0
+    };
+
     BIG_CHICKEN_IMAGES_WALKING_PATH = [
     './img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
     './img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
