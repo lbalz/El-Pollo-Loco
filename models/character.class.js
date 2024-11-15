@@ -89,7 +89,9 @@ class Character extends MovableObject {
                 // Character moving to the right
                 this.movingRight();
                 this.otherDirection = false;
-                this.walkingSound.play();
+                if (!this.isNotOnGround()) {
+                    this.walkingSound.play();
+                }
                 console.log(this.positionX);
             }
             
@@ -97,7 +99,9 @@ class Character extends MovableObject {
                 // Character moving to the left
                 this.movingLeft();
                 this.otherDirection = true;
-                this.walkingSound.play();
+                if (!this.isNotOnGround()) {
+                    this.walkingSound.play();
+                }
             }
 
             
