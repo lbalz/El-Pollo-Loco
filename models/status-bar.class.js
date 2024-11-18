@@ -1,15 +1,4 @@
 class StatusBar extends DrawableObject {
-    
-    
-    //TODO: FIX -> Refactor StatusBar class to create a new StatusBar with Input
-    //TODO: FIX -> instead of hardcoding all statusbars in this class
-
-    //TODO: FIX -> StatusBar as super() class and create individual statusbars for
-    //TODO: FIX -> coins, health & bottles
-
-
-
-
     constructor() {
         super();
     }
@@ -20,9 +9,6 @@ class StatusBar extends DrawableObject {
     }
 
     setHealthPercentage(healthPercentage) {
-        //TODO: FIX -> fix healthPercantage, mby do a custom variable for all 3 bars
-        //TODO: FIX -> so it is a StatusBar Template, usable to generate custom
-        //TODO: FIX -> StatusBars for different things
         this.healthPercentage = healthPercentage;
 
         let path = this.HEALTH_POINTS_IMAGES[this.getHealthImageIndex()];
@@ -78,4 +64,19 @@ class StatusBar extends DrawableObject {
     }
 
     // 10 Bottles
+    getBottleImageIndex() {
+        if (this.bottlesPercentage >= 10) {
+            return 5;
+        } else if (this.bottlesPercentage >= 8) {
+            return 4;
+        } else if (this.bottlesPercentage >= 6) {
+            return 3;
+        } else if (this.bottlesPercentage >= 4) {
+            return 2;
+        } else if (this.bottlesPercentage >= 2) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }

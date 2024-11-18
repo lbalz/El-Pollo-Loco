@@ -60,9 +60,22 @@ class World {
         this.level.coins.forEach( coin => {
             if (this.character.isColliding(coin)) {
                 this.character.collectCoin();
-                this.coinStatusBar.setCoinsPercentage(this.character.coins)
-                // this.level.coins.slice(1, coin);
-                // this.draw();
+                this.coinStatusBar.setCoinsPercentage(this.character.coins);
+
+                let coinIndex = this.level.coins.indexOf(coin);
+                this.level.coins.splice(coinIndex, 1);
+                this.draw();
+            }
+        });
+
+        this.level.bottles.forEach( bottle => {
+            if (this.character.isColliding(bottle)) {
+                this.character.collectBottle();
+                this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
+
+                let bottleIndex = this.level.bottles.indexOf(bottle);
+                this.level.bottles.splice(bottleIndex, 1);
+                this.draw();
             }
         })
     }
@@ -122,7 +135,6 @@ class World {
         }
 
         movableObject.draw(this.ctx);
-        movableObject.drawFrame(this.ctx);
         movableObject.drawOffsetFrame(this.ctx);
 
         if (movableObject.otherDirection) {

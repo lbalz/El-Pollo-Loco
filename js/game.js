@@ -48,8 +48,6 @@ window.addEventListener('keypress', event => {
 
 // Eventlistener for arrow keys
 window.addEventListener('keydown', event => {
-    console.log(event);
-
     switch (event.code) {
         case "ArrowUp":
             keyboard.UP = true;
@@ -78,8 +76,6 @@ window.addEventListener('keydown', event => {
 
 // Eventlistener for keys up to set variables to false
 window.addEventListener('keyup', event => {
-    console.log(event);
-
     switch (event.code) {
         case "ArrowUp":
             keyboard.UP = false;

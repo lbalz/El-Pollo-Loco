@@ -31,6 +31,12 @@ class MovableObject extends DrawableObject {
         console.log(this.coins);
     }
 
+    collectBottle() {
+        this.bottles += 1;
+
+        console.log(this.bottles);
+    }
+
     getHit() {
         this.healthPoints -= 5;
 

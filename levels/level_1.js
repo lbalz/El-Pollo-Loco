@@ -9,7 +9,6 @@ let imagePositionX = 1079;
 //! TODO: Add coins & Bottles
 const level_1 = new Level(
     [
-        // ...generateEnemies(numOfBigChicken),
         ...generateBigChicken(numOfBigChicken),
         ...generateSmallChicken(numOfLittleChicken)
     ],

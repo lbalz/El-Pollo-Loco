@@ -17,6 +17,6 @@ class BottleStatusBar extends StatusBar {
         this.positionY = 150;
         this.width = 300;
         this.height = 75;
-        // this.setHealthPercentage(100); this has to be another function which updates bar depends on total of coins
+        this.setBottlesPercentage(0);
     }
 }
