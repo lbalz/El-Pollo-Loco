@@ -99,7 +99,7 @@ class Character extends MovableObject {
                 if (!this.isNotOnGround()) {
                     this.walkingSound.play();
                 }
-                console.log(this.positionX);
+                console.log("Current positionX", this.positionX);
             }
             
             if (this.world.keyboard.LEFT && this.positionX > 0) {
@@ -109,6 +109,7 @@ class Character extends MovableObject {
                 if (!this.isNotOnGround()) {
                     this.walkingSound.play();
                 }
+                console.log("Current positionX", this.positionX);
             }
 
             

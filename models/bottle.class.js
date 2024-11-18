@@ -15,7 +15,7 @@ class Bottle extends DrawableObject {
     //! TODO: Need collision detections for Bottles to collect 
     constructor(randomPosX) {
         super();
-        this.loadImage('../img/6_salsa_bottle/2_salsa_bottle_on_ground.png');
+        this.loadImage('./img/6_salsa_bottle/2_salsa_bottle_on_ground.png');
         this.positionX = randomPosX;
     }
 }

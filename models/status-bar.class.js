@@ -25,11 +25,26 @@ class StatusBar extends DrawableObject {
         //TODO: FIX -> StatusBars for different things
         this.healthPercentage = healthPercentage;
 
-        let path = this.HEALTH_POINTS_IMAGES[this.getImageIndex()];
+        let path = this.HEALTH_POINTS_IMAGES[this.getHealthImageIndex()];
         this.image = this.imageCache[path];
     }
 
-    getImageIndex() {
+    setCoinsPercentage(coinsPercentage) {
+        this.coinsPercentage = coinsPercentage;
+
+        let path = this.COINS_IMAGES[this.getCoinImageIndex()];
+        this.image = this.imageCache[path];
+    }
+
+    setBottlesPercentage(bottlesPercentage) {
+        this.bottlesPercentage = bottlesPercentage;
+
+        let path = this.BOTTLE_IMAGES[this.getBottleImageIndex()];
+        this.image = this.imageCache[path];
+    }
+
+    // 100 healthPoints
+    getHealthImageIndex() {
         if (this.healthPercentage >= 100) {
             return 5;
         } else if (this.healthPercentage > 80) {
@@ -44,4 +59,23 @@ class StatusBar extends DrawableObject {
             return 0;
         }
     }
+
+    // 20 Coins
+    getCoinImageIndex() {
+        if (this.coinsPercentage >= 20) {
+            return 5;
+        } else if (this.coinsPercentage >= 16) {
+            return 4;
+        } else if (this.coinsPercentage >= 12) {
+            return 3;
+        } else if (this.coinsPercentage >= 8) {
+            return 2;
+        } else if (this.coinsPercentage >= 4) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    // 10 Bottles
 }

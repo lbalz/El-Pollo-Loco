@@ -5,6 +5,10 @@ class MovableObject extends DrawableObject {
     characterAcceleration = 2.5; // Beschleunigung
     healthPoints = 100;
     lastHit = 0;
+    coins = 0;
+    lastCoinHit = 0;
+    bottles = 0;
+    lastBottlesHit = 0;
 
 
 
@@ -19,6 +23,12 @@ class MovableObject extends DrawableObject {
             this.positionY + this.height - this.offset.bottom > movableObject.positionY + movableObject.offset.top &&
             this.positionX + this.offset.left < movableObject.positionX + movableObject.width - movableObject.offset.right &&
             this.positionY + this.offset.top < movableObject.positionY + movableObject.height - movableObject.offset.bottom;
+    }
+
+    collectCoin() {
+        this.coins += 1;
+
+        console.log(this.coins);
     }
 
     getHit() {

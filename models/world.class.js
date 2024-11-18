@@ -56,6 +56,15 @@ class World {
                 this.healthStatusBar.setHealthPercentage(this.character.healthPoints);
             }
         });
+
+        this.level.coins.forEach( coin => {
+            if (this.character.isColliding(coin)) {
+                this.character.collectCoin();
+                this.coinStatusBar.setCoinsPercentage(this.character.coins)
+                // this.level.coins.slice(1, coin);
+                // this.draw();
+            }
+        })
     }
 
     // Function draw to draw all images needed
