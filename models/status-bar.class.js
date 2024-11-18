@@ -3,10 +3,7 @@ class StatusBar extends DrawableObject {
         super();
     }
 
-    drawStatusText() {
-        // Idee: da die Statusbalken nur alle 20 punkte z.B. ein neues Bild haben
-        // evtl. einen Statustext direkt neben dem balken anzeigen wieviel hp punkte, coins oder flaschen man hat
-    }
+    
 
     setHealthPercentage(healthPercentage) {
         this.healthPercentage = healthPercentage;
@@ -26,6 +23,13 @@ class StatusBar extends DrawableObject {
         this.bottlesPercentage = bottlesPercentage;
 
         let path = this.BOTTLE_IMAGES[this.getBottleImageIndex()];
+        this.image = this.imageCache[path];
+    }
+
+    setEndbossHealthPercentage(endbossHealthPercentage) {
+        this.endbossHealthPercentage = endbossHealthPercentage;
+
+        let path = this.ENDBOSS_HEALTH_POINTS_IMAGES[this.getEndbossHealthImageIndex()];
         this.image = this.imageCache[path];
     }
 
@@ -74,6 +78,22 @@ class StatusBar extends DrawableObject {
         } else if (this.bottlesPercentage >= 4) {
             return 2;
         } else if (this.bottlesPercentage >= 2) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    getEndbossHealthImageIndex() {
+        if (this.healthPercentage >= 100) {
+            return 5;
+        } else if (this.healthPercentage > 80) {
+            return 4;
+        } else if (this.healthPercentage > 60) {
+            return 3;
+        } else if (this.healthPercentage > 40) {
+            return 2;
+        } else if (this.healthPercentage > 20) {
             return 1;
         } else {
             return 0;

@@ -8,6 +8,7 @@ class World {
     healthStatusBar = new HealthStatusBar();
     coinStatusBar = new CoinStatusBar();
     bottleStatusBar = new BottleStatusBar();
+    endbossStatusBar = new EndbossStatusBar();
     throwableObjects = [];
 
     constructor(canvas, keyboard) {
@@ -28,7 +29,14 @@ class World {
             
             this.checkCollisions();
             this.checkThrowBottle();
+            this.checkCharacterNearBoss();
         }, 100);
+    }
+
+    checkCharacterNearBoss() {
+        if (this.character.positionX >= 8350) {
+            this.endbossStatusBar 
+        }
     }
 
     checkThrowBottle() {
@@ -38,6 +46,7 @@ class World {
                     let throwableBottle = new ThrowableObject(this.character.positionX, this.character.positionY + 175, this.character.otherDirection);
                     this.throwableObjects.push(throwableBottle);
                     this.character.bottles -= 1;
+                    this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
                     console.log(this.keyboard);
                 }
     
@@ -46,17 +55,26 @@ class World {
                     let throwableBottle = new ThrowableObject(this.character.positionX + 125, this.character.positionY + 175, this.character.otherDirection);
                     this.throwableObjects.push(throwableBottle);
                     this.character.bottles -= 1;
+                    this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
                     console.log(this.keyboard);
                 }
             }
         }
     }
 
+    //! TODO: -> Albert morgen im Call fragen wieso die großen chickens nur gekillt werden können wenn ich nach links schaue
+    //! TODO: -> und bei den kleinen nach rechts
     checkCollisions() {
         this.level.enemies.forEach( enemy => {
             if (this.character.isColliding(enemy)) {
                 this.character.getHit();
-                this.healthStatusBar.setHealthPercentage(this.character.healthPoints);
+                this.healthStatusBar.setHealthPercentage(this.character.healthPoints, this.ctx);
+            }
+
+            //! Add that big chickens can drop with a 10% chance a bottle and if there are no chickens left in total, add mby 5 new each
+            if (this.character.isColliding(enemy) && this.character.isNotOnGround() && this.character.speedPosY < 0) { // speedY
+                let enemieIndex = this.level.enemies.indexOf(enemy);
+                this.level.enemies.splice(enemieIndex, 1);
             }
         });
 
@@ -67,7 +85,7 @@ class World {
 
                 let coinIndex = this.level.coins.indexOf(coin);
                 this.level.coins.splice(coinIndex, 1);
-                this.draw();
+
             }
         });
 
@@ -79,6 +97,18 @@ class World {
                 let bottleIndex = this.level.bottles.indexOf(bottle);
                 this.level.bottles.splice(bottleIndex, 1);
                 this.draw();
+            }
+        });
+
+
+    }
+
+    checkBottleCollisionChicken() {
+        this.level.enemies.forEach( (enemy, index) => {
+            if (this.world.throwableObjects[index].positionX == enemy.positionX &&
+                this.world.throwableObjects[index].positionY == enemy.positionY) 
+            {
+                //! Delete object but check this function, im not sure if this is the right if condition
             }
         })
     }
@@ -93,9 +123,6 @@ class World {
             this.canvas.height
         );
 
-        //! Nochmal genau schauen wo man das so machen kann, dass Pepe nicht außerhalb
-        //! des lvls kann und evtl. mit einer if-abfrage testen, dass ab einer gewissen
-        //! px pos die cam nicht mehr weiter sich bewegt sondern stoppt
         this.ctx.translate(this.camPosX, 0);
 
         // Add Images to Map
@@ -103,9 +130,22 @@ class World {
         this.addObjectsToMap(this.level.clouds);
 
         this.ctx.translate(-this.camPosX, 0);
+
         this.addToMap(this.healthStatusBar);
+        this.drawStatusText(this.character.healthPoints, this.ctx, 250, 60);
+
         this.addToMap(this.coinStatusBar);
+        this.drawStatusText(this.character.coins, this.ctx, 265, 135);
+
         this.addToMap(this.bottleStatusBar);
+        this.drawStatusText(this.character.bottles, this.ctx, 265, 210);
+
+        if (this.character.positionX >= 8350) {
+            this.addToMap(this.endbossStatusBar);
+            //! TODO: -> Endboss needs hp, check where character hp is created etc. pp
+            // this.drawStatusText(this.world.endboss, this.ctx, 265, 210);
+        }
+
         this.ctx.translate(this.camPosX, 0);
 
         this.addToMap(this.character);
@@ -114,6 +154,9 @@ class World {
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.throwableObjects);
+
+        
+        
         
 
         this.ctx.translate(-this.camPosX, 0);
@@ -155,5 +198,13 @@ class World {
     restoreFlippedImage(movableObject) {
         movableObject.positionX = movableObject.positionX * -1;
         this.ctx.restore();
+    }
+
+    drawStatusText(num, ctx, posX, posY) {
+        // Idee: da die Statusbalken nur alle 20 punkte z.B. ein neues Bild haben
+        // evtl. einen Statustext direkt neben dem balken anzeigen wieviel hp punkte, coins oder flaschen man hat
+        ctx.font = "28px Arial";
+        ctx.fillStyle = "black";
+        ctx.fillText(num, posX, posY);
     }
 }
