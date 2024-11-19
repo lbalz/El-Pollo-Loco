@@ -26,7 +26,7 @@ class World {
 
     checkingFunctionLoop() {
         setInterval(() => {
-            this.checkCollisions();
+            this.checkCollectables();
             this.checkThrowBottle();
             this.checkCharacterNearBoss();
             this.checkCharacterGotChickenHit();
@@ -34,12 +34,13 @@ class World {
 
         setInterval(() => {
             this.checkCharacterChickenCollision();
+            this.checkBottleCollision();
         }, 1000 / 60);
     }
 
     checkCharacterNearBoss() {
         if (this.character.positionX >= 8350) {
-            this.endbossStatusBar 
+            this.endbossStatusBar
         }
     }
 
@@ -53,7 +54,7 @@ class World {
                     this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
                     console.log(this.keyboard);
                 }
-    
+
             } else {
                 if (this.keyboard.THROW) {
                     let throwableBottle = new ThrowableObject(this.character.positionX + 125, this.character.positionY + 175, this.character.otherDirection);
@@ -66,9 +67,21 @@ class World {
         }
     }
 
+    checkBottleCollision() {
+        if (this.character.world.throwableObjects.length > 0) {
+            this.character.world.throwableObjects.forEach(bottle => {
+                if (bottle.positionY >= 560) {
+                    let bottleIndex = this.character.world.throwableObjects.indexOf(bottle);
+                    this.character.world.throwableObjects.splice(bottleIndex, 1);
+                    console.log("Bottle")
+                }
+            });
+        }
+    }
+
     //TODO: -> Delete throwable object when hit a chicken, the boss or the ground posY = 260ish?
     checkCharacterGotChickenHit() {
-        this.level.enemies.forEach( enemy => {
+        this.level.enemies.forEach(enemy => {
             if (this.character.isColliding(enemy)) {
                 this.character.getHit();
                 this.healthStatusBar.setHealthPercentage(this.character.healthPoints, this.ctx);
@@ -77,7 +90,7 @@ class World {
     }
 
     checkCharacterChickenCollision() {
-        this.level.enemies.forEach( enemy => {
+        this.level.enemies.forEach(enemy => {
             //! Add that big chickens can drop with a 10% chance a bottle and if there are no chickens left in total, add mby 5 new each
             if (this.character.isColliding(enemy) && this.character.isNotOnGround() && this.character.speedPosY < 0) { // speedY
                 let enemieIndex = this.level.enemies.indexOf(enemy);
@@ -91,22 +104,18 @@ class World {
         });
     }
 
-    //! TODO: -> Wie es aussieht werden die chicken nur getroffen wenn man nicht direkt mittig auf sie drauf springt
-    checkCollisions() {
-        
-
-        this.level.coins.forEach( coin => {
+    checkCollectables() {
+        this.level.coins.forEach(coin => {
             if (this.character.isColliding(coin)) {
                 this.character.collectCoin();
                 this.coinStatusBar.setCoinsPercentage(this.character.coins);
 
                 let coinIndex = this.level.coins.indexOf(coin);
                 this.level.coins.splice(coinIndex, 1);
-
             }
         });
 
-        this.level.bottles.forEach( bottle => {
+        this.level.bottles.forEach(bottle => {
             if (this.character.isColliding(bottle)) {
                 this.character.collectBottle();
                 this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
@@ -115,15 +124,12 @@ class World {
                 this.level.bottles.splice(bottleIndex, 1);
             }
         });
-
-
     }
 
     checkBottleCollisionChicken() {
-        this.level.enemies.forEach( (enemy, index) => {
+        this.level.enemies.forEach((enemy, index) => {
             if (this.world.throwableObjects[index].positionX == enemy.positionX &&
-                this.world.throwableObjects[index].positionY == enemy.positionY) 
-            {
+                this.world.throwableObjects[index].positionY == enemy.positionY) {
                 //! Delete object but check this function, im not sure if this is the right if condition
             }
         })
@@ -133,9 +139,9 @@ class World {
     draw() {
         // Clear Canvas
         this.ctx.clearRect(
-            0, 
-            0, 
-            this.canvas.width, 
+            0,
+            0,
+            this.canvas.width,
             this.canvas.height
         );
 
@@ -174,12 +180,12 @@ class World {
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.throwableObjects);
 
-        
-        
-        
+
+
+
 
         this.ctx.translate(-this.camPosX, 0);
-        
+
 
         // draw() wird immer wieder aufgerufen
         requestAnimationFrame(() => {
