@@ -26,11 +26,15 @@ class World {
 
     checkingFunctionLoop() {
         setInterval(() => {
-            
             this.checkCollisions();
             this.checkThrowBottle();
             this.checkCharacterNearBoss();
+            this.checkCharacterGotChickenHit();
         }, 100);
+
+        setInterval(() => {
+            this.checkCharacterChickenCollision();
+        }, 1000 / 60);
     }
 
     checkCharacterNearBoss() {
@@ -62,21 +66,34 @@ class World {
         }
     }
 
-    //! TODO: -> Albert morgen im Call fragen wieso die großen chickens nur gekillt werden können wenn ich nach links schaue
-    //! TODO: -> und bei den kleinen nach rechts
-    checkCollisions() {
+    //TODO: -> Delete throwable object when hit a chicken, the boss or the ground posY = 260ish?
+    checkCharacterGotChickenHit() {
         this.level.enemies.forEach( enemy => {
             if (this.character.isColliding(enemy)) {
                 this.character.getHit();
                 this.healthStatusBar.setHealthPercentage(this.character.healthPoints, this.ctx);
             }
+        })
+    }
 
+    checkCharacterChickenCollision() {
+        this.level.enemies.forEach( enemy => {
             //! Add that big chickens can drop with a 10% chance a bottle and if there are no chickens left in total, add mby 5 new each
             if (this.character.isColliding(enemy) && this.character.isNotOnGround() && this.character.speedPosY < 0) { // speedY
                 let enemieIndex = this.level.enemies.indexOf(enemy);
                 this.level.enemies.splice(enemieIndex, 1);
+
+                let randomNumber = Math.random() * 10; // Random num 1 - 10
+                if (randomNumber == 10) {
+                    //TODO: Write new addToMap func which is pretty similar, just to add the bottle at the pos of dead chicken or something
+                }
             }
         });
+    }
+
+    //! TODO: -> Wie es aussieht werden die chicken nur getroffen wenn man nicht direkt mittig auf sie drauf springt
+    checkCollisions() {
+        
 
         this.level.coins.forEach( coin => {
             if (this.character.isColliding(coin)) {
@@ -96,7 +113,6 @@ class World {
 
                 let bottleIndex = this.level.bottles.indexOf(bottle);
                 this.level.bottles.splice(bottleIndex, 1);
-                this.draw();
             }
         });
 
@@ -139,6 +155,9 @@ class World {
 
         this.addToMap(this.bottleStatusBar);
         this.drawStatusText(this.character.bottles, this.ctx, 265, 210);
+
+        // Chickens left text
+        this.drawStatusText("Current chickens: " + this.level.enemies.length, this.ctx, 38, 250);
 
         if (this.character.positionX >= 8350) {
             this.addToMap(this.endbossStatusBar);

@@ -1,5 +1,5 @@
 class Character extends MovableObject {
-    positionY = 250; // Standard Y = 250px
+    positionY = 255; // Standard Y = 250px
     positionX = 25;
     height = 400;
     width = 200;
@@ -148,6 +148,7 @@ class Character extends MovableObject {
         setInterval( () => {
             this.movingSpeed = 35;
             this.healthPoints = 150;
+            this.bottles = 20;
             //TODO: After the implementation of being able to throw only 1 bottle in a sec for e.g.
             //TODO: i need infinite bottles here 
         }, 250);
