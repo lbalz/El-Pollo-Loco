@@ -26,15 +26,16 @@ class World {
 
     checkingFunctionLoop() {
         setInterval(() => {
-            this.checkCollectables();
+            
             this.checkThrowBottle();
             this.checkCharacterNearBoss();
             this.checkCharacterGotChickenHit();
         }, 100);
 
         setInterval(() => {
-            this.checkCharacterChickenCollision();
+            this.checkCharacterJumpOnChicken();
             this.checkBottleCollision();
+            this.checkCollectables();
         }, 1000 / 60);
     }
 
@@ -89,7 +90,7 @@ class World {
         })
     }
 
-    checkCharacterChickenCollision() {
+    checkCharacterJumpOnChicken() {
         this.level.enemies.forEach(enemy => {
             //! Add that big chickens can drop with a 10% chance a bottle and if there are no chickens left in total, add mby 5 new each
             if (this.character.isColliding(enemy) && this.character.isNotOnGround() && this.character.speedPosY < 0) { // speedY
