@@ -85,15 +85,15 @@ class StatusBar extends DrawableObject {
     }
 
     getEndbossHealthImageIndex() {
-        if (this.healthPercentage >= 100) {
+        if (this.endbossHealthPercentage >= 200) {
             return 5;
-        } else if (this.healthPercentage > 80) {
+        } else if (this.endbossHealthPercentage >= 150) {
             return 4;
-        } else if (this.healthPercentage > 60) {
+        } else if (this.endbossHealthPercentage >= 100) {
             return 3;
-        } else if (this.healthPercentage > 40) {
+        } else if (this.endbossHealthPercentage >= 50) {
             return 2;
-        } else if (this.healthPercentage > 20) {
+        } else if (this.endbossHealthPercentage > 0) {
             return 1;
         } else {
             return 0;

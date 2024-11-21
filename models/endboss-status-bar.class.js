@@ -17,6 +17,6 @@ class EndbossStatusBar extends StatusBar {
         this.positionY = 10;
         this.width = 300;
         this.height = 75;
-        this.setEndbossHealthPercentage(100);
+        this.setEndbossHealthPercentage(250);
     }
 }

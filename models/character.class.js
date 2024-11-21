@@ -14,7 +14,6 @@ class Character extends MovableObject {
 
     world;
 
-    //TODO: -> IDLE ANIMATION muss immer laufen wenn nix passiert, weder dmg noch laufen oder jump
 
     PEPE_WALKING_IMAGE_PATHS = [
         './img/2_character_pepe/2_walk/W-21.png',
@@ -67,16 +66,16 @@ class Character extends MovableObject {
     ];
 
     PEPE_LONG_IDLE_IMAGE_PATHS = [
-        './img/2_character_pepe/1_idle/idle/I-11.png',
-        './img/2_character_pepe/1_idle/idle/I-12.png',
-        './img/2_character_pepe/1_idle/idle/I-13.png',
-        './img/2_character_pepe/1_idle/idle/I-14.png',
-        './img/2_character_pepe/1_idle/idle/I-15.png',
-        './img/2_character_pepe/1_idle/idle/I-16.png',
-        './img/2_character_pepe/1_idle/idle/I-17.png',
-        './img/2_character_pepe/1_idle/idle/I-18.png',
-        './img/2_character_pepe/1_idle/idle/I-19.png',
-        './img/2_character_pepe/1_idle/idle/I-20.png',
+        './img/2_character_pepe/1_idle/long_idle/I-11.png',
+        './img/2_character_pepe/1_idle/long_idle/I-12.png',
+        './img/2_character_pepe/1_idle/long_idle/I-13.png',
+        './img/2_character_pepe/1_idle/long_idle/I-14.png',
+        './img/2_character_pepe/1_idle/long_idle/I-15.png',
+        './img/2_character_pepe/1_idle/long_idle/I-16.png',
+        './img/2_character_pepe/1_idle/long_idle/I-17.png',
+        './img/2_character_pepe/1_idle/long_idle/I-18.png',
+        './img/2_character_pepe/1_idle/long_idle/I-19.png',
+        './img/2_character_pepe/1_idle/long_idle/I-20.png',
     ];
 
     walkingSound = new Audio('./audio/walking_steps.mp3');
@@ -98,7 +97,7 @@ class Character extends MovableObject {
         this.loadImages(this.PEPE_LONG_IDLE_IMAGE_PATHS);
         this.applyGravity();
         this.animate();
-        this.godMode(); // Godmode for developing game without dying and inifite bottles
+        // this.godMode(); // Godmode for developing game without dying and inifite bottles
     }
 
     animate() {
@@ -129,7 +128,7 @@ class Character extends MovableObject {
                 if (!this.isNotOnGround()) {
                     this.walkingSound.play();
                 }
-                console.log("Current positionX", this.positionX);
+                //! console.log("Current positionX", this.positionX);
             }
             
             if (this.world.keyboard.LEFT && this.positionX > 0) {
@@ -139,7 +138,7 @@ class Character extends MovableObject {
                 if (!this.isNotOnGround()) {
                     this.walkingSound.play();
                 }
-                console.log("Current positionX", this.positionX);
+                //! console.log("Current positionX", this.positionX);
             }
 
             
@@ -166,6 +165,7 @@ class Character extends MovableObject {
                 this.playAnimation(this.PEPE_WALKING_IMAGE_PATHS);
             } else {
                 this.playAnimation(this.PEPE_IDLE_IMAGE_PATHS);
+                //TODO: -> Long Idle?
             }
         }, 50);
     }
@@ -175,10 +175,12 @@ class Character extends MovableObject {
     }
 
     godMode() {
+        this.bottles = 20;
+        this.coins = 20;
         setInterval( () => {
             this.movingSpeed = 35;
             this.healthPoints = 150;
-            this.bottles = 20;
+            
             //TODO: After the implementation of being able to throw only 1 bottle in a sec for e.g.
             //TODO: i need infinite bottles here 
         }, 250);

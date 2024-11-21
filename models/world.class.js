@@ -10,6 +10,8 @@ class World {
     bottleStatusBar = new BottleStatusBar();
     endbossStatusBar = new EndbossStatusBar();
     throwableObjects = [];
+    
+
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -26,23 +28,18 @@ class World {
 
     checkingFunctionLoop() {
         setInterval(() => {
-            
+
             this.checkThrowBottle();
-            this.checkCharacterNearBoss();
             this.checkCharacterGotChickenHit();
         }, 100);
 
         setInterval(() => {
             this.checkCharacterJumpOnChicken();
-            this.checkBottleCollision();
+            this.checkBottleCollisionWithGround();
             this.checkCollectables();
+            this.checkBottleCollisionWithChicken();
+            this.checkBottleCollisionWithEndboss();
         }, 1000 / 60);
-    }
-
-    checkCharacterNearBoss() {
-        if (this.character.positionX >= 8350) {
-            this.endbossStatusBar
-        }
     }
 
     checkThrowBottle() {
@@ -68,13 +65,62 @@ class World {
         }
     }
 
-    checkBottleCollision() {
+    checkBottleCollisionWithGround() {
         if (this.character.world.throwableObjects.length > 0) {
             this.character.world.throwableObjects.forEach(bottle => {
                 if (bottle.positionY >= 560) {
                     let bottleIndex = this.character.world.throwableObjects.indexOf(bottle);
                     this.character.world.throwableObjects.splice(bottleIndex, 1);
                     console.log("Bottle")
+                }
+            });
+        }
+    }
+
+    checkBottleCollisionWithChicken() {
+        if (this.character.world.throwableObjects.length > 0) {
+            this.character.world.throwableObjects.forEach(bottle => {
+                this.level.enemies.forEach(enemy => {
+                    if (bottle.isColliding(enemy)) {
+                        let bottleIndex = this.character.world.throwableObjects.indexOf(bottle);
+                        let enemyIndex = this.level.enemies.indexOf(enemy);
+
+                        this.character.world.throwableObjects.splice(bottleIndex, 1);
+                        this.level.enemies.splice(enemyIndex, 1);
+
+                        let randomNumber = Math.round(Math.random() * 8); // Random num 1 - 8
+                        console.log(randomNumber);
+                        if (randomNumber == 8) {
+                            this.character.bottles += 1;
+                            console.log("Added new Bottle for killing chicken");
+                        }
+                        console.log("Bottle killed Chicken!");
+                    }
+                })
+            });
+        }
+    }
+
+    checkBottleCollisionWithEndboss() {
+        if (this.character.world.throwableObjects.length > 0) {
+            this.character.world.throwableObjects.forEach(bottle => {
+                if (bottle.isColliding(this.level.endboss[0])) {
+                    let bottleIndex = this.character.world.throwableObjects.indexOf(bottle);
+                    this.character.world.throwableObjects.splice(bottleIndex, 1);
+                    this.level.endboss[0].endbossHealth -= 25;
+                    this.level.endboss[0].animateHurtChickenEndboss();
+                    this.endbossStatusBar.setEndbossHealthPercentage(this.level.endboss[0].endbossHealth);
+
+                    if (this.level.endboss[0].endbossHealth <= 0) {
+                        this.level.endboss[0].animateDeadChickenEndboss();
+
+                        //! TODO: -> setInterval gibt als return wert eine id wieder, diese interval ID muss gespeichert werden
+                        //! TODO: -> und hier dann irgendwie genutzt werden um den interval der animation zu stoppen, vlt kann
+                        //! TODO: -> dann dadurch ja die neue animation ablaufen etc.
+                        setTimeout(() => {
+                            this.level.endboss.splice(1, 1);
+                        }, 2500);
+                    }
                 }
             });
         }
@@ -97,9 +143,19 @@ class World {
                 let enemieIndex = this.level.enemies.indexOf(enemy);
                 this.level.enemies.splice(enemieIndex, 1);
 
-                let randomNumber = Math.random() * 10; // Random num 1 - 10
-                if (randomNumber == 10) {
-                    //TODO: Write new addToMap func which is pretty similar, just to add the bottle at the pos of dead chicken or something
+                let randomNumber = Math.round(Math.random() * 8); // Random num 1 - 8
+                console.log(randomNumber);
+                if (randomNumber == 8) {
+                    this.character.bottles += 1;
+                    console.log("Added new Bottle for killing chicken");
+                }
+            }
+
+            //! TODO: -> Need to add and fix that if there are no chickens left, there will be added 5 of each 
+            if (this.level.enemies.length == 0) {
+                for (let i = 0; i < 5; i++) {
+                    this.addToMap(new BigChicken());
+                    this.addToMap(new SmallChicken());
                 }
             }
         });
@@ -127,14 +183,7 @@ class World {
         });
     }
 
-    checkBottleCollisionChicken() {
-        this.level.enemies.forEach((enemy, index) => {
-            if (this.world.throwableObjects[index].positionX == enemy.positionX &&
-                this.world.throwableObjects[index].positionY == enemy.positionY) {
-                //! Delete object but check this function, im not sure if this is the right if condition
-            }
-        })
-    }
+
 
     // Function draw to draw all images needed
     draw() {
@@ -158,18 +207,25 @@ class World {
         this.drawStatusText(this.character.healthPoints, this.ctx, 250, 60);
 
         this.addToMap(this.coinStatusBar);
-        this.drawStatusText(this.character.coins, this.ctx, 265, 135);
+        this.drawStatusText(this.character.coins, this.ctx, 250, 135);
 
         this.addToMap(this.bottleStatusBar);
-        this.drawStatusText(this.character.bottles, this.ctx, 265, 210);
+        this.drawStatusText(this.character.bottles, this.ctx, 250, 210);
 
         // Chickens left text
         this.drawStatusText("Current chickens: " + this.level.enemies.length, this.ctx, 38, 250);
 
-        if (this.character.positionX >= 8350) {
+
+        if (this.character.positionX >= 8350) { // 8350
             this.addToMap(this.endbossStatusBar);
+            if (this.level.endboss[0].endbossHealth > 0) {
+                this.drawStatusText(this.level.endboss[0].endbossHealth, this.ctx, 1000, 60);
+            } else {
+                this.drawStatusText(0, this.ctx, 1000, 60);
+            }
+            
             //! TODO: -> Endboss needs hp, check where character hp is created etc. pp
-            // this.drawStatusText(this.world.endboss, this.ctx, 265, 210);
+            
         }
 
         this.ctx.translate(this.camPosX, 0);
@@ -207,7 +263,7 @@ class World {
         }
 
         movableObject.draw(this.ctx);
-        movableObject.drawOffsetFrame(this.ctx);
+        // movableObject.drawOffsetFrame(this.ctx); // Need offset frame for dev mode
 
         if (movableObject.otherDirection) {
             this.restoreFlippedImage(movableObject);

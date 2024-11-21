@@ -2,12 +2,18 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 
+let backgroundSound = new Audio('./audio/mexican_song_background.mp3');
+backgroundSound.volume = 0.3;
+backgroundSound.loop = true;
+backgroundSound.play();
+
 // drawImage(img, x, y, width, height)
 
 function init() {
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
 
+    backgroundSound.play();
     console.log(world.character, world.enemies);
 }
 

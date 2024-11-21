@@ -9,6 +9,8 @@ class MovableObject extends DrawableObject {
     lastCoinHit = 0;
     bottles = 0;
     lastBottlesHit = 0;
+    endbossHealth = 250;
+    bottleDamage = 25;
 
 
 

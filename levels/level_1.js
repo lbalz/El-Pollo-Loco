@@ -1,5 +1,5 @@
-let numOfBigChicken = 15;
-let numOfLittleChicken  = 15;
+let numOfBigChicken = 15; // 15
+let numOfLittleChicken  = 15; // 15
 let numOfBackgroundObjectGroups = 10;
 let numOfClouds = 10;
 let numOfCoins = 20;
