@@ -78,6 +78,26 @@ class World {
         window.location.reload();
     }
 
+    showGameOver() {
+        this.gameRunning = false;
+
+        let overlay = document.getElementById('overlay');
+        overlay.style.display = 'flex';
+        overlay.style.flexDirection = 'column';
+        overlay.style.gap = '20px';
+        overlay.innerHTML = `
+        <img src="${this.gameOverScreenImage.src}" alt="Game Over" style="width: 100%; height: 100%;">
+        <button id="resetButton">Reset Game</button>
+        `;
+        overlay.style.backgroundImage = 'none';
+
+        let resetButton = document.getElementById('resetButton');
+        resetButton.style.display = 'block';
+        resetButton.addEventListener('click', () => {
+            this.resetGame();
+        });
+    }
+
     checkThrowBottle() {
         if (this.character.bottles > 0) {
             if (this.character.otherDirection) {

@@ -57,6 +57,21 @@ canvas {
     font-family: 'MightySouly';
 }
 
+#resetButton {
+    width: 200px;
+    height: 50px;
+    background-color: orangered;
+    color: black;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: 'MightySouly';
+    position: absolute;
+    top: 80%;
+}
+
 #startButton:hover {
     background-color: black;
     color: white;
