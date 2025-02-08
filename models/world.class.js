@@ -10,6 +10,7 @@ class World {
     bottleStatusBar = new BottleStatusBar();
     endbossStatusBar = new EndbossStatusBar();
     throwableObjects = [];
+    lastHitTime = 0;
     
 
 
@@ -130,8 +131,14 @@ class World {
     checkCharacterGotChickenHit() {
         this.level.enemies.forEach(enemy => {
             if (this.character.isColliding(enemy)) {
-                this.character.getHit();
-                this.healthStatusBar.setHealthPercentage(this.character.healthPoints, this.ctx);
+                // console.log("Character got hit by chicken");
+                let currentTime = Date.now();
+                if (currentTime - this.lastHitTime > 1000) {
+                    this.character.getHit();
+                    console.log("Character got hit by chicken");
+                    this.healthStatusBar.setHealthPercentage(this.character.healthPoints, this.ctx);
+                    this.lastHitTime = currentTime;
+                }
             }
         })
     }
