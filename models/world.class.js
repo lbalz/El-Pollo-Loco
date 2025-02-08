@@ -11,16 +11,28 @@ class World {
     endbossStatusBar = new EndbossStatusBar();
     throwableObjects = [];
     lastHitTime = 0;
-    
+    gameRunning = false;
+    startScreenImage = new Image();
+    gameOverScreenImage = new Image();
+    winScreenImage = new Image();
+    gameState = 'start'; // States: start, running, gameover, win
+
 
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
-        this.draw();
+        this.loadStartAndEndImages();
+        // this.draw();
         this.setWorld();
         this.checkingFunctionLoop();
+    }
+
+    loadStartAndEndImages() {
+        this.startScreenImage.src = "./img/9_intro_outro_screens/start/startscreen_1.png";
+        this.gameOverScreenImage.src = "./img/9_intro_outro_screens/game_over/game over.png";
+        this.winScreenImage.src = "./img/9_intro_outro_screens/win/win_1.png";
     }
 
     setWorld() {
@@ -29,18 +41,41 @@ class World {
 
     checkingFunctionLoop() {
         setInterval(() => {
+            if (this.gameState === 'running') {
+                this.checkThrowBottle();
+                this.checkCharacterGotChickenHit();
 
-            this.checkThrowBottle();
-            this.checkCharacterGotChickenHit();
+                if (this.character.isDead()) {
+                    this.gameState = 'gameover';
+                    this.showGameOver();
+                }
+
+                if (this.level.endboss.length > 0 && this.level.endboss[0].endbossHealth <= 0) {
+                    this.gameState = 'win';
+                    this.showWin();
+                }
+            }
         }, 100);
 
         setInterval(() => {
-            this.checkCharacterJumpOnChicken();
-            this.checkBottleCollisionWithGround();
-            this.checkCollectables();
-            this.checkBottleCollisionWithChicken();
-            this.checkBottleCollisionWithEndboss();
+            if (this.gameState === 'running') {
+                this.checkCharacterJumpOnChicken();
+                this.checkBottleCollisionWithGround();
+                this.checkCollectables();
+                this.checkBottleCollisionWithChicken();
+                this.checkBottleCollisionWithEndboss();
+            }
         }, 1000 / 60);
+    }
+
+    startGame() {
+        this.gameState = 'running';
+        this.gameRunning = true;
+        this.draw();
+    }
+
+    resetGame() {
+        window.location.reload();
     }
 
     checkThrowBottle() {
@@ -140,8 +175,8 @@ class World {
                     this.lastHitTime = currentTime;
                 }
             }
-        })
-    }
+        });
+    };
 
     checkCharacterJumpOnChicken() {
         this.level.enemies.forEach(enemy => {
@@ -230,9 +265,9 @@ class World {
             } else {
                 this.drawStatusText(0, this.ctx, 1000, 60);
             }
-            
+
             //! TODO: -> Endboss needs hp, check where character hp is created etc. pp
-            
+
         }
 
         this.ctx.translate(this.camPosX, 0);

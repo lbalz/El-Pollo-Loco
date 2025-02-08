@@ -5,31 +5,37 @@ let numOfClouds = 10;
 let numOfCoins = 20;
 let numOfBottles = 10;
 let imagePositionX = 1079;
+let level_1;
 
-//! TODO: Add coins & Bottles
-const level_1 = new Level(
-    [
-        ...generateBigChicken(numOfBigChicken),
-        ...generateSmallChicken(numOfLittleChicken)
-    ],
-    [
-        new Endboss()
-    ],
-    [
-        //TODO: FIX -> Need to Fix Cloud Movement, and generate random posX
-        ...generateClouds(numOfClouds)
-    ],
-    [
-        ...generateFirstPlaygroundBGObjectGroupLayer(),
-        ...generatePlaygroundBackgroundObjectGroups(numOfBackgroundObjectGroups)
-    ],
-    [
-        ...generateCoins(numOfCoins)
-    ],
-    [
-        ...generateBottles(numOfBottles)
-    ]
-);
+function initLevel() {
+    level_1 = new Level(
+        [
+            ...generateBigChicken(numOfBigChicken),
+            ...generateSmallChicken(numOfLittleChicken)
+        ],
+        [
+            new Endboss()
+        ],
+        [
+            //TODO: FIX -> Need to Fix Cloud Movement, and generate random posX
+            ...generateClouds(numOfClouds)
+        ],
+        [
+            ...generateFirstPlaygroundBGObjectGroupLayer(),
+            ...generatePlaygroundBackgroundObjectGroups(numOfBackgroundObjectGroups)
+        ],
+        [
+            ...generateCoins(numOfCoins)
+        ],
+        [
+            ...generateBottles(numOfBottles)
+        ]
+    );
+}
+
+function resetLevel() {
+    window.location.reload();
+}
 
 function generateBigChicken(num) {
     const bigChicken = [];
@@ -88,9 +94,6 @@ function generatePlaygroundBackgroundObjectGroups(num) {
     return pbgObjectGroups;
 }
 
-//TODO: For now its just random generated Coins over the whole world,
-//TODO: mby refactor lator to make Coin Groups where for e.g. 5 Coins are in a row
-//TODO: and this in different y directions to collect
 function generateCoins(num) {
     const coins = []
     for (let i = 0; i < num; i++) {

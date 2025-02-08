@@ -30,6 +30,45 @@ canvas {
 }
 
 .overlay {
+    width: 1080px;
+    height: 720px;
+    position: fixed;
+    background-image: url('./img/9_intro_outro_screens/start/startscreen_1.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: white;
+    margin-top: 136px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#startButton {
+    width: 200px;
+    height: 50px;
+    background-color: orangered;
+    color: black;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: 'MightySouly';
+}
+
+#startButton:hover {
+    background-color: black;
+    color: white;
+}
+
+.start-image {
+    width: 1080px;
+    height: 720px;
+
+}
+
+.turn-device-overlay {
     width: 100%;
     height: 100%;
     display: none;
@@ -42,6 +81,9 @@ canvas {
     z-index: 1;
 }
 
+.turn-device-overlay>h1 {
+    color: white;
+}
 
 
 

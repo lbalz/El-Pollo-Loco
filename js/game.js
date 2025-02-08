@@ -10,11 +10,16 @@ backgroundSound.play();
 // drawImage(img, x, y, width, height)
 
 function init() {
-    canvas = document.getElementById('canvas');
-    world = new World(canvas, keyboard);
+    document.getElementById('startButton').addEventListener('click', startGame);
+}
 
+function startGame() {
     backgroundSound.play();
-    console.log(world.character, world.enemies);
+    canvas = document.getElementById('canvas');
+    initLevel();
+    world = new World(canvas, keyboard);
+    document.getElementById('overlay').style.display = 'none';
+    world.startGame();
 }
 
 
