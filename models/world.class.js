@@ -32,7 +32,7 @@ class World {
     loadStartAndEndImages() {
         this.startScreenImage.src = "./img/9_intro_outro_screens/start/startscreen_1.png";
         this.gameOverScreenImage.src = "./img/9_intro_outro_screens/game_over/game over.png";
-        this.winScreenImage.src = "./img/9_intro_outro_screens/win/win_1.png";
+        this.winScreenImage.src = "./img/9_intro_outro_screens/win/win_2.png";
     }
 
     setWorld() {
@@ -90,6 +90,29 @@ class World {
         <button id="resetButton">Reset Game</button>
         `;
         overlay.style.backgroundImage = 'none';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+
+        let resetButton = document.getElementById('resetButton');
+        resetButton.style.display = 'block';
+        resetButton.addEventListener('click', () => {
+            this.resetGame();
+        });
+    }
+    //! TODO: Wenn gameover oder gamewin ist muss die steuereung des characters deaktiviert werden
+
+    showWin() {
+        this.gameRunning = false;
+
+        let overlay = document.getElementById('overlay');
+        overlay.style.display = 'flex';
+        overlay.style.flexDirection = 'column';
+        overlay.style.gap = '20px';
+        overlay.innerHTML = `
+        <img src="${this.winScreenImage.src}" alt="Game Over" style="width: 100%; height: 100%;">
+        <button id="resetButton">Reset Game</button>
+        `;
+        overlay.style.backgroundImage = 'none';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
 
         let resetButton = document.getElementById('resetButton');
         resetButton.style.display = 'block';
