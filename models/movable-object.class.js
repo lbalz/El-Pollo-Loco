@@ -3,7 +3,7 @@ class MovableObject extends DrawableObject {
     otherDirection = false;
     speedPosY = 0;
     characterAcceleration = 2.5; // Beschleunigung
-    healthPoints = 100;
+    healthPoints = 5;
     lastHit = 0;
     coins = 0;
     lastCoinHit = 0;

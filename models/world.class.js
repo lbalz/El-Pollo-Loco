@@ -24,7 +24,6 @@ class World {
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.loadStartAndEndImages();
-        // this.draw();
         this.setWorld();
         this.checkingFunctionLoop();
     }
@@ -193,9 +192,6 @@ class World {
                     if (this.level.endboss[0].endbossHealth <= 0) {
                         this.level.endboss[0].animateDeadChickenEndboss();
 
-                        //! TODO: -> setInterval gibt als return wert eine id wieder, diese interval ID muss gespeichert werden
-                        //! TODO: -> und hier dann irgendwie genutzt werden um den interval der animation zu stoppen, vlt kann
-                        //! TODO: -> dann dadurch ja die neue animation ablaufen etc.
                         setTimeout(() => {
                             this.level.endboss.splice(1, 1);
                         }, 2500);
@@ -205,11 +201,9 @@ class World {
         }
     }
 
-    //TODO: -> Delete throwable object when hit a chicken, the boss or the ground posY = 260ish?
     checkCharacterGotChickenHit() {
         this.level.enemies.forEach(enemy => {
             if (this.character.isColliding(enemy)) {
-                // console.log("Character got hit by chicken");
                 let currentTime = Date.now();
                 if (currentTime - this.lastHitTime > 1000) {
                     this.character.getHit();
@@ -223,7 +217,6 @@ class World {
 
     checkCharacterJumpOnChicken() {
         this.level.enemies.forEach(enemy => {
-            //! Add that big chickens can drop with a 10% chance a bottle and if there are no chickens left in total, add mby 5 new each
             if (this.character.isColliding(enemy) && this.character.isNotOnGround() && this.character.speedPosY < 0) { // speedY
                 let enemieIndex = this.level.enemies.indexOf(enemy);
                 this.level.enemies.splice(enemieIndex, 1);
@@ -236,7 +229,6 @@ class World {
                 }
             }
 
-            //! TODO: -> Need to add and fix that if there are no chickens left, there will be added 5 of each 
             if (this.level.enemies.length == 0) {
                 for (let i = 0; i < 5; i++) {
                     this.addToMap(new BigChicken());
@@ -268,10 +260,26 @@ class World {
         });
     }
 
-
+    drawLastFrame() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.translate(this.camPosX, 0);
+        this.addObjectsToMap(this.level.backgroundObjects);
+        this.addObjectsToMap(this.level.clouds);
+        this.addObjectsToMap(this.level.enemies);
+        this.ctx.translate(-this.camPosX, 0);
+        // Draw status bars
+        this.addToMap(this.healthStatusBar);
+        this.addToMap(this.coinStatusBar);
+        this.addToMap(this.bottleStatusBar);
+    }
 
     // Function draw to draw all images needed
     draw() {
+        if (this.gameState !== 'running') {
+            this.drawLastFrame();
+            return;
+        }
+
         // Clear Canvas
         this.ctx.clearRect(
             0,
@@ -308,9 +316,6 @@ class World {
             } else {
                 this.drawStatusText(0, this.ctx, 1000, 60);
             }
-
-            //! TODO: -> Endboss needs hp, check where character hp is created etc. pp
-
         }
 
         this.ctx.translate(this.camPosX, 0);
@@ -321,10 +326,6 @@ class World {
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.throwableObjects);
-
-
-
-
 
         this.ctx.translate(-this.camPosX, 0);
 
