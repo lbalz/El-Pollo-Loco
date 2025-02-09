@@ -179,23 +179,15 @@ class World {
         }
     }
 
+
     checkBottleCollisionWithEndboss() {
-        if (this.character.world.throwableObjects.length > 0) {
-            this.character.world.throwableObjects.forEach(bottle => {
+        if (this.throwableObjects.length > 0) {
+            this.throwableObjects.forEach(bottle => {
                 if (bottle.isColliding(this.level.endboss[0])) {
-                    let bottleIndex = this.character.world.throwableObjects.indexOf(bottle);
-                    this.character.world.throwableObjects.splice(bottleIndex, 1);
-                    this.level.endboss[0].endbossHealth -= 25;
-                    this.level.endboss[0].animateHurtChickenEndboss();
+                    let bottleIndex = this.throwableObjects.indexOf(bottle);
+                    this.throwableObjects.splice(bottleIndex, 1);
+                    this.level.endboss[0].hit();
                     this.endbossStatusBar.setEndbossHealthPercentage(this.level.endboss[0].endbossHealth);
-
-                    if (this.level.endboss[0].endbossHealth <= 0) {
-                        this.level.endboss[0].animateDeadChickenEndboss();
-
-                        setTimeout(() => {
-                            this.level.endboss.splice(1, 1);
-                        }, 2500);
-                    }
                 }
             });
         }
@@ -213,6 +205,18 @@ class World {
                 }
             }
         });
+
+        if (this.level.endboss.length > 0) {
+            let endboss = this.level.endboss[0];
+            if (this.character.isColliding(endboss) && endboss.state === 'attacking') {
+                let currentTime = Date.now();
+                if (currentTime - this.lastHitTime > 1000) {
+                    this.character.healthPoints -= 20; // Endboss does more damage
+                    this.healthStatusBar.setHealthPercentage(this.character.healthPoints, this.ctx);
+                    this.lastHitTime = currentTime;
+                }
+            }
+        }
     };
 
     checkCharacterJumpOnChicken() {
@@ -310,6 +314,15 @@ class World {
 
 
         if (this.character.positionX >= 8350) { // 8350
+            this.addToMap(this.endbossStatusBar);
+            if (this.level.endboss[0].endbossHealth > 0) {
+                this.drawStatusText(this.level.endboss[0].endbossHealth, this.ctx, 1000, 60);
+            } else {
+                this.drawStatusText(0, this.ctx, 1000, 60);
+            }
+        }
+
+        if (this.level.endboss[0].hasFirstEncounterOccurred) {
             this.addToMap(this.endbossStatusBar);
             if (this.level.endboss[0].endbossHealth > 0) {
                 this.drawStatusText(this.level.endboss[0].endbossHealth, this.ctx, 1000, 60);
