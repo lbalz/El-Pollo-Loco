@@ -151,8 +151,6 @@ class Endboss extends MovableObject {
             this.isJumping = true;
             let currentFrame = 0;
             let jumpHeight = 0;
-            // let startPosY = this.positionY;
-            let startPosX = this.positionX;
             let targetPosX = world.character.positionX;
             let jumpDirection = targetPosX > this.positionX ? 1 : -1;
 
@@ -179,7 +177,6 @@ class Endboss extends MovableObject {
                         if (world.character.healthPoints <= 0) {
                             world.character.healthPoints = 0;  // Prevent negative health
                             world.gameState = 'lose';
-                            world.showLose();
                             clearInterval(attackInterval);  // Stop attack animation
                         }
                     }

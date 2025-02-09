@@ -101,7 +101,7 @@ class Character extends MovableObject {
         this.loadImages(this.PEPE_LONG_IDLE_IMAGE_PATHS);
         this.applyGravity();
         this.animate();
-        // this.godMode(); // Godmode for developing game without dying and inifite bottles
+        this.godMode(); // Godmode for developing game without dying and inifite bottles
     }
 
     animate() {

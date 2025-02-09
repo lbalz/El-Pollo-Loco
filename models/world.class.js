@@ -46,12 +46,16 @@ class World {
 
                 if (this.character.isDead()) {
                     this.gameState = 'gameover';
-                    this.showGameOver();
+                    setTimeout(() => {
+                        this.showGameOver();
+                    }, 50);
                 }
 
                 if (this.level.endboss.length > 0 && this.level.endboss[0].endbossHealth <= 0) {
                     this.gameState = 'win';
-                    this.showWin();
+                    setTimeout(() => {
+                        this.showWin();
+                    }, 50);
                 }
             }
         }, 100);
