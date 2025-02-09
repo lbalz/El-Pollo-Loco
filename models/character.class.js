@@ -4,7 +4,7 @@ class Character extends MovableObject {
     height = 400;
     width = 200;
     movingSpeed = 15;
-
+    world;
     offset = {
         top: 150,
         right: 30,
@@ -12,7 +12,11 @@ class Character extends MovableObject {
         left: 30
     };
 
-    world;
+    lastMovement = new Date().getTime();
+    idleTimer = 0;
+    IDLE_ANIMATION_SPEED = 200; // ms
+    LONG_IDLE_DELAY = 5000; // ms
+    currentAnimation = 'idle';
 
 
     PEPE_WALKING_IMAGE_PATHS = [
@@ -121,6 +125,12 @@ class Character extends MovableObject {
 
         setInterval(() => {
             this.walkingSound.pause();
+
+            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.UP || this.world.keyboard.SPACE) {
+                this.lastMovement = new Date().getTime();
+                this.currentAnimation = 'walking';
+            }
+
             if (this.world.keyboard.RIGHT && this.positionX < this.world.level.characterLevelEndPosX) {
                 // Character moving to the right
                 this.movingRight();
@@ -128,7 +138,6 @@ class Character extends MovableObject {
                 if (!this.isNotOnGround()) {
                     this.walkingSound.play();
                 }
-                //! console.log("Current positionX", this.positionX);
             }
             
             if (this.world.keyboard.LEFT && this.positionX > 0) {
@@ -138,9 +147,7 @@ class Character extends MovableObject {
                 if (!this.isNotOnGround()) {
                     this.walkingSound.play();
                 }
-                //! console.log("Current positionX", this.positionX);
             }
-
             
             if ((this.world.keyboard.UP || this.world.keyboard.SPACE) && !this.isNotOnGround()) {
                 this.jumpingSound.play();
@@ -155,21 +162,37 @@ class Character extends MovableObject {
 
             if (this.isDead()) {
                 this.playAnimation(this.PEPE_DYING_IMAGE_PATHS);
-                //! Nur 1x abspielen und dann Game Over screen anzeigen
             } else if (this.isHurt()) {
                 this.playAnimation(this.PEPE_HURT_IMAGE_PATHS);
             } else if(this.isNotOnGround()) {
                 this.playAnimation(this.PEPE_JUMPING_IMAGE_PATHS);
-            } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                // Walk animation
-                this.playAnimation(this.PEPE_WALKING_IMAGE_PATHS);
             } else {
-                this.playAnimation(this.PEPE_IDLE_IMAGE_PATHS);
-                //TODO: -> Long Idle?
+                this.updateIdleAnimations();
             }
-        }, 50);
+        }, this.IDLE_ANIMATION_SPEED);
     }
     
+    updateIdleAnimations() {
+        let currentTime = new Date().getTime();
+        let timeSinceLastMovement = currentTime - this.lastMovement;
+
+        if (timeSinceLastMovement > this.LONG_IDLE_DELAY) { 
+            if (this.currentAnimation !== 'long_idle') {
+                this.currentAnimation = 'long_idle';
+                this.idleTimer = 0;
+            }
+            this.playAnimation(this.PEPE_LONG_IDLE_IMAGE_PATHS);
+        } else if (!this.world.keyboard.RIGHT && !this.world.keyboard.LEFT) {
+            if (this.currentAnimation !== 'idle') {
+                this.currentAnimation = 'idle';
+                this.idleTimer = 0;
+            }
+            this.playAnimation(this.PEPE_IDLE_IMAGE_PATHS);
+        } else {
+            this.playAnimation(this.PEPE_WALKING_IMAGE_PATHS);
+        }
+    }
+
     jump() {
         this.speedPosY = 35;
     }
