@@ -194,6 +194,7 @@ class Character extends MovableObject {
     }
 
     jump() {
+        if (this.healthPoints <= 0) return;
         this.speedPosY = 35;
     }
 

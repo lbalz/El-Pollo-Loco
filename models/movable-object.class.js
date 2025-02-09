@@ -84,14 +84,17 @@ class MovableObject extends DrawableObject {
     }
 
     movingRight() {
+        if (this.healthPoints <= 0) return;
         this.positionX += this.movingSpeed;
     }
 
     movingLeft() {
+        if (this.healthPoints <= 0) return;
         this.positionX -= this.movingSpeed;
     }
 
     jump() {
+        if (this.healthPoints <= 0) return;
         this.speedPosY = 35;
     }
 }

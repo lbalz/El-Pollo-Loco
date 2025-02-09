@@ -175,6 +175,13 @@ class Endboss extends MovableObject {
                     if (this.isColliding(world.character)) {
                         world.character.healthPoints -= 20;
                         world.healthStatusBar.setHealthPercentage(world.character.healthPoints);
+
+                        if (world.character.healthPoints <= 0) {
+                            world.character.healthPoints = 0;  // Prevent negative health
+                            world.gameState = 'lose';
+                            world.showLose();
+                            clearInterval(attackInterval);  // Stop attack animation
+                        }
                     }
                 }
     
