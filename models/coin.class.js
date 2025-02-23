@@ -11,7 +11,6 @@ class Coin extends DrawableObject {
         left: 80
     };
 
-    //! TODO: Need collision detections for Coins to collect 
     constructor(randomPosX, randomPosY) {
         super()
         this.loadImage('./img/8_coin/coin_1.png');

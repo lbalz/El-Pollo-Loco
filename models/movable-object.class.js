@@ -27,15 +27,15 @@ class MovableObject extends DrawableObject {
     }
 
     collectCoin() {
+        let collectCoinAudio = new Audio('./audio/collect_coin.mp3');
+        collectCoinAudio.play();
         this.coins += 1;
-
-        console.log(this.coins);
     }
 
     collectBottle() {
+        let collectBottleAudio = new Audio('./audio/collect_bottle.mp3');
+        collectBottleAudio.play();
         this.bottles += 1;
-
-        console.log(this.bottles);
     }
 
     getHit() {

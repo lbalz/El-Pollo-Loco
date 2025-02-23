@@ -25,6 +25,15 @@ h1 {
     margin: 0;
 }
 
+.volume {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+    color: white;
+    font-size: 1.5rem;
+}
+
 canvas {
     background-color: black;
 }

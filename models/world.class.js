@@ -101,7 +101,7 @@ class World {
             this.resetGame();
         });
     }
-    //! TODO: Wenn gameover oder gamewin ist muss die steuereung des characters deaktiviert werden
+    
 
     showWin() {
         this.gameRunning = false;
@@ -151,9 +151,11 @@ class World {
         if (this.character.world.throwableObjects.length > 0) {
             this.character.world.throwableObjects.forEach(bottle => {
                 if (bottle.positionY >= 560) {
+                    let bottleBreakSound = new Audio('./audio/glass_bottle_destroyed.mp3');
+                    bottleBreakSound.currentTime = 0.5;
+                    bottleBreakSound.play();
                     let bottleIndex = this.character.world.throwableObjects.indexOf(bottle);
                     this.character.world.throwableObjects.splice(bottleIndex, 1);
-                    console.log("Bottle")
                 }
             });
         }
@@ -164,6 +166,9 @@ class World {
             this.character.world.throwableObjects.forEach(bottle => {
                 this.level.enemies.forEach(enemy => {
                     if (bottle.isColliding(enemy)) {
+                        let chickenAudio = new Audio('./audio/chicken.mp3');
+                        chickenAudio.play();
+
                         let bottleIndex = this.character.world.throwableObjects.indexOf(bottle);
                         let enemyIndex = this.level.enemies.indexOf(enemy);
 
@@ -188,6 +193,9 @@ class World {
         if (this.throwableObjects.length > 0) {
             this.throwableObjects.forEach(bottle => {
                 if (bottle.isColliding(this.level.endboss[0])) {
+                    let chickenAudio = new Audio('./audio/chicken.mp3');
+                    chickenAudio.play();
+                    
                     let bottleIndex = this.throwableObjects.indexOf(bottle);
                     this.throwableObjects.splice(bottleIndex, 1);
                     this.level.endboss[0].hit();
@@ -226,6 +234,10 @@ class World {
     checkCharacterJumpOnChicken() {
         this.level.enemies.forEach(enemy => {
             if (this.character.isColliding(enemy) && this.character.isNotOnGround() && this.character.speedPosY < 0) { // speedY
+                let chickenAudio = new Audio('./audio/chicken.mp3');
+                chickenAudio.currentTime = 0.5;
+                chickenAudio.play();
+                
                 let enemieIndex = this.level.enemies.indexOf(enemy);
                 this.level.enemies.splice(enemieIndex, 1);
 

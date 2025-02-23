@@ -5,12 +5,11 @@ let keyboard = new Keyboard();
 let backgroundSound = new Audio('./audio/mexican_song_background.mp3');
 backgroundSound.volume = 0.3;
 backgroundSound.loop = true;
-backgroundSound.play();
 
-// drawImage(img, x, y, width, height)
 
 function init() {
     document.getElementById('startButton').addEventListener('click', startGame);
+    document.getElementById('volume').addEventListener('click', muteGame);
 }
 
 function startGame() {
@@ -22,6 +21,20 @@ function startGame() {
     world.startGame();
 }
 
+function muteGame() {
+    let volumeBtn = document.getElementById('volume');
+    if (backgroundSound.paused) {
+        backgroundSound.play();
+        volumeBtn.innerHTML = `
+            <img src="./img/volume_on.svg">
+        `;
+    } else {
+        backgroundSound.pause();
+        volumeBtn.innerHTML = `
+            <img src="./img/volume_mute.svg">
+        `;
+    }
+}
 
 // Eventlistener for keyboard keys
 window.addEventListener('keypress', event => {
@@ -48,7 +61,6 @@ window.addEventListener('keypress', event => {
 
         case "KeyF":
             keyboard.THROW = true;
-            console.log(keyboard.THROW);
             break;
 
         default:
@@ -126,7 +138,6 @@ window.addEventListener('keyup', event => {
 
         case "KeyF":
             keyboard.THROW = false;
-            console.log(keyboard.THROW);
             break;
         default:
             break;

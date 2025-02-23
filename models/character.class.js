@@ -101,7 +101,7 @@ class Character extends MovableObject {
         this.loadImages(this.PEPE_LONG_IDLE_IMAGE_PATHS);
         this.applyGravity();
         this.animate();
-        this.godMode(); // Godmode for developing game without dying and inifite bottles
+        // this.godMode(); // Godmode for developing game without dying and inifite bottles
     }
 
     animate() {
@@ -204,9 +204,6 @@ class Character extends MovableObject {
         setInterval( () => {
             this.movingSpeed = 35;
             this.healthPoints = 150;
-            
-            //TODO: After the implementation of being able to throw only 1 bottle in a sec for e.g.
-            //TODO: i need infinite bottles here 
         }, 250);
     }
 }
