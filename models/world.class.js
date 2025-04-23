@@ -53,9 +53,10 @@ class World {
 
                 if (this.level.endboss.length > 0 && this.level.endboss[0].endbossHealth <= 0) {
                     this.gameState = 'win';
+                    this.level.endboss[0].playDeadAnimation();
                     setTimeout(() => {
                         this.showWin();
-                    }, 50);
+                    }, 500);
                 }
             }
         }, 100);
@@ -132,7 +133,6 @@ class World {
                     this.throwableObjects.push(throwableBottle);
                     this.character.bottles -= 1;
                     this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
-                    console.log(this.keyboard);
                 }
 
             } else {
@@ -141,7 +141,6 @@ class World {
                     this.throwableObjects.push(throwableBottle);
                     this.character.bottles -= 1;
                     this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
-                    console.log(this.keyboard);
                 }
             }
         }
@@ -176,12 +175,9 @@ class World {
                         this.level.enemies.splice(enemyIndex, 1);
 
                         let randomNumber = Math.round(Math.random() * 8); // Random num 1 - 8
-                        console.log(randomNumber);
                         if (randomNumber == 8) {
                             this.character.bottles += 1;
-                            console.log("Added new Bottle for killing chicken");
                         }
-                        console.log("Bottle killed Chicken!");
                     }
                 })
             });
@@ -211,7 +207,6 @@ class World {
                 let currentTime = Date.now();
                 if (currentTime - this.lastHitTime > 1000) {
                     this.character.getHit();
-                    console.log("Character got hit by chicken");
                     this.healthStatusBar.setHealthPercentage(this.character.healthPoints, this.ctx);
                     this.lastHitTime = currentTime;
                 }
@@ -242,10 +237,8 @@ class World {
                 this.level.enemies.splice(enemieIndex, 1);
 
                 let randomNumber = Math.round(Math.random() * 8); // Random num 1 - 8
-                console.log(randomNumber);
                 if (randomNumber == 8) {
                     this.character.bottles += 1;
-                    console.log("Added new Bottle for killing chicken");
                 }
             }
 
@@ -280,25 +273,8 @@ class World {
         });
     }
 
-    drawLastFrame() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.translate(this.camPosX, 0);
-        this.addObjectsToMap(this.level.backgroundObjects);
-        this.addObjectsToMap(this.level.clouds);
-        this.addObjectsToMap(this.level.enemies);
-        this.ctx.translate(-this.camPosX, 0);
-        // Draw status bars
-        this.addToMap(this.healthStatusBar);
-        this.addToMap(this.coinStatusBar);
-        this.addToMap(this.bottleStatusBar);
-    }
-
     // Function draw to draw all images needed
     draw() {
-        if (this.gameState !== 'running') {
-            this.drawLastFrame();
-            return;
-        }
 
         // Clear Canvas
         this.ctx.clearRect(
