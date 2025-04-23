@@ -5,11 +5,12 @@ let keyboard = new Keyboard();
 let backgroundSound = new Audio('./audio/mexican_song_background.mp3');
 backgroundSound.volume = 0.3;
 backgroundSound.loop = true;
-backgroundSound.play();
+
 
 function init() {
     document.getElementById('startButton').addEventListener('click', startGame);
     document.getElementById('volume').addEventListener('click', muteGame);
+    backgroundSound.play();
 }
 
 function startGame() {
@@ -17,7 +18,22 @@ function startGame() {
     initLevel();
     world = new World(canvas, keyboard);
     document.getElementById('overlay').style.display = 'none';
+
+    if (window.matchMedia('(orientation: portrait)').matches) {
+        hideMobileButtons();
+    } else {
+        showMobileButtons();
+    }
+
     world.startGame();
+}
+
+function hideMobileButtons() {
+    document.getElementById('mobileButtonsContainer').style.display = 'none';
+}
+
+function showMobileButtons() {
+    document.getElementById('mobileButtonsContainer').style.display = 'flex';
 }
 
 function muteGame() {
@@ -141,4 +157,38 @@ window.addEventListener('keyup', event => {
         default:
             break;
     }
-})
+});
+
+// Eventlistener for touchstart events
+document.getElementById('leftButton').addEventListener('touchstart', () => {
+    keyboard.LEFT = true;
+});
+
+document.getElementById('rightButton').addEventListener('touchstart', () => {
+    keyboard.RIGHT = true;
+});
+
+document.getElementById('jumpButton').addEventListener('touchstart', () => {
+    keyboard.SPACE = true;
+});
+
+document.getElementById('throwButton').addEventListener('touchstart', () => {
+    keyboard.THROW = true;
+});
+
+// Eventlistener for touchend events
+document.getElementById('leftButton').addEventListener('touchend', () => {
+    keyboard.LEFT = false;
+});
+
+document.getElementById('rightButton').addEventListener('touchend', () => {
+    keyboard.RIGHT = false;
+});
+
+document.getElementById('jumpButton').addEventListener('touchend', () => {
+    keyboard.SPACE = false;
+});
+
+document.getElementById('throwButton').addEventListener('touchend', () => {
+    keyboard.THROW = false;
+});

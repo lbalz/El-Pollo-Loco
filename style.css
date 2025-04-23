@@ -30,8 +30,6 @@ h1 {
     top: 0;
     right: 0;
     margin: 10px;
-    color: white;
-    font-size: 1.5rem;
 }
 
 .volume>img {
@@ -41,6 +39,8 @@ h1 {
 }
 
 canvas {
+    width: 1080px;
+    height: 720px;
     background-color: black;
 }
 
@@ -115,10 +115,76 @@ canvas {
     color: white;
 }
 
+.mobile-buttons-container {
+    display: none;
+}
 
-
-@media (max-width: 1079px) {
+@media screen and (max-width: 1180px) and (orientation: portrait) {
     .turn-device-overlay {
         display: flex;
+    }
+}
+
+@media screen and (max-width: 1180px) and (orientation: landscape) {
+    .turn-device-overlay {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1180px) and (orientation: landscape) {
+    h1 {
+        display: none;
+    }
+
+    .volume {
+        z-index: 1;
+    }
+
+    canvas {
+        width: 100%;
+        height: 100vh;
+    }
+
+    .overlay {
+        width: 100%;
+        height: 100vh;
+        background-image: url('./img/9_intro_outro_screens/start/startscreen_1.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        margin-top: 0;
+        z-index: 2;
+    }
+
+    .mobile-buttons-container {
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin-bottom: 12px;
+    }
+
+    .left-right-buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 120px;
+        margin-left: 16px;
+    }
+
+    .jump-throw-buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 120px;
+        margin-right: 16px;
+    }
+
+    .mobile-button>img {
+        width: 48px;
+        height: 48px;
     }
 }
