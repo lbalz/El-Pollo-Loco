@@ -119,6 +119,21 @@ canvas {
     display: none;
 }
 
+/*! Gameplay Info Overlay fertig machen, info icon hinzufügen abgeben und fragen wie ich bei imprint und privacy policy die überschriften in mobile sehen kann?
+*/
+.gameplay-info-overlay {
+    width: 100%;
+    height: 100%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
 footer {
     width: 100%;
     height: auto;
@@ -154,10 +169,21 @@ footer {
     color: orangered;
 }
 
+.home {
+    position: absolute;
+    top: 24px;
+    left: 48px;
+}
+
+.home>a>img {
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+}
+
 .imprint-container {
     height: 100%;
     margin: 16px;
-    /* margin-left: 32px; */
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -166,15 +192,13 @@ footer {
 }
 
 .imprint-container>h1 {
-    color: orange;
+    color: orangered;
     font-size: 48px;
     margin: 0;
     align-self: center;
 }
 
 .imprint-header {
-    width: 100%;
-    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -189,7 +213,7 @@ footer {
 }
 
 .imprint-header>span>a:hover {
-    color: orange;
+    color: orangered;
 }
 
 .imprint-content {
@@ -214,7 +238,32 @@ footer {
 }
 
 .imprint-footer>a:hover {
-    color: orange;
+    color: orangered;
+}
+
+.privacy-container {
+    height: 100%;
+    margin: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    gap: 16px;
+}
+
+.privacy-container>h1 {
+    color: orangered;
+    font-size: 48px;
+    margin: 0;
+    align-self: center;
+}
+
+.privacy-section {
+    display: flex;
+    flex-direction: column;
+    text-align: justify;
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
 }
 
 @media screen and (max-width: 1180px) and (orientation: portrait) {
@@ -224,12 +273,14 @@ footer {
 }
 
 @media screen and (max-width: 1180px) and (orientation: landscape) {
+    body {
+        height: auto;
+    }
+
     .turn-device-overlay {
         display: none;
     }
-}
-
-@media screen and (max-width: 1180px) and (orientation: landscape) {
+    
     h1 {
         display: none;
     }
@@ -308,4 +359,60 @@ footer {
         bottom: 0;
         left: 0;
     }
+
+    .home {
+        position: absolute;
+        top: 24px;
+        left: 24px;
+    }
+
+    .imprint-container {
+        width: auto;
+        height: auto;
+        overflow: auto;
+        position: absolute;
+        top: 78px;
+    }
+
+    .imprint-container>h1 {
+        font-size: 32px;
+    }
+
+    .imprint-header {
+        font-size: 16px;
+    }
+
+    .imprint-header>span>a {
+        font-size: 16px;
+    }
+
+    .imprint-content {
+        font-size: 16px;
+    }
+
+    .imprint-footer {
+        font-size: 16px;
+        flex-wrap: wrap;
+    }
+
+    .imprint-footer>a {
+        font-size: 16px;
+    }
+
+    .privacy-container {
+        width: auto;
+        height: auto;
+        overflow: auto;
+        position: absolute;
+        top: 78px;
+    }
+
+    .privacy-container>h1 {
+        font-size: 32px;
+    }
+
+    .privacy-section {
+        font-size: 16px;
+    }
+
 }

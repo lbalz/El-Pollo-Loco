@@ -18,6 +18,8 @@ function startGame() {
     initLevel();
     world = new World(canvas, keyboard);
     document.getElementById('overlay').style.display = 'none';
+    document.getElementById('footer').style.display = 'none';
+    document.getElementById('volume').style.top = '24px';
 
     if (window.matchMedia('(orientation: portrait)').matches) {
         hideMobileButtons();
