@@ -199,4 +199,38 @@ canvas {
         width: 48px;
         height: 48px;
     }
+
+    footer {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 4;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        font-family: 'MightySouly'; 
+    }
+
+    .imprint>a {
+        color: white;
+        text-decoration: none;
+        font-size: 1.2rem;
+        margin: 0 10px;
+    }
+
+    .imprint>a:hover {
+        color: orangered;
+    }
+
+    .privacy-policy>a {
+        color: white;
+        text-decoration: none;
+        font-size: 1.2rem;
+        margin: 0 10px;
+    }
+
+    .privacy-policy>a:hover {
+        color: orangered;
+    }
 }
