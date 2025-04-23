@@ -5,7 +5,7 @@ let keyboard = new Keyboard();
 let backgroundSound = new Audio('./audio/mexican_song_background.mp3');
 backgroundSound.volume = 0.3;
 backgroundSound.loop = true;
-
+backgroundSound.play();
 
 function init() {
     document.getElementById('startButton').addEventListener('click', startGame);
@@ -13,7 +13,6 @@ function init() {
 }
 
 function startGame() {
-    backgroundSound.play();
     canvas = document.getElementById('canvas');
     initLevel();
     world = new World(canvas, keyboard);

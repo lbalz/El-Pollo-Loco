@@ -112,7 +112,7 @@ canvas {
 
 
 @media (max-width: 1079px) {
-    .overlay {
+    .turn-device-overlay {
         display: flex;
     }
 }
