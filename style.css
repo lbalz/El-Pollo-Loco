@@ -119,6 +119,104 @@ canvas {
     display: none;
 }
 
+footer {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-family: 'MightySouly';
+}
+
+.imprint>a {
+    color: white;
+    text-decoration: none;
+    font-size: 40px;
+    margin: 0 10px;
+}
+
+.imprint>a:hover {
+    color: orangered;
+}
+
+.privacy-policy>a {
+    color: white;
+    text-decoration: none;
+    font-size: 40px;
+    margin: 0 10px;
+}
+
+.privacy-policy>a:hover {
+    color: orangered;
+}
+
+.imprint-container {
+    height: 100%;
+    margin: 16px;
+    /* margin-left: 32px; */
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    gap: 16px;
+}
+
+.imprint-container>h1 {
+    color: orange;
+    font-size: 48px;
+    margin: 0;
+    align-self: center;
+}
+
+.imprint-header {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
+}
+
+.imprint-header>span>a {
+    text-decoration: none;
+    color: black;
+}
+
+.imprint-header>span>a:hover {
+    color: orange;
+}
+
+.imprint-content {
+    display: flex;
+    flex-direction: column;
+    text-align: justify;
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
+}
+
+.imprint-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
+}
+
+.imprint-footer>a {
+    text-decoration: none;
+    color: black;
+}
+
+.imprint-footer>a:hover {
+    color: orange;
+}
+
 @media screen and (max-width: 1180px) and (orientation: portrait) {
     .turn-device-overlay {
         display: flex;
@@ -209,28 +307,5 @@ canvas {
         position: absolute;
         bottom: 0;
         left: 0;
-        font-family: 'MightySouly'; 
-    }
-
-    .imprint>a {
-        color: white;
-        text-decoration: none;
-        font-size: 1.2rem;
-        margin: 0 10px;
-    }
-
-    .imprint>a:hover {
-        color: orangered;
-    }
-
-    .privacy-policy>a {
-        color: white;
-        text-decoration: none;
-        font-size: 1.2rem;
-        margin: 0 10px;
-    }
-
-    .privacy-policy>a:hover {
-        color: orangered;
     }
 }
