@@ -34,6 +34,12 @@ h1 {
     font-size: 1.5rem;
 }
 
+.volume>img {
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+}
+
 canvas {
     background-color: black;
 }
