@@ -101,7 +101,6 @@ function generateCoins(num) {
         coins.push(
             new Coin(posX, posY)
         );
-        console.log(`Coin Nr. ${i + 1} Pos: `, posX, posY);
     }
 
     return coins;
@@ -114,7 +113,6 @@ function generateBottles(num) {
         bottles.push(
             new Bottle(posX)
         );
-        console.log(`Bottle Nr. ${i + 1} Pos: `, posX);
     }
     return bottles;
 }

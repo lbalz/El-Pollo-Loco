@@ -14,7 +14,7 @@ class DrawableObject {
         left: 0
     };
 
-
+    
     loadImage(path) {
         this.image = new Image(); // creates new <img> Tag
         this.image.src = path;
@@ -27,7 +27,6 @@ class DrawableObject {
             img.src = path;
             this.imageCache[path] = img;
         });
-        console.log(this.imageCache)
     }
 
 
@@ -42,7 +41,6 @@ class DrawableObject {
             );
         } catch (error) {
             console.warn('Error loading Image', error);
-            console.log('Cant load image', this.image);
         }
     }
 
