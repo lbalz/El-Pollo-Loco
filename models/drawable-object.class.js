@@ -1,12 +1,36 @@
+/**
+ * Base class for all drawable objects in the game
+ * Handles image loading, caching, and rendering
+ */
 class DrawableObject {
+    /** @type {number} Horizontal position of the object */
     positionX = 120;
+
+    /** @type {number} Vertical position of the object */
     positionY = 280;
+
+    /** @type {number} Height of the object in pixels */
     height = 150;
+
+    /** @type {number} Width of the object in pixels */
     width = 100;
+
+    /** @type {HTMLImageElement} Current image being displayed */
     image;
+
+    /** @type {Object.<string, HTMLImageElement>} Cache of loaded images */
     imageCache = {};
+
+    /** @type {number} Index of the current image in animation sequence */
     currentImage = 0;
 
+    /** 
+     * @type {Object} Collision offset values for hit detection
+     * @property {number} top - Top offset for collision detection
+     * @property {number} right - Right offset for collision detection
+     * @property {number} bottom - Bottom offset for collision detection
+     * @property {number} left - Left offset for collision detection
+     */
     offset = {
         top: 0,
         right: 0,
@@ -14,13 +38,19 @@ class DrawableObject {
         left: 0
     };
 
-    
+    /**
+     * Loads a single image from the specified path
+     * @param {string} path - Path to the image file
+     */
     loadImage(path) {
         this.image = new Image(); // creates new <img> Tag
         this.image.src = path;
     }
 
-
+    /**
+     * Loads multiple images and stores them in the image cache
+     * @param {string[]} array - Array of image file paths
+     */
     loadImages(array) {
         array.forEach(path => {
             let img = new Image();
@@ -29,7 +59,10 @@ class DrawableObject {
         });
     }
 
-
+    /**
+     * Draws the object on the canvas
+     * @param {CanvasRenderingContext2D} ctx - The canvas rendering context
+     */
     draw(ctx) {
         try {
             ctx.drawImage(
@@ -44,6 +77,11 @@ class DrawableObject {
         }
     }
 
+    /**
+     * Draws the collision frame for debugging purposes
+     * Only draws for specific game objects that need collision detection
+     * @param {CanvasRenderingContext2D} ctx - The canvas rendering context
+     */
     drawOffsetFrame(ctx) {
         if (this instanceof Character || 
             this instanceof Chicken || 
