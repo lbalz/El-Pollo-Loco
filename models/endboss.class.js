@@ -81,14 +81,14 @@ class Endboss extends MovableObject {
 
     /** @type {string[]} Array of image paths for attack animation */
     ENDBOSS_IMAGES_ATTACK_PATH = [
-        '../img/4_enemie_boss_chicken/3_attack/G13.png',
-        '../img/4_enemie_boss_chicken/3_attack/G14.png',
-        '../img/4_enemie_boss_chicken/3_attack/G15.png',
-        '../img/4_enemie_boss_chicken/3_attack/G16.png',
-        '../img/4_enemie_boss_chicken/3_attack/G17.png',
-        '../img/4_enemie_boss_chicken/3_attack/G18.png',
-        '../img/4_enemie_boss_chicken/3_attack/G19.png',
-        '../img/4_enemie_boss_chicken/3_attack/G20.png'
+        './img/4_enemie_boss_chicken/3_attack/G13.png',
+        './img/4_enemie_boss_chicken/3_attack/G14.png',
+        './img/4_enemie_boss_chicken/3_attack/G15.png',
+        './img/4_enemie_boss_chicken/3_attack/G16.png',
+        './img/4_enemie_boss_chicken/3_attack/G17.png',
+        './img/4_enemie_boss_chicken/3_attack/G18.png',
+        './img/4_enemie_boss_chicken/3_attack/G19.png',
+        './img/4_enemie_boss_chicken/3_attack/G20.png'
     ];
 
     /** @type {string[]} Array of image paths for hurt animation */
