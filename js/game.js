@@ -10,7 +10,8 @@ backgroundSound.loop = true;
 function init() {
     document.getElementById('startButton').addEventListener('click', startGame);
     document.getElementById('volume').addEventListener('click', muteGame);
-    document.getElementById('gameplayInfoButton').addEventListener('click', toggleGameplayInfoOverlay)
+    document.getElementById('gameplayInfoButton').addEventListener('click', toggleGameplayInfoOverlay);
+    document.getElementById('closeInfoButton').addEventListener('click', toggleGameplayInfoOverlay);
     initTouchListeners();
 }
 
@@ -57,12 +58,12 @@ function muteGame() {
 
 function toggleGameplayInfoOverlay() {
     let gameplayInfoOverlay = document.getElementById('gameplayInfoOverlay');
-    if (gameplayInfoOverlay.style.display === 'none') {
+    let gameplayInfoOverlayDisplay = window.getComputedStyle(gameplayInfoOverlay).display;
+    
+    if (gameplayInfoOverlayDisplay === 'none') {
         gameplayInfoOverlay.style.display = 'flex';
-        document.getElementById('gameplayInfoButton').style.display = 'none';
     } else {
         gameplayInfoOverlay.style.display = 'none';
-        document.getElementById('gameplayInfoButton').style.display = 'flex';
     }
 }
 
