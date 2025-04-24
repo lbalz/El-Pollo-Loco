@@ -22,6 +22,7 @@ function startGame() {
     document.getElementById('overlay').style.display = 'none';
     document.getElementById('footer').style.display = 'none';
     document.getElementById('volume').style.top = '24px';
+    document.getElementById('gameplayInfoButton').style.display = 'none';
 
     if (window.matchMedia('(orientation: portrait)').matches) {
         hideMobileButtons();
@@ -43,8 +44,11 @@ function showMobileButtons() {
 
 function muteGame() {
     let volumeBtn = document.getElementById('volume');
+
     if (backgroundSound.paused) {
         backgroundSound.play();
+        toggleSounds();
+
         volumeBtn.innerHTML = `
             <img src="./img/volume_on.svg">
         `;
@@ -54,6 +58,22 @@ function muteGame() {
             <img src="./img/volume_mute.svg">
         `;
     }
+}
+
+function toggleSounds() {
+    let walkingSound = world.character.walkingSound;
+    let jumpingSound = world.character.jumpingSound;
+    let collectCoinSound = world.character.collectCoinAudio;
+    let collectBottleSound = world.character.collectBottleAudio;
+    let bottleBreakSound = world.bottleBreakSound;
+    let chickenSound = world.chickenAudio;
+
+    walkingSound.muted = !walkingSound.muted;
+    jumpingSound.muted = !jumpingSound.muted;
+    collectCoinSound.muted = !collectCoinSound.muted;
+    collectBottleSound.muted = !collectBottleSound.muted;
+    bottleBreakSound.muted = !bottleBreakSound.muted;
+    chickenSound.muted = !chickenSound.muted;
 }
 
 function toggleGameplayInfoOverlay() {

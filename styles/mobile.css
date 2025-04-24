@@ -47,6 +47,7 @@
 
     #closeInfoButton {
         margin-top: 24px;
+        width: 150px;
     }
 
     canvas {

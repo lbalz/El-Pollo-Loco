@@ -17,6 +17,8 @@ class World {
     winScreenImage = new Image();
     gameState = 'start'; // States: start, running, gameover, win
 
+    bottleBreakSound = new Audio('./audio/glass_bottle_destroyed.mp3');
+    chickenAudio = new Audio('./audio/chicken.mp3');
 
 
     constructor(canvas, keyboard) {
@@ -150,9 +152,8 @@ class World {
         if (this.character.world.throwableObjects.length > 0) {
             this.character.world.throwableObjects.forEach(bottle => {
                 if (bottle.positionY >= 560) {
-                    let bottleBreakSound = new Audio('./audio/glass_bottle_destroyed.mp3');
-                    bottleBreakSound.currentTime = 0.5;
-                    bottleBreakSound.play();
+                    this.bottleBreakSound.currentTime = 0.5;
+                    this.bottleBreakSound.play();
                     let bottleIndex = this.character.world.throwableObjects.indexOf(bottle);
                     this.character.world.throwableObjects.splice(bottleIndex, 1);
                 }
@@ -165,8 +166,7 @@ class World {
             this.character.world.throwableObjects.forEach(bottle => {
                 this.level.enemies.forEach(enemy => {
                     if (bottle.isColliding(enemy)) {
-                        let chickenAudio = new Audio('./audio/chicken.mp3');
-                        chickenAudio.play();
+                        this.chickenAudio.play();
 
                         let bottleIndex = this.character.world.throwableObjects.indexOf(bottle);
                         let enemyIndex = this.level.enemies.indexOf(enemy);
@@ -189,8 +189,7 @@ class World {
         if (this.throwableObjects.length > 0) {
             this.throwableObjects.forEach(bottle => {
                 if (bottle.isColliding(this.level.endboss[0])) {
-                    let chickenAudio = new Audio('./audio/chicken.mp3');
-                    chickenAudio.play();
+                    this.chickenAudio.play();
                     
                     let bottleIndex = this.throwableObjects.indexOf(bottle);
                     this.throwableObjects.splice(bottleIndex, 1);
@@ -218,7 +217,7 @@ class World {
             if (this.character.isColliding(endboss) && endboss.state === 'attacking') {
                 let currentTime = Date.now();
                 if (currentTime - this.lastHitTime > 1000) {
-                    this.character.healthPoints -= 20; // Endboss does more damage
+                    this.character.healthPoints -= 20;
                     this.healthStatusBar.setHealthPercentage(this.character.healthPoints, this.ctx);
                     this.lastHitTime = currentTime;
                 }
@@ -229,9 +228,8 @@ class World {
     checkCharacterJumpOnChicken() {
         this.level.enemies.forEach(enemy => {
             if (this.character.isColliding(enemy) && this.character.isNotOnGround() && this.character.speedPosY < 0) { // speedY
-                let chickenAudio = new Audio('./audio/chicken.mp3');
-                chickenAudio.currentTime = 0.5;
-                chickenAudio.play();
+                this.chickenAudio.currentTime = 0.5;
+                this.chickenAudio.play();
                 
                 let enemieIndex = this.level.enemies.indexOf(enemy);
                 this.level.enemies.splice(enemieIndex, 1);

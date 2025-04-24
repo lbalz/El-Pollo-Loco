@@ -12,7 +12,8 @@ class MovableObject extends DrawableObject {
     endbossHealth = 250;
     bottleDamage = 25;
 
-
+    collectCoinAudio = new Audio('./audio/collect_coin.mp3');
+    collectBottleAudio = new Audio('./audio/collect_bottle.mp3');
 
     constructor() {
         super();
@@ -27,14 +28,12 @@ class MovableObject extends DrawableObject {
     }
 
     collectCoin() {
-        let collectCoinAudio = new Audio('./audio/collect_coin.mp3');
-        collectCoinAudio.play();
+        this.collectCoinAudio.play();
         this.coins += 1;
     }
 
     collectBottle() {
-        let collectBottleAudio = new Audio('./audio/collect_bottle.mp3');
-        collectBottleAudio.play();
+        this.collectBottleAudio.play();
         this.bottles += 1;
     }
 

@@ -17,7 +17,6 @@ function initLevel() {
             new Endboss()
         ],
         [
-            //TODO: FIX -> Need to Fix Cloud Movement, and generate random posX
             ...generateClouds(numOfClouds)
         ],
         [
