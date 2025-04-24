@@ -1,26 +1,70 @@
+/**
+ * Class representing the game world
+ * Manages all game objects, collisions, and game state
+ */
 class World {
+    /** @type {Character} The player character instance */
     character = new Character();
-    level = level_1;
-    canvas;
-    ctx;
-    keyboard;
-    camPosX = 0;
-    healthStatusBar = new HealthStatusBar();
-    coinStatusBar = new CoinStatusBar();
-    bottleStatusBar = new BottleStatusBar();
-    endbossStatusBar = new EndbossStatusBar();
-    throwableObjects = [];
-    lastHitTime = 0;
-    gameRunning = false;
-    startScreenImage = new Image();
-    gameOverScreenImage = new Image();
-    winScreenImage = new Image();
-    gameState = 'start'; // States: start, running, gameover, win
 
+    /** @type {Level} Current game level */
+    level = level_1;
+
+    /** @type {HTMLCanvasElement} The game's canvas element */
+    canvas;
+
+    /** @type {CanvasRenderingContext2D} The canvas 2D rendering context */
+    ctx;
+
+    /** @type {Keyboard} Keyboard input handler */
+    keyboard;
+
+    /** @type {number} Camera position on X axis */
+    camPosX = 0;
+
+    /** @type {HealthStatusBar} Health status bar instance */
+    healthStatusBar = new HealthStatusBar();
+
+    /** @type {CoinStatusBar} Coin collection status bar */
+    coinStatusBar = new CoinStatusBar();
+
+    /** @type {BottleStatusBar} Bottle collection status bar */
+    bottleStatusBar = new BottleStatusBar();
+
+    /** @type {EndbossStatusBar} End boss health status bar */
+    endbossStatusBar = new EndbossStatusBar();
+
+    /** @type {ThrowableObject[]} Array of thrown bottles */
+    throwableObjects = [];
+
+    /** @type {number} Timestamp of last damage taken */
+    lastHitTime = 0;
+
+    /** @type {boolean} Whether the game is currently running */
+    gameRunning = false;
+
+    /** @type {HTMLImageElement} Start screen image */
+    startScreenImage = new Image();
+
+    /** @type {HTMLImageElement} Game over screen image */
+    gameOverScreenImage = new Image();
+
+    /** @type {HTMLImageElement} Win screen image */
+    winScreenImage = new Image();
+
+    /** @type {string} Current game state ('start', 'running', 'gameover', 'win') */
+    gameState = 'start';
+
+    /** @type {HTMLAudioElement} Sound effect for bottle breaking */
     bottleBreakSound = new Audio('./audio/glass_bottle_destroyed.mp3');
+
+    /** @type {HTMLAudioElement} Sound effect for chicken death */
     chickenAudio = new Audio('./audio/chicken.mp3');
 
-
+    /**
+     * Creates a new game world
+     * @param {HTMLCanvasElement} canvas - The game's canvas element
+     * @param {Keyboard} keyboard - Keyboard input handler
+     */
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -30,16 +74,25 @@ class World {
         this.checkingFunctionLoop();
     }
 
+    /**
+     * Loads start, game over and win screen images
+     */
     loadStartAndEndImages() {
         this.startScreenImage.src = "./img/9_intro_outro_screens/start/startscreen_1.png";
         this.gameOverScreenImage.src = "./img/9_intro_outro_screens/game_over/game over.png";
         this.winScreenImage.src = "./img/9_intro_outro_screens/win/win_2.png";
     }
 
+    /**
+     * Sets up the world reference in character
+     */
     setWorld() {
         this.character.world = this;
     }
 
+    /**
+     * Main game loop for checking various conditions
+     */
     checkingFunctionLoop() {
         setInterval(() => {
             if (this.gameState === 'running') {
@@ -74,16 +127,25 @@ class World {
         }, 1000 / 60);
     }
 
+    /**
+     * Starts the game and animation loop
+     */
     startGame() {
         this.gameState = 'running';
         this.gameRunning = true;
         this.draw();
     }
 
+    /**
+     * Resets the game by reloading the page
+     */
     resetGame() {
         window.location.reload();
     }
 
+    /**
+     * Displays the game over screen
+     */
     showGameOver() {
         this.gameRunning = false;
 
@@ -105,7 +167,9 @@ class World {
         });
     }
     
-
+    /**
+     * Displays the win screen
+     */
     showWin() {
         this.gameRunning = false;
 
@@ -127,6 +191,9 @@ class World {
         });
     }
 
+    /**
+     * Handles bottle throwing mechanics
+     */
     checkThrowBottle() {
         if (this.character.bottles > 0) {
             if (this.character.otherDirection) {
@@ -148,6 +215,9 @@ class World {
         }
     }
 
+    /**
+     * Checks for bottle collisions with ground
+     */
     checkBottleCollisionWithGround() {
         if (this.character.world.throwableObjects.length > 0) {
             this.character.world.throwableObjects.forEach(bottle => {
@@ -161,6 +231,9 @@ class World {
         }
     }
 
+    /**
+     * Checks for bottle collisions with chickens
+     */
     checkBottleCollisionWithChicken() {
         if (this.character.world.throwableObjects.length > 0) {
             this.character.world.throwableObjects.forEach(bottle => {
@@ -184,7 +257,9 @@ class World {
         }
     }
 
-
+    /**
+     * Checks for bottle collisions with end boss
+     */
     checkBottleCollisionWithEndboss() {
         if (this.throwableObjects.length > 0) {
             this.throwableObjects.forEach(bottle => {
@@ -200,6 +275,9 @@ class World {
         }
     }
 
+    /**
+     * Checks if character takes damage from enemies
+     */
     checkCharacterGotChickenHit() {
         this.level.enemies.forEach(enemy => {
             if (this.character.isColliding(enemy)) {
@@ -225,6 +303,9 @@ class World {
         }
     };
 
+    /**
+     * Checks if character jumps on enemies
+     */
     checkCharacterJumpOnChicken() {
         this.level.enemies.forEach(enemy => {
             if (this.character.isColliding(enemy) && this.character.isNotOnGround() && this.character.speedPosY < 0) { // speedY
@@ -249,6 +330,9 @@ class World {
         });
     }
 
+    /**
+     * Checks for collisions with collectible items
+     */
     checkCollectables() {
         this.level.coins.forEach(coin => {
             if (this.character.isColliding(coin)) {
@@ -271,10 +355,10 @@ class World {
         });
     }
 
-    // Function draw to draw all images needed
+    /**
+     * Main drawing function for rendering the game
+     */
     draw() {
-
-        // Clear Canvas
         this.ctx.clearRect(
             0,
             0,
@@ -284,7 +368,6 @@ class World {
 
         this.ctx.translate(this.camPosX, 0);
 
-        // Add Images to Map
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
 
@@ -299,9 +382,7 @@ class World {
         this.addToMap(this.bottleStatusBar);
         this.drawStatusText(this.character.bottles, this.ctx, 250, 210);
 
-        // Chickens left text
         this.drawStatusText("Current chickens: " + this.level.enemies.length, this.ctx, 38, 250);
-
 
         if (this.character.positionX >= 8350) { // 8350
             this.addToMap(this.endbossStatusBar);
@@ -332,33 +413,41 @@ class World {
 
         this.ctx.translate(-this.camPosX, 0);
 
-
-        // draw() wird immer wieder aufgerufen
         requestAnimationFrame(() => {
             this.draw();
         });
     }
 
+    /**
+     * Adds multiple objects to the game map
+     * @param {DrawableObject[]} objects - Array of objects to add
+     */
     addObjectsToMap(objects) {
         objects.forEach(object => {
             this.addToMap(object);
         })
     }
 
-    // Draw image canvas function to draw all images in to Map
+    /**
+     * Adds a single object to the game map
+     * @param {DrawableObject} movableObject - Object to add
+     */
     addToMap(movableObject) {
         if (movableObject.otherDirection) {
             this.flipImage(movableObject);
         }
 
         movableObject.draw(this.ctx);
-        // movableObject.drawOffsetFrame(this.ctx); // Need offset frame for dev mode
 
         if (movableObject.otherDirection) {
             this.restoreFlippedImage(movableObject);
         }
     }
 
+    /**
+     * Flips an image horizontally for opposite direction
+     * @param {MovableObject} movableObject - Object to flip
+     */
     flipImage(movableObject) {
         this.ctx.save();
         this.ctx.translate(movableObject.width, 0);
@@ -366,14 +455,23 @@ class World {
         movableObject.positionX = movableObject.positionX * -1;
     }
 
+    /**
+     * Restores original image orientation
+     * @param {MovableObject} movableObject - Object to restore
+     */
     restoreFlippedImage(movableObject) {
         movableObject.positionX = movableObject.positionX * -1;
         this.ctx.restore();
     }
 
+    /**
+     * Draws status text on the canvas
+     * @param {number} num - Number to display
+     * @param {CanvasRenderingContext2D} ctx - Canvas context
+     * @param {number} posX - X position of text
+     * @param {number} posY - Y position of text
+     */
     drawStatusText(num, ctx, posX, posY) {
-        // Idee: da die Statusbalken nur alle 20 punkte z.B. ein neues Bild haben
-        // evtl. einen Statustext direkt neben dem balken anzeigen wieviel hp punkte, coins oder flaschen man hat
         ctx.font = "28px Arial";
         ctx.fillStyle = "black";
         ctx.fillText(num, posX, posY);
