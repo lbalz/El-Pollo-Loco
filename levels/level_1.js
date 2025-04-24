@@ -1,12 +1,47 @@
-let numOfBigChicken = 15; // 15
-let numOfLittleChicken  = 15; // 15
+/**
+ * @type {number} Number of big chickens to generate in the level
+ */
+let numOfBigChicken = 15;
+
+/**
+ * @type {number} Number of small chickens to generate in the level
+ */
+let numOfLittleChicken = 15;
+
+/**
+ * @type {number} Number of background object groups to generate
+ */
 let numOfBackgroundObjectGroups = 10;
+
+/**
+ * @type {number} Number of clouds to generate in the level
+ */
 let numOfClouds = 10;
+
+/**
+ * @type {number} Number of coins to generate in the level
+ */
 let numOfCoins = 20;
+
+/**
+ * @type {number} Number of bottles to generate in the level
+ */
 let numOfBottles = 10;
+
+/**
+ * @type {number} The width of each background image section
+ */
 let imagePositionX = 1079;
+
+/**
+ * @type {Level} The level instance
+ */
 let level_1;
 
+/**
+ * Initializes the game level by creating all game objects
+ * Creates enemies, endboss, clouds, background objects, coins and bottles
+ */
 function initLevel() {
     level_1 = new Level(
         [
@@ -32,10 +67,18 @@ function initLevel() {
     );
 }
 
+/**
+ * Resets the level by reloading the page
+ */
 function resetLevel() {
     window.location.reload();
 }
 
+/**
+ * Generates an array of big chicken enemies
+ * @param {number} num - The number of big chickens to generate
+ * @returns {BigChicken[]} Array of big chicken instances
+ */
 function generateBigChicken(num) {
     const bigChicken = [];
     for (let i = 0; i < num; i++) {
@@ -44,6 +87,11 @@ function generateBigChicken(num) {
     return bigChicken;
 }
 
+/**
+ * Generates an array of small chicken enemies
+ * @param {number} num - The number of small chickens to generate
+ * @returns {SmallChicken[]} Array of small chicken instances
+ */
 function generateSmallChicken(num) {
     const smallChicken = [];
     for (let i = 0; i < num; i++) {
@@ -52,6 +100,11 @@ function generateSmallChicken(num) {
     return smallChicken;
 }
 
+/**
+ * Generates an array of standard chicken enemies
+ * @param {number} num - The number of chickens to generate
+ * @returns {Chicken[]} Array of chicken instances
+ */
 function generateEnemies(num) {
     const enemies = [];
     for (let i = 0; i < num; i++) {
@@ -60,6 +113,11 @@ function generateEnemies(num) {
     return enemies;
 }
 
+/**
+ * Generates an array of cloud objects
+ * @param {number} num - The number of clouds to generate
+ * @returns {Cloud[]} Array of cloud instances
+ */
 function generateClouds(num) {
     const clouds = [];
     for (let i = 0; i < num; i++) {
@@ -68,6 +126,10 @@ function generateClouds(num) {
     return clouds;
 }
 
+/**
+ * Generates the first layer of background objects for the playground
+ * @returns {BackgroundObject[]} Array of background objects for the first layer
+ */
 function generateFirstPlaygroundBGObjectGroupLayer() {
     return [
         new BackgroundObject('./img/5_background/layers/air.png', -1079),
@@ -77,11 +139,15 @@ function generateFirstPlaygroundBGObjectGroupLayer() {
     ];
 }
 
+/**
+ * Generates multiple layers of background objects for the playground
+ * @param {number} num - The number of background object groups to generate
+ * @returns {BackgroundObject[]} Array of background object groups
+ */
 function generatePlaygroundBackgroundObjectGroups(num) {
     const pbgObjectGroups = [];
     for (let i = 0; i < num; i++) {
         const position = imagePositionX * i;
-
 
         pbgObjectGroups.push(
             new BackgroundObject('./img/5_background/layers/air.png', position),
@@ -93,6 +159,11 @@ function generatePlaygroundBackgroundObjectGroups(num) {
     return pbgObjectGroups;
 }
 
+/**
+ * Generates coins at random positions in the level
+ * @param {number} num - The number of coins to generate
+ * @returns {Coin[]} Array of coin instances
+ */
 function generateCoins(num) {
     const coins = []
     for (let i = 0; i < num; i++) {
@@ -106,6 +177,11 @@ function generateCoins(num) {
     return coins;
 }
 
+/**
+ * Generates bottles at random positions in the level
+ * @param {number} num - The number of bottles to generate
+ * @returns {Bottle[]} Array of bottle instances
+ */
 function generateBottles(num) {
     const bottles = [];
     for (let i = 0; i < num; i++) {
@@ -117,6 +193,10 @@ function generateBottles(num) {
     return bottles;
 }
 
+/**
+ * Generates a random X position for game objects
+ * @returns {number} Random number between 500 and 9000
+ */
 function randomPosXNumber() {
     return Math.floor(500 + Math.random() * 8500);
 }

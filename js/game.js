@@ -6,15 +6,23 @@ let backgroundSound = new Audio('./audio/mexican_song_background.mp3');
 backgroundSound.volume = 0.3;
 backgroundSound.loop = true;
 
-
+/**
+ * Initializes the game by setting up event listeners for various buttons
+ * and touch controls
+ */
 function init() {
     document.getElementById('startButton').addEventListener('click', startGame);
     document.getElementById('volume').addEventListener('click', muteGame);
     document.getElementById('gameplayInfoButton').addEventListener('click', toggleGameplayInfoOverlay);
     document.getElementById('closeInfoButton').addEventListener('click', toggleGameplayInfoOverlay);
+    initKeyboardListeners();
     initTouchListeners();
 }
 
+/**
+ * Starts the game by initializing the canvas, world, and game settings
+ * Also handles the display of UI elements and plays background music
+ */
 function startGame() {
     canvas = document.getElementById('canvas');
     initLevel();
@@ -34,14 +42,23 @@ function startGame() {
     world.startGame();
 }
 
+/**
+ * Hides the mobile control buttons
+ */
 function hideMobileButtons() {
     document.getElementById('mobileButtonsContainer').style.display = 'none';
 }
 
+/**
+ * Shows the mobile control buttons
+ */
 function showMobileButtons() {
     document.getElementById('mobileButtonsContainer').style.display = 'flex';
 }
 
+/**
+ * Toggles the game audio on/off and updates the volume button icon
+ */
 function muteGame() {
     let volumeBtn = document.getElementById('volume');
 
@@ -60,6 +77,9 @@ function muteGame() {
     }
 }
 
+/**
+ * Toggles all game sound effects between muted and unmuted states
+ */
 function toggleSounds() {
     let walkingSound = world.character.walkingSound;
     let jumpingSound = world.character.jumpingSound;
@@ -76,6 +96,9 @@ function toggleSounds() {
     chickenSound.muted = !chickenSound.muted;
 }
 
+/**
+ * Toggles the visibility of the gameplay information overlay
+ */
 function toggleGameplayInfoOverlay() {
     let gameplayInfoOverlay = document.getElementById('gameplayInfoOverlay');
     let gameplayInfoOverlayDisplay = window.getComputedStyle(gameplayInfoOverlay).display;
@@ -87,120 +110,151 @@ function toggleGameplayInfoOverlay() {
     }
 }
 
-// Eventlistener for keyboard keys
-window.addEventListener('keypress', event => {
-    switch (event.code) {
-        case "KeyW":
-            keyboard.UP = true;
-            break;
+/**
+ * Initializes keyboard event listeners for the game
+ * Sets up keypress, keydown, and keyup event handlers
+ */
+function initKeyboardListeners() {
+    keyPressListeners();
+    keyDownListeners();
+    keyUpListeners();
+}
 
-        case "KeyA":
-            keyboard.LEFT = true;
-            break;
-
-        case "KeyS":
-            keyboard.DOWN = true;
-            break;
-
-        case "KeyD":
-            keyboard.RIGHT = true;
-            break;
-
-        case "Space":
-            keyboard.SPACE = true;
-            break;
-
-        case "KeyF":
-            keyboard.THROW = true;
-            break;
-
-        default:
-            break;
-    }
-});
-
-
-// Eventlistener for arrow keys
-window.addEventListener('keydown', event => {
-    switch (event.code) {
-        case "ArrowUp":
-            keyboard.UP = true;
-            break;
-
-        case "ArrowLeft":
-            keyboard.LEFT = true;
-            break;
-
-        case "ArrowDown":
-            keyboard.DOWN = true;
-            break;
-
-        case "ArrowRight":
-            keyboard.RIGHT = true;
-            break;
-
-        case "Space":
-            keyboard.SPACE = true;
-            break;
-        default:
-            break;
-    }
-});
+/**
+ * Sets up keypress event listeners for WASD controls, space bar, and throw action
+ * @listens keypress
+ */
+function keyPressListeners() {
+    window.addEventListener('keypress', event => {
+        switch (event.code) {
+            case "KeyW":
+                keyboard.UP = true;
+                break;
+    
+            case "KeyA":
+                keyboard.LEFT = true;
+                break;
+    
+            case "KeyS":
+                keyboard.DOWN = true;
+                break;
+    
+            case "KeyD":
+                keyboard.RIGHT = true;
+                break;
+    
+            case "Space":
+                keyboard.SPACE = true;
+                break;
+    
+            case "KeyF":
+                keyboard.THROW = true;
+                break;
+    
+            default:
+                break;
+        }
+    });
+}
 
 
-// Eventlistener for keys up to set variables to false
-window.addEventListener('keyup', event => {
-    switch (event.code) {
-        case "ArrowUp":
-            keyboard.UP = false;
-            break;
+/**
+ * Sets up keydown event listeners for arrow key controls and space bar
+ * @listens keydown
+ */
+function keyDownListeners() {
+    window.addEventListener('keydown', event => {
+        switch (event.code) {
+            case "ArrowUp":
+                keyboard.UP = true;
+                break;
+    
+            case "ArrowLeft":
+                keyboard.LEFT = true;
+                break;
+    
+            case "ArrowDown":
+                keyboard.DOWN = true;
+                break;
+    
+            case "ArrowRight":
+                keyboard.RIGHT = true;
+                break;
+    
+            case "Space":
+                keyboard.SPACE = true;
+                break;
+            default:
+                break;
+        }
+    });
+}
 
-        case "ArrowLeft":
-            keyboard.LEFT = false;
-            break;
 
-        case "ArrowDown":
-            keyboard.DOWN = false;
-            break;
+/**
+ * Sets up keyup event listeners for all keyboard controls
+ * Resets control states when keys are released
+ * @listens keyup
+ */
+function keyUpListeners() {
+    window.addEventListener('keyup', event => {
+        switch (event.code) {
+            case "ArrowUp":
+                keyboard.UP = false;
+                break;
+    
+            case "ArrowLeft":
+                keyboard.LEFT = false;
+                break;
+    
+            case "ArrowDown":
+                keyboard.DOWN = false;
+                break;
+    
+            case "ArrowRight":
+                keyboard.RIGHT = false;
+                break;
+    
+            case "Space":
+                keyboard.SPACE = false;
+                break;
+    
+            case "KeyW":
+                keyboard.UP = false;
+                break;
+    
+            case "KeyA":
+                keyboard.LEFT = false;
+                break;
+    
+            case "KeyS":
+                keyboard.DOWN = false;
+                break;
+    
+            case "KeyD":
+                keyboard.RIGHT = false;
+                break;
+    
+            case "KeyF":
+                keyboard.THROW = false;
+                break;
+            default:
+                break;
+        }
+    });
+}
 
-        case "ArrowRight":
-            keyboard.RIGHT = false;
-            break;
-
-        case "Space":
-            keyboard.SPACE = false;
-            break;
-
-        case "KeyW":
-            keyboard.UP = false;
-            break;
-
-        case "KeyA":
-            keyboard.LEFT = false;
-            break;
-
-        case "KeyS":
-            keyboard.DOWN = false;
-            break;
-
-        case "KeyD":
-            keyboard.RIGHT = false;
-            break;
-
-        case "KeyF":
-            keyboard.THROW = false;
-            break;
-        default:
-            break;
-    }
-});
-
+/**
+ * Initializes all touch event listeners for mobile controls
+ */
 function initTouchListeners() {
     touchstartListeners();
     touchendListeners();
 }
 
-// Eventlistener for touchstart events
+/**
+ * Sets up touch start event listeners for mobile control buttons
+ */
 function touchstartListeners() {
     document.getElementById('leftButton').addEventListener('touchstart', event => {
         event.preventDefault();
@@ -223,7 +277,9 @@ function touchstartListeners() {
     });
 }
 
-// Eventlistener for touchend events
+/**
+ * Sets up touch end event listeners for mobile control buttons
+ */
 function touchendListeners() {
     document.getElementById('leftButton').addEventListener('touchend', event => {
         event.preventDefault();
