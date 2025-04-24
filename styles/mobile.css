@@ -22,6 +22,33 @@
         z-index: 1;
     }
 
+    .gameplay-info-button {
+        z-index: 3;
+    }
+
+    .gameplay-info-overlay {
+        z-index: 5;
+        padding-top: 0;
+        overflow: auto;
+    }
+
+    .gameplay-info-overlay>h1 {
+        font-size: 48px;
+    }
+
+    .desktop-gameplay-info, .mobile-gameplay-info {
+        font-size: 16px;
+        padding-top: 0;
+    }
+
+    .desktop-gameplay-info>h3, .mobile-gameplay-info>h3 {
+        font-size: 24px;
+    }
+
+    #closeInfoButton {
+        margin-top: 24px;
+    }
+
     canvas {
         width: 100%;
         height: 100vh;
