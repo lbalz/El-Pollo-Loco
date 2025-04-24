@@ -40,6 +40,19 @@ h1 {
     cursor: pointer;
 }
 
+.gameplay-info-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 10px;
+}
+
+.gameplay-info-button>img {
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+}
+
 canvas {
     width: 1080px;
     height: 720px;
@@ -247,6 +260,7 @@ footer {
 /* datenschutz.html desktop styles */
 .privacy-container {
     height: 100%;
+    width: 98.5%;
     margin: 16px;
     display: flex;
     flex-direction: column;
