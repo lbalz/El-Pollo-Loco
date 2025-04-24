@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: models/bottle-status-bar.class.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: models/bottle-status-bar.class.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Class representing the bottle collection status bar in the game
+ * @extends StatusBar
+ */
+class BottleStatusBar extends StatusBar {
+    /** @type {number} Current percentage of bottles collected */
+    bottlePercentage = 0;
+
+    /** 
+     * @type {string[]} Array of image paths for different bottle status bar states
+     * Images represent 0%, 20%, 40%, 60%, 80%, and 100% states
+     */
+    BOTTLE_IMAGES = [
+        './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/0.png',
+        './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/20.png',
+        './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/40.png',
+        './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/60.png',
+        './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/80.png',
+        './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/100.png',
+    ];
+
+    /**
+     * Creates a new bottle status bar
+     * Initializes position, dimensions, and initial bottle percentage
+     */
+    constructor() {
+        super();
+        this.loadImage('./img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/0.png');
+        this.loadImages(this.BOTTLE_IMAGES);
+        this.positionX = 15;
+        this.positionY = 150;
+        this.width = 300;
+        this.height = 75;
+        this.setBottlesPercentage(0);
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BackgroundObject.html">BackgroundObject</a></li><li><a href="BigChicken.html">BigChicken</a></li><li><a href="Bottle.html">Bottle</a></li><li><a href="BottleStatusBar.html">BottleStatusBar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Cloud.html">Cloud</a></li><li><a href="Coin.html">Coin</a></li><li><a href="CoinStatusBar.html">CoinStatusBar</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossStatusBar.html">EndbossStatusBar</a></li><li><a href="HealthStatusBar.html">HealthStatusBar</a></li><li><a href="Keyboard.html">Keyboard</a></li><li><a href="Level.html">Level</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="SmallChicken.html">SmallChicken</a></li><li><a href="StatusBar.html">StatusBar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#generateBigChicken">generateBigChicken</a></li><li><a href="global.html#generateBottles">generateBottles</a></li><li><a href="global.html#generateClouds">generateClouds</a></li><li><a href="global.html#generateCoins">generateCoins</a></li><li><a href="global.html#generateEnemies">generateEnemies</a></li><li><a href="global.html#generateFirstPlaygroundBGObjectGroupLayer">generateFirstPlaygroundBGObjectGroupLayer</a></li><li><a href="global.html#generatePlaygroundBackgroundObjectGroups">generatePlaygroundBackgroundObjectGroups</a></li><li><a href="global.html#generateSmallChicken">generateSmallChicken</a></li><li><a href="global.html#hideMobileButtons">hideMobileButtons</a></li><li><a href="global.html#imagePositionX">imagePositionX</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initKeyboardListeners">initKeyboardListeners</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initTouchListeners">initTouchListeners</a></li><li><a href="global.html#keyDownListeners">keyDownListeners</a></li><li><a href="global.html#keyPressListeners">keyPressListeners</a></li><li><a href="global.html#keyUpListeners">keyUpListeners</a></li><li><a href="global.html#level_1">level_1</a></li><li><a href="global.html#muteGame">muteGame</a></li><li><a href="global.html#numOfBackgroundObjectGroups">numOfBackgroundObjectGroups</a></li><li><a href="global.html#numOfBigChicken">numOfBigChicken</a></li><li><a href="global.html#numOfBottles">numOfBottles</a></li><li><a href="global.html#numOfClouds">numOfClouds</a></li><li><a href="global.html#numOfCoins">numOfCoins</a></li><li><a href="global.html#numOfLittleChicken">numOfLittleChicken</a></li><li><a href="global.html#randomPosXNumber">randomPosXNumber</a></li><li><a href="global.html#resetLevel">resetLevel</a></li><li><a href="global.html#showMobileButtons">showMobileButtons</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#toggleGameplayInfoOverlay">toggleGameplayInfoOverlay</a></li><li><a href="global.html#toggleSounds">toggleSounds</a></li><li><a href="global.html#touchendListeners">touchendListeners</a></li><li><a href="global.html#touchstartListeners">touchstartListeners</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Apr 24 2025 18:32:31 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

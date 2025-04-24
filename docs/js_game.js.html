@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: js/game.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: js/game.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>let canvas;
+let world;
+let keyboard = new Keyboard();
+
+let backgroundSound = new Audio('./audio/mexican_song_background.mp3');
+backgroundSound.volume = 0.3;
+backgroundSound.loop = true;
+
+/**
+ * Initializes the game by setting up event listeners for various buttons
+ * and touch controls
+ */
+function init() {
+    document.getElementById('startButton').addEventListener('click', startGame);
+    document.getElementById('volume').addEventListener('click', muteGame);
+    document.getElementById('gameplayInfoButton').addEventListener('click', toggleGameplayInfoOverlay);
+    document.getElementById('closeInfoButton').addEventListener('click', toggleGameplayInfoOverlay);
+    initKeyboardListeners();
+    initTouchListeners();
+}
+
+/**
+ * Starts the game by initializing the canvas, world, and game settings
+ * Also handles the display of UI elements and plays background music
+ */
+function startGame() {
+    canvas = document.getElementById('canvas');
+    initLevel();
+    world = new World(canvas, keyboard);
+    document.getElementById('overlay').style.display = 'none';
+    document.getElementById('footer').style.display = 'none';
+    document.getElementById('volume').style.top = '24px';
+    document.getElementById('gameplayInfoButton').style.display = 'none';
+
+    if (window.matchMedia('(orientation: portrait)').matches) {
+        hideMobileButtons();
+    } else {
+        showMobileButtons();
+    }
+
+    backgroundSound.play();
+    world.startGame();
+}
+
+/**
+ * Hides the mobile control buttons
+ */
+function hideMobileButtons() {
+    document.getElementById('mobileButtonsContainer').style.display = 'none';
+}
+
+/**
+ * Shows the mobile control buttons
+ */
+function showMobileButtons() {
+    document.getElementById('mobileButtonsContainer').style.display = 'flex';
+}
+
+/**
+ * Toggles the game audio on/off and updates the volume button icon
+ */
+function muteGame() {
+    let volumeBtn = document.getElementById('volume');
+
+    if (backgroundSound.paused) {
+        backgroundSound.play();
+        toggleSounds();
+
+        volumeBtn.innerHTML = `
+            &lt;img src="./img/volume_on.svg">
+        `;
+    } else {
+        backgroundSound.pause();
+        volumeBtn.innerHTML = `
+            &lt;img src="./img/volume_mute.svg">
+        `;
+    }
+}
+
+/**
+ * Toggles all game sound effects between muted and unmuted states
+ */
+function toggleSounds() {
+    let walkingSound = world.character.walkingSound;
+    let jumpingSound = world.character.jumpingSound;
+    let collectCoinSound = world.character.collectCoinAudio;
+    let collectBottleSound = world.character.collectBottleAudio;
+    let bottleBreakSound = world.bottleBreakSound;
+    let chickenSound = world.chickenAudio;
+
+    walkingSound.muted = !walkingSound.muted;
+    jumpingSound.muted = !jumpingSound.muted;
+    collectCoinSound.muted = !collectCoinSound.muted;
+    collectBottleSound.muted = !collectBottleSound.muted;
+    bottleBreakSound.muted = !bottleBreakSound.muted;
+    chickenSound.muted = !chickenSound.muted;
+}
+
+/**
+ * Toggles the visibility of the gameplay information overlay
+ */
+function toggleGameplayInfoOverlay() {
+    let gameplayInfoOverlay = document.getElementById('gameplayInfoOverlay');
+    let gameplayInfoOverlayDisplay = window.getComputedStyle(gameplayInfoOverlay).display;
+    
+    if (gameplayInfoOverlayDisplay === 'none') {
+        gameplayInfoOverlay.style.display = 'flex';
+    } else {
+        gameplayInfoOverlay.style.display = 'none';
+    }
+}
+
+/**
+ * Initializes keyboard event listeners for the game
+ * Sets up keypress, keydown, and keyup event handlers
+ */
+function initKeyboardListeners() {
+    keyPressListeners();
+    keyDownListeners();
+    keyUpListeners();
+}
+
+/**
+ * Sets up keypress event listeners for WASD controls, space bar, and throw action
+ * @listens keypress
+ */
+function keyPressListeners() {
+    window.addEventListener('keypress', event => {
+        switch (event.code) {
+            case "KeyW":
+                keyboard.UP = true;
+                break;
+    
+            case "KeyA":
+                keyboard.LEFT = true;
+                break;
+    
+            case "KeyS":
+                keyboard.DOWN = true;
+                break;
+    
+            case "KeyD":
+                keyboard.RIGHT = true;
+                break;
+    
+            case "Space":
+                keyboard.SPACE = true;
+                break;
+    
+            case "KeyF":
+                keyboard.THROW = true;
+                break;
+    
+            default:
+                break;
+        }
+    });
+}
+
+
+/**
+ * Sets up keydown event listeners for arrow key controls and space bar
+ * @listens keydown
+ */
+function keyDownListeners() {
+    window.addEventListener('keydown', event => {
+        switch (event.code) {
+            case "ArrowUp":
+                keyboard.UP = true;
+                break;
+    
+            case "ArrowLeft":
+                keyboard.LEFT = true;
+                break;
+    
+            case "ArrowDown":
+                keyboard.DOWN = true;
+                break;
+    
+            case "ArrowRight":
+                keyboard.RIGHT = true;
+                break;
+    
+            case "Space":
+                keyboard.SPACE = true;
+                break;
+            default:
+                break;
+        }
+    });
+}
+
+
+/**
+ * Sets up keyup event listeners for all keyboard controls
+ * Resets control states when keys are released
+ * @listens keyup
+ */
+function keyUpListeners() {
+    window.addEventListener('keyup', event => {
+        switch (event.code) {
+            case "ArrowUp":
+                keyboard.UP = false;
+                break;
+    
+            case "ArrowLeft":
+                keyboard.LEFT = false;
+                break;
+    
+            case "ArrowDown":
+                keyboard.DOWN = false;
+                break;
+    
+            case "ArrowRight":
+                keyboard.RIGHT = false;
+                break;
+    
+            case "Space":
+                keyboard.SPACE = false;
+                break;
+    
+            case "KeyW":
+                keyboard.UP = false;
+                break;
+    
+            case "KeyA":
+                keyboard.LEFT = false;
+                break;
+    
+            case "KeyS":
+                keyboard.DOWN = false;
+                break;
+    
+            case "KeyD":
+                keyboard.RIGHT = false;
+                break;
+    
+            case "KeyF":
+                keyboard.THROW = false;
+                break;
+            default:
+                break;
+        }
+    });
+}
+
+/**
+ * Initializes all touch event listeners for mobile controls
+ */
+function initTouchListeners() {
+    touchstartListeners();
+    touchendListeners();
+}
+
+/**
+ * Sets up touch start event listeners for mobile control buttons
+ */
+function touchstartListeners() {
+    document.getElementById('leftButton').addEventListener('touchstart', event => {
+        event.preventDefault();
+        keyboard.LEFT = true;
+    });
+    
+    document.getElementById('rightButton').addEventListener('touchstart', event => {
+        event.preventDefault();
+        keyboard.RIGHT = true;
+    });
+    
+    document.getElementById('jumpButton').addEventListener('touchstart', event => {
+        event.preventDefault();
+        keyboard.UP = true;
+    });
+    
+    document.getElementById('throwButton').addEventListener('touchstart', event => {
+        event.preventDefault();
+        keyboard.THROW = true;
+    });
+}
+
+/**
+ * Sets up touch end event listeners for mobile control buttons
+ */
+function touchendListeners() {
+    document.getElementById('leftButton').addEventListener('touchend', event => {
+        event.preventDefault();
+        keyboard.LEFT = false;
+    });
+    
+    document.getElementById('rightButton').addEventListener('touchend', event => {
+        event.preventDefault();
+        keyboard.RIGHT = false;
+    });
+    
+    document.getElementById('jumpButton').addEventListener('touchend', event => {
+        event.preventDefault();
+        keyboard.UP = false;
+    });
+    
+    document.getElementById('throwButton').addEventListener('touchend', event => {
+        event.preventDefault();
+        keyboard.THROW = false;
+    });
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BackgroundObject.html">BackgroundObject</a></li><li><a href="BigChicken.html">BigChicken</a></li><li><a href="Bottle.html">Bottle</a></li><li><a href="BottleStatusBar.html">BottleStatusBar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Cloud.html">Cloud</a></li><li><a href="Coin.html">Coin</a></li><li><a href="CoinStatusBar.html">CoinStatusBar</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossStatusBar.html">EndbossStatusBar</a></li><li><a href="HealthStatusBar.html">HealthStatusBar</a></li><li><a href="Keyboard.html">Keyboard</a></li><li><a href="Level.html">Level</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="SmallChicken.html">SmallChicken</a></li><li><a href="StatusBar.html">StatusBar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#generateBigChicken">generateBigChicken</a></li><li><a href="global.html#generateBottles">generateBottles</a></li><li><a href="global.html#generateClouds">generateClouds</a></li><li><a href="global.html#generateCoins">generateCoins</a></li><li><a href="global.html#generateEnemies">generateEnemies</a></li><li><a href="global.html#generateFirstPlaygroundBGObjectGroupLayer">generateFirstPlaygroundBGObjectGroupLayer</a></li><li><a href="global.html#generatePlaygroundBackgroundObjectGroups">generatePlaygroundBackgroundObjectGroups</a></li><li><a href="global.html#generateSmallChicken">generateSmallChicken</a></li><li><a href="global.html#hideMobileButtons">hideMobileButtons</a></li><li><a href="global.html#imagePositionX">imagePositionX</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initKeyboardListeners">initKeyboardListeners</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initTouchListeners">initTouchListeners</a></li><li><a href="global.html#keyDownListeners">keyDownListeners</a></li><li><a href="global.html#keyPressListeners">keyPressListeners</a></li><li><a href="global.html#keyUpListeners">keyUpListeners</a></li><li><a href="global.html#level_1">level_1</a></li><li><a href="global.html#muteGame">muteGame</a></li><li><a href="global.html#numOfBackgroundObjectGroups">numOfBackgroundObjectGroups</a></li><li><a href="global.html#numOfBigChicken">numOfBigChicken</a></li><li><a href="global.html#numOfBottles">numOfBottles</a></li><li><a href="global.html#numOfClouds">numOfClouds</a></li><li><a href="global.html#numOfCoins">numOfCoins</a></li><li><a href="global.html#numOfLittleChicken">numOfLittleChicken</a></li><li><a href="global.html#randomPosXNumber">randomPosXNumber</a></li><li><a href="global.html#resetLevel">resetLevel</a></li><li><a href="global.html#showMobileButtons">showMobileButtons</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#toggleGameplayInfoOverlay">toggleGameplayInfoOverlay</a></li><li><a href="global.html#toggleSounds">toggleSounds</a></li><li><a href="global.html#touchendListeners">touchendListeners</a></li><li><a href="global.html#touchstartListeners">touchstartListeners</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Apr 24 2025 18:32:31 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
