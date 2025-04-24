@@ -1,8 +1,24 @@
+/**
+ * Class representing the end boss enemy in the game
+ * @extends MovableObject
+ */
 class Endboss extends MovableObject {
+    /** @type {number} Height of the end boss sprite in pixels */
     height = 650;
+
+    /** @type {number} Width of the end boss sprite in pixels */
     width = 450;
+
+    /** @type {number} Vertical position of the end boss */
     positionY = 50;
 
+    /** 
+     * @type {Object} Collision offset values for the end boss
+     * @property {number} top - Top offset for collision detection
+     * @property {number} right - Right offset for collision detection
+     * @property {number} bottom - Bottom offset for collision detection
+     * @property {number} left - Left offset for collision detection
+     */
     offset = {
         top: 115,
         right: 15,
@@ -10,18 +26,40 @@ class Endboss extends MovableObject {
         left: 30
     };
 
-    state = 'waiting'; // waiting, alert, chasing, hurt, attacking, dead
+    /** @type {string} Current state of the end boss (waiting, alert, chasing, hurt, attacking, dead) */
+    state = 'waiting';
+
+    /** @type {boolean} Whether this is the first encounter with the player */
     firstEncounter = true;
+
+    /** @type {number} Timestamp of the last attack */
     lastAttackTime = 0;
+
+    /** @type {number} Cooldown period between attacks in milliseconds */
     attackCoolDown = 5000;
+
+    /** @type {boolean} Whether a one-time animation is currently playing */
     isPlayingOneTimeAnimation = false;
+
+    /** @type {number} Speed of the jump during attack */
     attackJumpSpeed = 50;
+
+    /** @type {number} Horizontal distance covered during attack jump */
     attackJumpDistance = 500;
+
+    /** @type {number} Maximum height of the attack jump */
     attackJumpHeight = 300;
+
+    /** @type {number} Initial Y position for attack calculations */
     initialAttackPosY = 50;
+
+    /** @type {boolean} Whether the boss is currently jumping */
     isJumping = false;
+
+    /** @type {boolean} Whether the first encounter has occurred */
     hasFirstEncounterOccurred = false;
 
+    /** @type {string[]} Array of image paths for walking animation */
     ENDBOSS_IMAGES_WALKING_PATH = [
         './img/4_enemie_boss_chicken/1_walk/G1.png',
         './img/4_enemie_boss_chicken/1_walk/G2.png',
@@ -29,6 +67,7 @@ class Endboss extends MovableObject {
         './img/4_enemie_boss_chicken/1_walk/G4.png'
     ];
 
+    /** @type {string[]} Array of image paths for alert sequence */
     ENDBOSS_IMAGES_ALERT_SEQUENCE_PATH = [
         './img/4_enemie_boss_chicken/2_alert/G5.png',
         './img/4_enemie_boss_chicken/2_alert/G6.png',
@@ -40,6 +79,7 @@ class Endboss extends MovableObject {
         './img/4_enemie_boss_chicken/2_alert/G12.png'
     ];
 
+    /** @type {string[]} Array of image paths for attack animation */
     ENDBOSS_IMAGES_ATTACK_PATH = [
         '../img/4_enemie_boss_chicken/3_attack/G13.png',
         '../img/4_enemie_boss_chicken/3_attack/G14.png',
@@ -51,19 +91,23 @@ class Endboss extends MovableObject {
         '../img/4_enemie_boss_chicken/3_attack/G20.png'
     ];
 
+    /** @type {string[]} Array of image paths for hurt animation */
     ENDBOSS_IMAGES_HURT_PATH = [
         './img/4_enemie_boss_chicken/4_hurt/G21.png',
         './img/4_enemie_boss_chicken/4_hurt/G22.png',
         './img/4_enemie_boss_chicken/4_hurt/G23.png'
     ];
 
+    /** @type {string[]} Array of image paths for death animation */
     ENDBOSS_IMAGES_DEAD_PATH = [
         './img/4_enemie_boss_chicken/5_dead/G24.png',
         './img/4_enemie_boss_chicken/5_dead/G25.png',
         './img/4_enemie_boss_chicken/5_dead/G26.png'
     ];
 
-
+    /**
+     * Creates a new end boss instance and initializes animations
+     */
     constructor() {
         super();
         this.loadImage('./img/4_enemie_boss_chicken/1_walk/G1.png');
@@ -76,17 +120,19 @@ class Endboss extends MovableObject {
         this.animate();
     }
 
+    /**
+     * Main animation loop for the end boss
+     * Handles state changes and corresponding behaviors
+     */
     animate() {
         setInterval(() => {
             if (this.state === 'dead') return;
 
-            //Check for first encounter
             if (world.character.positionX > 9000 && this.firstEncounter) {
                 this.playAlertSequence();
                 this.firstEncounter = false;
             }
 
-            //Handle different states
             switch (this.state) {
                 case 'chasing':
                     this.chaseCharacter();
@@ -108,6 +154,9 @@ class Endboss extends MovableObject {
         }, 50);
     }
 
+    /**
+     * Plays the alert animation sequence when first encountering the player
+     */
     playAlertSequence() {
         this.state = 'alert';
         this.isPlayingOneTimeAnimation = true;
@@ -126,6 +175,10 @@ class Endboss extends MovableObject {
         }, 200);
     }
 
+    /**
+     * Makes the end boss chase the player character
+     * Updates position and animation based on player location
+     */
     chaseCharacter() {
         if (this.positionX > world.character.positionX) {
             this.positionX -= 2;
@@ -137,6 +190,9 @@ class Endboss extends MovableObject {
         this.playAnimation(this.ENDBOSS_IMAGES_WALKING_PATH);
     }
 
+    /**
+     * Checks if the boss can perform an attack based on cooldown
+     */
     checkAttackOpportunity() {
         let currentTime = new Date().getTime();
         if (currentTime - this.lastAttackTime > this.attackCoolDown) {
@@ -145,6 +201,10 @@ class Endboss extends MovableObject {
         }
     }
 
+    /**
+     * Executes the attack animation and damage calculation
+     * Includes jump arc calculation and collision detection
+     */
     attackCharacter() {
         if (!this.isJumping) {
             this.isPlayingOneTimeAnimation = true;
@@ -193,6 +253,9 @@ class Endboss extends MovableObject {
         }
     }
 
+    /**
+     * Plays the hurt animation when the boss takes damage
+     */
     playHurtAnimation() {
         this.isPlayingOneTimeAnimation = true;
         let currentFrame = 0;
@@ -209,6 +272,9 @@ class Endboss extends MovableObject {
         }, 200);
     }
 
+    /**
+     * Plays the death animation and triggers win condition
+     */
     playDeadAnimation() {
         this.state = 'dead';
         this.isPlayingOneTimeAnimation = true;
@@ -228,6 +294,10 @@ class Endboss extends MovableObject {
         }, 200);
     }
 
+    /**
+     * Handles damage taken by the end boss
+     * Triggers hurt state and checks for death condition
+     */
     hit() {
         if (this.state !== 'dead') {
             this.state = 'hurt';
@@ -238,30 +308,45 @@ class Endboss extends MovableObject {
         }
     }
 
+    /**
+     * Animates the walking state
+     */
     animateWalkingChickenEndboss() {
         setInterval(() => {
             this.playAnimation(this.ENDBOSS_IMAGES_WALKING_PATH);
         }, 200);
     }
 
+    /**
+     * Animates the alert state
+     */
     animateAlertChickenEndboss() {
         setInterval(() => {
             this.playAnimation(this.ENDBOSS_IMAGES_ALERT_SEQUENCE_PATH);
         }, 200);
     }
 
+    /**
+     * Animates the attack state
+     */
     animateAttackChickenEndboss() {
         setInterval(() => {
             this.playAnimation(this.ENDBOSS_IMAGES_ATTACK_PATH);
         }, 200);
     }
 
+    /**
+     * Animates the hurt state
+     */
     animateHurtChickenEndboss() {
         setInterval(() => {
             this.playAnimation(this.ENDBOSS_IMAGES_HURT_PATH);
         }, 200);
     }
 
+    /**
+     * Animates the dead state
+     */
     animateDeadChickenEndboss() {
         setInterval(() => {
             this.playAnimation(this.ENDBOSS_IMAGES_DEAD_PATH);
