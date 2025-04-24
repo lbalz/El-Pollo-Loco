@@ -65,12 +65,12 @@ function muteGame() {
     if (backgroundSound.paused) {
         backgroundSound.play();
         toggleSounds();
-
         volumeBtn.innerHTML = `
             <img src="./img/volume_on.svg">
         `;
     } else {
         backgroundSound.pause();
+        toggleSounds();
         volumeBtn.innerHTML = `
             <img src="./img/volume_mute.svg">
         `;
