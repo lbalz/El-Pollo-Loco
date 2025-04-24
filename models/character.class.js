@@ -1,10 +1,33 @@
+/**
+ * Class representing the main playable character in the game
+ * @extends MovableObject
+ */
 class Character extends MovableObject {
-    positionY = 255; // Standard Y = 250px
+    /** @type {number} Vertical position of the character */
+    positionY = 255; 
+
+    /** @type {number} Horizontal position of the character */
     positionX = 25;
+
+    /** @type {number} Height of the character sprite in pixels */
     height = 400;
+
+    /** @type {number} Width of the character sprite in pixels */
     width = 200;
+
+    /** @type {number} Movement speed of the character */
     movingSpeed = 15;
+
+    /** @type {World} Reference to the game world */
     world;
+
+    /** 
+     * @type {Object} Collision offset values for the character
+     * @property {number} top - Top offset for collision detection
+     * @property {number} right - Right offset for collision detection
+     * @property {number} bottom - Bottom offset for collision detection
+     * @property {number} left - Left offset for collision detection
+     */
     offset = {
         top: 150,
         right: 30,
@@ -12,13 +35,22 @@ class Character extends MovableObject {
         left: 30
     };
 
+    /** @type {number} Timestamp of the last character movement */
     lastMovement = new Date().getTime();
+
+    /** @type {number} Timer for idle animations */
     idleTimer = 0;
-    IDLE_ANIMATION_SPEED = 200; // ms
-    LONG_IDLE_DELAY = 5000; // ms
+
+    /** @type {number} Speed of idle animations in milliseconds */
+    IDLE_ANIMATION_SPEED = 200;
+
+    /** @type {number} Delay before long idle animation starts */
+    LONG_IDLE_DELAY = 5000;
+
+    /** @type {string} Current animation state of the character */
     currentAnimation = 'idle';
 
-
+    /** @type {string[]} Array of image paths for walking animation */
     PEPE_WALKING_IMAGE_PATHS = [
         './img/2_character_pepe/2_walk/W-21.png',
         './img/2_character_pepe/2_walk/W-22.png',
@@ -28,6 +60,7 @@ class Character extends MovableObject {
         './img/2_character_pepe/2_walk/W-26.png'
     ];
 
+    /** @type {string[]} Array of image paths for jumping animation */
     PEPE_JUMPING_IMAGE_PATHS = [
         './img/2_character_pepe/3_jump/J-31.png',
         './img/2_character_pepe/3_jump/J-32.png',
@@ -40,6 +73,7 @@ class Character extends MovableObject {
         './img/2_character_pepe/3_jump/J-39.png'
     ];
 
+    /** @type {string[]} Array of image paths for dying animation */
     PEPE_DYING_IMAGE_PATHS = [
         './img/2_character_pepe/5_dead/D-51.png',
         './img/2_character_pepe/5_dead/D-52.png',
@@ -50,12 +84,14 @@ class Character extends MovableObject {
         './img/2_character_pepe/5_dead/D-57.png',
     ];
 
+    /** @type {string[]} Array of image paths for hurt animation */
     PEPE_HURT_IMAGE_PATHS = [
         './img/2_character_pepe/4_hurt/H-41.png',
         './img/2_character_pepe/4_hurt/H-42.png',
         './img/2_character_pepe/4_hurt/H-43.png'
     ];
 
+    /** @type {string[]} Array of image paths for idle animation */
     PEPE_IDLE_IMAGE_PATHS = [
         './img/2_character_pepe/1_idle/idle/I-1.png',
         './img/2_character_pepe/1_idle/idle/I-2.png',
@@ -69,6 +105,7 @@ class Character extends MovableObject {
         './img/2_character_pepe/1_idle/idle/I-10.png',
     ];
 
+    /** @type {string[]} Array of image paths for long idle animation */
     PEPE_LONG_IDLE_IMAGE_PATHS = [
         './img/2_character_pepe/1_idle/long_idle/I-11.png',
         './img/2_character_pepe/1_idle/long_idle/I-12.png',
@@ -82,15 +119,27 @@ class Character extends MovableObject {
         './img/2_character_pepe/1_idle/long_idle/I-20.png',
     ];
 
+    /** @type {HTMLAudioElement} Sound effect for walking */
     walkingSound = new Audio('./audio/walking_steps.mp3');
+    
+    /** @type {number} Start time for walking sound loop */
     walkingSoundLoopStart = 3.1;
+
+    /** @type {number} End time for walking sound loop */
     walkingSoundLoopEnd = 4;
 
+    /** @type {HTMLAudioElement} Sound effect for jumping */
     jumpingSound = new Audio('./audio/jump.mp3');
+
+    /** @type {number} Start time for jumping sound loop */
     jumpingSoundLoopStart = 0;
+
+    /** @type {number} End time for jumping sound loop */
     jumpingSoundLoopEnd = 1.5;
 
-    
+    /**
+     * Creates a new character instance and initializes animations and controls
+     */
     constructor() {
         super().loadImage('./img/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.PEPE_WALKING_IMAGE_PATHS);
@@ -104,6 +153,10 @@ class Character extends MovableObject {
         // this.godMode(); // Godmode for developing game without dying and inifite bottles
     }
 
+    /**
+     * Sets up character animation loops and movement controls
+     * Handles walking, jumping, and idle animations
+     */
     animate() {
         this.walkingSound.currentTime = this.walkingSoundLoopStart;
         this.walkingSound.playbackRate = 2.0;
@@ -172,6 +225,10 @@ class Character extends MovableObject {
         }, this.IDLE_ANIMATION_SPEED);
     }
     
+    /**
+     * Updates the character's idle animations based on movement state
+     * Switches between normal idle and long idle animations
+     */
     updateIdleAnimations() {
         let currentTime = new Date().getTime();
         let timeSinceLastMovement = currentTime - this.lastMovement;
@@ -193,11 +250,19 @@ class Character extends MovableObject {
         }
     }
 
+    /**
+     * Makes the character jump if they're alive
+     * @returns {void}
+     */
     jump() {
         if (this.healthPoints <= 0) return;
         this.speedPosY = 35;
     }
 
+    /**
+     * Activates god mode for development/testing
+     * Gives infinite health and bottles
+     */
     godMode() {
         this.bottles = 20;
         this.coins = 20;
