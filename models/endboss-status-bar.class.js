@@ -25,7 +25,7 @@ class EndbossStatusBar extends StatusBar {
      */
     constructor() {
         super();
-        this.loadImage('../img/7_statusbars/2_statusbar_endboss/blue/blue0.png');
+        this.loadImage('./img/7_statusbars/2_statusbar_endboss/blue/blue0.png');
         this.loadImages(this.ENDBOSS_HEALTH_POINTS_IMAGES);
         this.positionX = 760;
         this.positionY = 10;
