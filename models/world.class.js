@@ -153,6 +153,7 @@ class World {
         overlay.style.display = 'flex';
         overlay.style.flexDirection = 'column';
         overlay.style.gap = '20px';
+        overlay.style.marginTop = '78px';
         overlay.innerHTML = `
         <img src="${this.gameOverScreenImage.src}" alt="Game Over" style="width: 100%; height: 100%;">
         <button id="resetButton">Reset Game</button>

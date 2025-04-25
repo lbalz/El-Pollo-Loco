@@ -29,6 +29,7 @@ function startGame() {
     world = new World(canvas, keyboard);
     document.getElementById('overlay').style.display = 'none';
     document.getElementById('footer').style.display = 'none';
+    document.getElementById('volume').style.display = 'flex';
     document.getElementById('volume').style.top = '24px';
     document.getElementById('gameplayInfoButton').style.display = 'none';
 
