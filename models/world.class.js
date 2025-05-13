@@ -178,13 +178,18 @@ class World {
         overlay.style.display = 'flex';
         overlay.style.flexDirection = 'column';
         overlay.style.gap = '20px';
-        overlay.style.marginTop = '78px';
         overlay.innerHTML = `
         <img src="${this.gameOverScreenImage.src}" alt="Game Over" style="width: 100%; height: 100%;">
         <button id="resetButton">Reset Game</button>
         `;
         overlay.style.backgroundImage = 'none';
         overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+
+        if (window.matchMedia('(orientation: landscape)').matches) {
+            overlay.style.marginTop = '0px';
+        } else {
+            overlay.style.marginTop = '78px';
+        }
 
         let resetButton = document.getElementById('resetButton');
         resetButton.style.display = 'block';
@@ -203,13 +208,18 @@ class World {
         overlay.style.display = 'flex';
         overlay.style.flexDirection = 'column';
         overlay.style.gap = '20px';
-        overlay.style.marginTop = '78px';
         overlay.innerHTML = `
         <img src="${this.winScreenImage.src}" alt="Game Over" style="width: 100%; height: 100%;">
         <button id="resetButton">Reset Game</button>
         `;
         overlay.style.backgroundImage = 'none';
         overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+
+        if (window.matchMedia('(orientation: landscape)').matches) {
+            overlay.style.marginTop = '0px';
+        } else {
+            overlay.style.marginTop = '78px';
+        }
 
         let resetButton = document.getElementById('resetButton');
         resetButton.style.display = 'block';
