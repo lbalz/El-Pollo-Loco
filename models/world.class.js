@@ -232,32 +232,57 @@ class World {
     /**
      * Displays the game over screen
      */
-    showGameOver() {
-        this.gameRunning = false;
+    /**
+ * Displays the game over screen
+ */
+showGameOver() {
+    this.gameRunning = false;
+    let overlay = document.getElementById('overlay');
+    this.setupOverlayBase(overlay);
+    this.setGameOverContent(overlay);
+    this.adjustOverlayMargin(overlay);
+    this.setupResetButton();
+}
 
-        let overlay = document.getElementById('overlay');
-        overlay.style.display = 'flex';
-        overlay.style.flexDirection = 'column';
-        overlay.style.gap = '20px';
-        overlay.innerHTML = `
+/**
+ * Sets up base overlay styles
+ * @param {HTMLElement} overlay - The overlay element
+ */
+setupOverlayBase(overlay) {
+    overlay.style.display = 'flex';
+    overlay.style.flexDirection = 'column';
+    overlay.style.gap = '20px';
+    overlay.style.backgroundImage = 'none';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+}
+
+/**
+ * Sets game over content in overlay
+ * @param {HTMLElement} overlay - The overlay element
+ */
+setGameOverContent(overlay) {
+    overlay.innerHTML = `
         <img src="${this.gameOverScreenImage.src}" alt="Game Over" style="width: 100%; height: 100%;">
         <button id="resetButton">Reset Game</button>
-        `;
-        overlay.style.backgroundImage = 'none';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    `;
+}
 
-        if (window.matchMedia('(orientation: landscape)').matches) {
-            overlay.style.marginTop = '0px';
-        } else {
-            overlay.style.marginTop = '78px';
-        }
+/**
+ * Adjusts overlay margin based on orientation
+ * @param {HTMLElement} overlay - The overlay element
+ */
+adjustOverlayMargin(overlay) {
+    overlay.style.marginTop = window.matchMedia('(orientation: landscape)').matches ? '0px' : '78px';
+}
 
-        let resetButton = document.getElementById('resetButton');
-        resetButton.style.display = 'block';
-        resetButton.addEventListener('click', () => {
-            this.resetGame();
-        });
-    }
+/**
+ * Sets up the reset button event listener
+ */
+setupResetButton() {
+    let resetButton = document.getElementById('resetButton');
+    resetButton.style.display = 'block';
+    resetButton.addEventListener('click', () => this.resetGame());
+}
 
     /**
      * Displays the win screen
