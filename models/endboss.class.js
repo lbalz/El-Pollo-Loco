@@ -231,13 +231,16 @@ class Endboss extends MovableObject {
 
                 if (currentFrame === Math.floor(this.ENDBOSS_IMAGES_ATTACK_PATH.length / 2)) {
                     if (this.isColliding(world.character)) {
-                        world.character.healthPoints -= 20;
+                        world.character.healthPoints = Math.max(0, world.character.healthPoints - 20);
                         world.healthStatusBar.setHealthPercentage(world.character.healthPoints);
 
                         if (world.character.healthPoints <= 0) {
-                            world.character.healthPoints = 0;  // Prevent negative health
-                            world.gameState = 'lose';
-                            clearInterval(attackInterval);  // Stop attack animation
+                            world.character.healthPoints = 0;
+                            world.gameState = 'gameover';
+                            clearInterval(attackInterval);
+                            setTimeout(() => {
+                                world.showGameOver();
+                            }, 50);
                         }
                     }
                 }
@@ -249,7 +252,7 @@ class Endboss extends MovableObject {
                     this.isPlayingOneTimeAnimation = false;
                     this.isJumping = false;
                 }
-            }, 200);
+            }, 175);
         }
     }
 

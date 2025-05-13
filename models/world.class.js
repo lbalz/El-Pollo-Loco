@@ -106,6 +106,14 @@ class World {
                     }, 50);
                 }
 
+                if (this.character.healthPoints <= 0) {
+                    this.character.healthPoints = 0;
+                    this.gameState = 'gameover';
+                    setTimeout(() => {
+                        this.showGameOver();
+                    }, 50);
+                }
+
                 if (this.level.endboss.length > 0 && this.level.endboss[0].endbossHealth <= 0) {
                     this.gameState = 'win';
                     this.level.endboss[0].playDeadAnimation();
@@ -323,6 +331,14 @@ class World {
                     this.character.getHit();
                     this.healthStatusBar.setHealthPercentage(this.character.healthPoints, this.ctx);
                     this.lastHitTime = currentTime;
+
+                    if (this.character.healthPoints <= 0) {
+                        this.character.healthPoints = 0;
+                        this.gameState = 'gameover';
+                        setTimeout(() => {
+                            this.showGameOver();
+                        }, 50);
+                    }
                 }
             }
         });

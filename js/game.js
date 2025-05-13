@@ -35,7 +35,11 @@ function startGame() {
 
     if (window.matchMedia('(orientation: portrait)').matches) {
         hideMobileButtons();
-    } else {
+    } 
+    // else if (window.matchMedia('(orientation: landscape)').matches) {
+    //     showMobileButtons();
+    // } 
+    else {
         showMobileButtons();
     }
 
