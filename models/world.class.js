@@ -60,6 +60,8 @@ class World {
     /** @type {HTMLAudioElement} Sound effect for chicken death */
     chickenAudio = new Audio('./audio/chicken.mp3');
 
+    lastBottleThrow;
+
     /**
      * Creates a new game world
      * @param {HTMLCanvasElement} canvas - The game's canvas element
@@ -72,6 +74,7 @@ class World {
         this.loadStartAndEndImages();
         this.setWorld();
         this.checkingFunctionLoop();
+        this.lastBottleThrow = 0;
     }
 
     /**
@@ -241,20 +244,27 @@ class World {
      */
     checkThrowBottle() {
         if (this.character.bottles > 0) {
-            if (this.character.otherDirection) {
-                if (this.keyboard.THROW) {
-                    let throwableBottle = new ThrowableObject(this.character.positionX, this.character.positionY + 175, this.character.otherDirection);
-                    this.throwableObjects.push(throwableBottle);
-                    this.character.bottles -= 1;
-                    this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
-                }
+            const currentTime = new Date().getTime();
+            const throwCooldown = 1000;
 
-            } else {
-                if (this.keyboard.THROW) {
-                    let throwableBottle = new ThrowableObject(this.character.positionX + 125, this.character.positionY + 175, this.character.otherDirection);
-                    this.throwableObjects.push(throwableBottle);
-                    this.character.bottles -= 1;
-                    this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
+            if (currentTime - this.lastBottleThrow > throwCooldown) {
+                if (this.character.otherDirection) {
+                    if (this.keyboard.THROW) {
+                        let throwableBottle = new ThrowableObject(this.character.positionX, this.character.positionY + 175, this.character.otherDirection);
+                        this.throwableObjects.push(throwableBottle);
+                        this.character.bottles -= 1;
+                        this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
+                        this.lastBottleThrow = currentTime;
+                    }
+    
+                } else {
+                    if (this.keyboard.THROW) {
+                        let throwableBottle = new ThrowableObject(this.character.positionX + 125, this.character.positionY + 175, this.character.otherDirection);
+                        this.throwableObjects.push(throwableBottle);
+                        this.character.bottles -= 1;
+                        this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
+                        this.lastBottleThrow = currentTime;
+                    }
                 }
             }
         }
