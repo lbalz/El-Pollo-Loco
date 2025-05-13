@@ -99,43 +99,56 @@ class World {
     checkingFunctionLoop() {
         setInterval(() => {
             if (this.gameState === 'running') {
-                this.checkThrowBottle();
-                this.checkCharacterGotChickenHit();
-
-                if (this.character.isDead()) {
-                    this.gameState = 'gameover';
-                    setTimeout(() => {
-                        this.showGameOver();
-                    }, 50);
-                }
-
-                if (this.character.healthPoints <= 0) {
-                    this.character.healthPoints = 0;
-                    this.gameState = 'gameover';
-                    setTimeout(() => {
-                        this.showGameOver();
-                    }, 50);
-                }
-
-                if (this.level.endboss.length > 0 && this.level.endboss[0].endbossHealth <= 0) {
-                    this.gameState = 'win';
-                    this.level.endboss[0].playDeadAnimation();
-                    setTimeout(() => {
-                        this.showWin();
-                    }, 500);
-                }
+                this.checkGameStatus();
+                this.checkEndBossStatus();
             }
         }, 100);
-
+    
         setInterval(() => {
-            if (this.gameState === 'running') {
-                this.checkCharacterJumpOnChicken();
-                this.checkBottleCollisionWithGround();
-                this.checkCollectables();
-                this.checkBottleCollisionWithChicken();
-                this.checkBottleCollisionWithEndboss();
-            }
+            if (this.gameState === 'running') this.checkCollisions();
         }, 1000 / 60);
+    }
+    
+    /**
+     * Checks game status including character health and attacks
+     */
+    checkGameStatus() {
+        this.checkThrowBottle();
+        this.checkCharacterGotChickenHit();
+        if (this.character.isDead() || this.character.healthPoints <= 0) {
+            this.handleGameOver();
+        }
+    }
+    
+    /**
+     * Handles game over state
+     */
+    handleGameOver() {
+        this.gameState = 'gameover';
+        this.character.healthPoints = 0;
+        setTimeout(() => this.showGameOver(), 50);
+    }
+    
+    /**
+     * Checks end boss status and victory conditions
+     */
+    checkEndBossStatus() {
+        if (this.level.endboss.length > 0 && this.level.endboss[0].endbossHealth <= 0) {
+            this.gameState = 'win';
+            this.level.endboss[0].playDeadAnimation();
+            setTimeout(() => this.showWin(), 500);
+        }
+    }
+    
+    /**
+     * Checks all collision-related events
+     */
+    checkCollisions() {
+        this.checkCharacterJumpOnChicken();
+        this.checkBottleCollisionWithGround();
+        this.checkCollectables();
+        this.checkBottleCollisionWithChicken();
+        this.checkBottleCollisionWithEndboss();
     }
 
     /**
@@ -151,29 +164,66 @@ class World {
      * Resets the game by reloading the page
      */
     resetGame() {
+        this.resetGameState();
+        this.clearGameObjects();
+        this.resetCamera();
+        this.showStartScreen();
+        this.setupStartButton();
+        this.updateUIElements();
+    }
+    
+    /**
+     * Resets basic game state variables
+     */
+    resetGameState() {
         this.gameState = 'start';
         this.gameRunning = false;
-
+    }
+    
+    /**
+     * Clears all game objects
+     */
+    clearGameObjects() {
         this.throwableObjects = [];
         this.level.enemies = [];
         this.level.endboss = [];
         this.level.clouds = [];
         this.level.coins = [];
         this.level.bottles = [];
-
+    }
+    
+    /**
+     * Resets camera position
+     */
+    resetCamera() {
         this.camPosX = 0;
-
+    }
+    
+    /**
+     * Shows the start screen overlay
+     */
+    showStartScreen() {
         let overlay = document.getElementById('overlay');
         overlay.style.display = 'flex';
         overlay.style.marginTop = '78px';
         overlay.innerHTML = `<button id="startButton">Start Game</button>`;
         overlay.style.backgroundImage = `url(${this.startScreenImage.src})`;
         overlay.style.backgroundColor = 'transparent';
-
+    }
+    
+    /**
+     * Updates UI element visibility
+     */
+    updateUIElements() {
         document.getElementById('footer').style.display = 'flex';
         document.getElementById('gameplayInfoButton').style.display = 'flex';
         document.getElementById('volume').style.display = 'none';
-
+    }
+    
+    /**
+     * Sets up the start button event listener
+     */
+    setupStartButton() {
         document.getElementById('startButton').addEventListener('click', () => {
             window.startGame();
         });
