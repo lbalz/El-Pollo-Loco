@@ -158,71 +158,120 @@ class Character extends MovableObject {
      * Handles walking, jumping, and idle animations
      */
     animate() {
+        this.initializeSounds();
+        this.setupSoundLoops();
+        
+        setInterval(() => {
+            this.handleMovement();
+            this.updateCameraPosition();
+        }, 1000 / 60);
+    
+        setInterval(() => {
+            this.updateCharacterState();
+        }, this.IDLE_ANIMATION_SPEED);
+    }
+    
+    /**
+     * Initializes sound settings for walking and jumping
+     */
+    initializeSounds() {
         this.walkingSound.currentTime = this.walkingSoundLoopStart;
         this.walkingSound.playbackRate = 2.0;
-
         this.jumpingSound.currentTime = this.jumpingSoundLoopStart;
         this.jumpingSound.playbackRate = 1.5;
-        
+    }
+    
+    /**
+     * Sets up sound loop event listeners
+     */
+    setupSoundLoops() {
         this.walkingSound.addEventListener('timeupdate', () => {
             if (this.walkingSound.currentTime >= this.walkingSoundLoopEnd) {
                 this.walkingSound.currentTime = this.walkingSoundLoopStart;
             }
         });
-
+    
         this.jumpingSound.addEventListener('timeupdate', () => {
             if (this.jumpingSound.currentTime >= this.jumpingSoundLoopEnd) {
                 this.jumpingSound.currentTime = this.jumpingSoundLoopStart;
             }
-        })
-
-        setInterval(() => {
-            this.walkingSound.pause();
-
-            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.UP || this.world.keyboard.SPACE) {
-                this.lastMovement = new Date().getTime();
-                this.currentAnimation = 'walking';
-            }
-
-            if (this.world.keyboard.RIGHT && this.positionX < this.world.level.characterLevelEndPosX) {
-                // Character moving to the right
-                this.movingRight();
-                this.otherDirection = false;
-                if (!this.isNotOnGround()) {
-                    this.walkingSound.play();
-                }
-            }
-            
-            if (this.world.keyboard.LEFT && this.positionX > 0) {
-                // Character moving to the left
-                this.movingLeft();
-                this.otherDirection = true;
-                if (!this.isNotOnGround()) {
-                    this.walkingSound.play();
-                }
-            }
-            
-            if ((this.world.keyboard.UP || this.world.keyboard.SPACE) && !this.isNotOnGround()) {
-                this.jumpingSound.play();
-                this.jump();
-                
-            }
-
-            this.world.camPosX = -this.positionX + 150;
-        }, 1000 / 60);
-
-        setInterval(() => {
-
-            if (this.isDead()) {
-                this.playAnimation(this.PEPE_DYING_IMAGE_PATHS);
-            } else if (this.isHurt()) {
-                this.playAnimation(this.PEPE_HURT_IMAGE_PATHS);
-            } else if(this.isNotOnGround()) {
-                this.playAnimation(this.PEPE_JUMPING_IMAGE_PATHS);
-            } else {
-                this.updateIdleAnimations();
-            }
-        }, this.IDLE_ANIMATION_SPEED);
+        });
+    }
+    
+    /**
+     * Handles character movement and related animations
+     */
+    handleMovement() {
+        this.walkingSound.pause();
+        this.checkKeyboardInput();
+        this.handleRightMovement();
+        this.handleLeftMovement();
+        this.handleJump();
+    }
+    
+    /**
+     * Checks keyboard input and updates animation state
+     */
+    checkKeyboardInput() {
+        if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || 
+            this.world.keyboard.UP || this.world.keyboard.SPACE) {
+            this.lastMovement = new Date().getTime();
+            this.currentAnimation = 'walking';
+        }
+    }
+    
+    /**
+     * Handles right movement logic
+     */
+    handleRightMovement() {
+        if (this.world.keyboard.RIGHT && this.positionX < this.world.level.characterLevelEndPosX) {
+            this.movingRight();
+            this.otherDirection = false;
+            if (!this.isNotOnGround()) this.walkingSound.play();
+        }
+    }
+    
+    /**
+     * Handles left movement logic
+     */
+    handleLeftMovement() {
+        if (this.world.keyboard.LEFT && this.positionX > 0) {
+            this.movingLeft();
+            this.otherDirection = true;
+            if (!this.isNotOnGround()) this.walkingSound.play();
+        }
+    }
+    
+    /**
+     * Handles jump logic
+     */
+    handleJump() {
+        if ((this.world.keyboard.UP || this.world.keyboard.SPACE) && !this.isNotOnGround()) {
+            this.jumpingSound.play();
+            this.jump();
+        }
+    }
+    
+    /**
+     * Updates camera position relative to character
+     */
+    updateCameraPosition() {
+        this.world.camPosX = -this.positionX + 150;
+    }
+    
+    /**
+     * Updates character state and animations
+     */
+    updateCharacterState() {
+        if (this.isDead()) {
+            this.playAnimation(this.PEPE_DYING_IMAGE_PATHS);
+        } else if (this.isHurt()) {
+            this.playAnimation(this.PEPE_HURT_IMAGE_PATHS);
+        } else if (this.isNotOnGround()) {
+            this.playAnimation(this.PEPE_JUMPING_IMAGE_PATHS);
+        } else {
+            this.updateIdleAnimations();
+        }
     }
     
     /**
