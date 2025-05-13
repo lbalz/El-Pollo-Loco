@@ -127,31 +127,41 @@ class Endboss extends MovableObject {
     animate() {
         setInterval(() => {
             if (this.state === 'dead') return;
-
-            if (world.character.positionX > 9000 && this.firstEncounter) {
-                this.playAlertSequence();
-                this.firstEncounter = false;
-            }
-
-            switch (this.state) {
-                case 'chasing':
-                    this.chaseCharacter();
-                    this.checkAttackOpportunity();
-                    break;
-
-                case 'attacking':
-                    if (!this.isPlayingOneTimeAnimation) {
-                        this.attackCharacter();
-                    }
-                    break;
-
-                case 'hurt':
-                    if (!this.isPlayingOneTimeAnimation) {
-                        this.playHurtAnimation();
-                    }
-                    break;
-            }
+            this.checkFirstEncounter();
+            this.handleState();
         }, 50);
+    }
+    
+    /**
+     * Checks for first encounter with player
+     */
+    checkFirstEncounter() {
+        if (world.character.positionX > 9000 && this.firstEncounter) {
+            this.playAlertSequence();
+            this.firstEncounter = false;
+        }
+    }
+    
+    /**
+     * Handles the current state of the end boss
+     */
+    handleState() {
+        const stateActions = {
+            'chasing': () => {
+                this.chaseCharacter();
+                this.checkAttackOpportunity();
+            },
+            'attacking': () => {
+                if (!this.isPlayingOneTimeAnimation) this.attackCharacter();
+            },
+            'hurt': () => {
+                if (!this.isPlayingOneTimeAnimation) this.playHurtAnimation();
+            }
+        };
+    
+        if (stateActions[this.state]) {
+            stateActions[this.state]();
+        }
     }
 
     /**
@@ -207,53 +217,104 @@ class Endboss extends MovableObject {
      */
     attackCharacter() {
         if (!this.isJumping) {
-            this.isPlayingOneTimeAnimation = true;
-            this.isJumping = true;
+            this.initializeAttack();
             let currentFrame = 0;
-            let jumpHeight = 0;
-            let targetPosX = world.character.positionX;
-            let jumpDirection = targetPosX > this.positionX ? 1 : -1;
-
             let attackInterval = setInterval(() => {
                 this.playAnimation([this.ENDBOSS_IMAGES_ATTACK_PATH[currentFrame]]);
                 currentFrame++;
-
-                if (currentFrame < this.ENDBOSS_IMAGES_ATTACK_PATH.length / 2) {
-                    jumpHeight = (currentFrame / (this.ENDBOSS_IMAGES_ATTACK_PATH.length / 2)) * this.attackJumpHeight;
-                    this.positionY = this.initialAttackPosY - jumpHeight;
-                } else {
-                    let fallProgress = (currentFrame - this.ENDBOSS_IMAGES_ATTACK_PATH.length / 2) / (this.ENDBOSS_IMAGES_ATTACK_PATH.length / 2);
-                    jumpHeight = (1 - fallProgress) * this.attackJumpHeight;
-                    this.positionY = this.initialAttackPosY - jumpHeight;
-                }
-
-                this.positionX += jumpDirection * (this.attackJumpDistance / this.ENDBOSS_IMAGES_ATTACK_PATH.length);
-
-                if (currentFrame === Math.floor(this.ENDBOSS_IMAGES_ATTACK_PATH.length / 2)) {
-                    if (this.isColliding(world.character)) {
-                        world.character.healthPoints = Math.max(0, world.character.healthPoints - 20);
-                        world.healthStatusBar.setHealthPercentage(world.character.healthPoints);
-
-                        if (world.character.healthPoints <= 0) {
-                            world.character.healthPoints = 0;
-                            world.gameState = 'gameover';
-                            clearInterval(attackInterval);
-                            setTimeout(() => {
-                                world.showGameOver();
-                            }, 50);
-                        }
-                    }
-                }
-    
-                if (currentFrame >= this.ENDBOSS_IMAGES_ATTACK_PATH.length) {
-                    clearInterval(attackInterval);
-                    this.positionY = this.initialAttackPosY;
-                    this.state = 'chasing';
-                    this.isPlayingOneTimeAnimation = false;
-                    this.isJumping = false;
-                }
+                this.updateJumpPosition(currentFrame);
+                this.checkDamageFrame(currentFrame, attackInterval);
+                this.checkEndOfAttack(currentFrame, attackInterval);
             }, 175);
         }
+    }
+    
+    /**
+     * Initializes attack state variables
+     */
+    initializeAttack() {
+        this.isPlayingOneTimeAnimation = true;
+        this.isJumping = true;
+        this.targetPosX = world.character.positionX;
+        this.jumpDirection = this.targetPosX > this.positionX ? 1 : -1;
+    }
+    
+    /**
+     * Updates jump height and position during attack
+     * @param {number} currentFrame - Current animation frame
+     */
+    updateJumpPosition(currentFrame) {
+        const halfLength = this.ENDBOSS_IMAGES_ATTACK_PATH.length / 2;
+        let jumpHeight;
+    
+        if (currentFrame < halfLength) {
+            jumpHeight = (currentFrame / halfLength) * this.attackJumpHeight;
+        } else {
+            let fallProgress = (currentFrame - halfLength) / halfLength;
+            jumpHeight = (1 - fallProgress) * this.attackJumpHeight;
+        }
+    
+        this.positionY = this.initialAttackPosY - jumpHeight;
+        this.positionX += this.jumpDirection * (this.attackJumpDistance / this.ENDBOSS_IMAGES_ATTACK_PATH.length);
+    }
+    
+    /**
+     * Checks if current frame should deal damage
+     * @param {number} currentFrame - Current animation frame
+     * @param {number} attackInterval - Interval ID for clearing
+     */
+    checkDamageFrame(currentFrame, attackInterval) {
+        if (currentFrame === Math.floor(this.ENDBOSS_IMAGES_ATTACK_PATH.length / 2)) {
+            if (this.isColliding(world.character)) {
+                this.dealDamageToCharacter(attackInterval);
+            }
+        }
+    }
+    
+    /**
+     * Deals damage to the character and checks for game over
+     * @param {number} attackInterval - Interval ID for clearing
+     */
+    dealDamageToCharacter(attackInterval) {
+        world.character.healthPoints = Math.max(0, world.character.healthPoints - 20);
+        world.healthStatusBar.setHealthPercentage(world.character.healthPoints);
+    
+        if (world.character.healthPoints <= 0) {
+            this.handleCharacterDeath(attackInterval);
+        }
+    }
+    
+    /**
+     * Handles character death and game over state
+     * @param {number} attackInterval - Interval ID for clearing
+     */
+    handleCharacterDeath(attackInterval) {
+        world.character.healthPoints = 0;
+        world.gameState = 'gameover';
+        clearInterval(attackInterval);
+        setTimeout(() => world.showGameOver(), 50);
+    }
+    
+    /**
+     * Checks if attack animation is complete
+     * @param {number} currentFrame - Current animation frame
+     * @param {number} attackInterval - Interval ID for clearing
+     */
+    checkEndOfAttack(currentFrame, attackInterval) {
+        if (currentFrame >= this.ENDBOSS_IMAGES_ATTACK_PATH.length) {
+            clearInterval(attackInterval);
+            this.resetAfterAttack();
+        }
+    }
+    
+    /**
+     * Resets boss state after attack
+     */
+    resetAfterAttack() {
+        this.positionY = this.initialAttackPosY;
+        this.state = 'chasing';
+        this.isPlayingOneTimeAnimation = false;
+        this.isJumping = false;
     }
 
     /**
