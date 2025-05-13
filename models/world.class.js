@@ -140,7 +140,32 @@ class World {
      * Resets the game by reloading the page
      */
     resetGame() {
-        window.location.reload();
+        this.gameState = 'start';
+        this.gameRunning = false;
+
+        this.throwableObjects = [];
+        this.level.enemies = [];
+        this.level.endboss = [];
+        this.level.clouds = [];
+        this.level.coins = [];
+        this.level.bottles = [];
+
+        this.camPosX = 0;
+
+        let overlay = document.getElementById('overlay');
+        overlay.style.display = 'flex';
+        overlay.style.marginTop = '78px';
+        overlay.innerHTML = `<button id="startButton">Start Game</button>`;
+        overlay.style.backgroundImage = `url(${this.startScreenImage.src})`;
+        overlay.style.backgroundColor = 'transparent';
+
+        document.getElementById('footer').style.display = 'flex';
+        document.getElementById('gameplayInfoButton').style.display = 'flex';
+        document.getElementById('volume').style.display = 'none';
+
+        document.getElementById('startButton').addEventListener('click', () => {
+            window.startGame();
+        });
     }
 
     /**
@@ -167,7 +192,7 @@ class World {
             this.resetGame();
         });
     }
-    
+
     /**
      * Displays the win screen
      */
@@ -178,6 +203,7 @@ class World {
         overlay.style.display = 'flex';
         overlay.style.flexDirection = 'column';
         overlay.style.gap = '20px';
+        overlay.style.marginTop = '78px';
         overlay.innerHTML = `
         <img src="${this.winScreenImage.src}" alt="Game Over" style="width: 100%; height: 100%;">
         <button id="resetButton">Reset Game</button>
@@ -266,7 +292,7 @@ class World {
             this.throwableObjects.forEach(bottle => {
                 if (bottle.isColliding(this.level.endboss[0])) {
                     this.chickenAudio.play();
-                    
+
                     let bottleIndex = this.throwableObjects.indexOf(bottle);
                     this.throwableObjects.splice(bottleIndex, 1);
                     this.level.endboss[0].hit();
@@ -312,7 +338,7 @@ class World {
             if (this.character.isColliding(enemy) && this.character.isNotOnGround() && this.character.speedPosY < 0) { // speedY
                 this.chickenAudio.currentTime = 0.5;
                 this.chickenAudio.play();
-                
+
                 let enemieIndex = this.level.enemies.indexOf(enemy);
                 this.level.enemies.splice(enemieIndex, 1);
 
