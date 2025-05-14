@@ -409,37 +409,68 @@ class World {
      * Checks if character takes damage from enemies
      */
     checkCharacterGotChickenHit() {
+        this.checkChickenCollisions();
+        this.checkEndbossCollision();
+    }
+
+    /**
+     * Checks collisions with regular chickens
+     */
+    checkChickenCollisions() {
         this.level.enemies.forEach(enemy => {
             if (this.character.isColliding(enemy)) {
-                let currentTime = Date.now();
-                if (currentTime - this.lastHitTime > 1000) {
-                    this.character.getHit();
-                    this.healthStatusBar.setHealthPercentage(this.character.healthPoints, this.ctx);
-                    this.lastHitTime = currentTime;
-
-                    if (this.character.healthPoints <= 0) {
-                        this.character.healthPoints = 0;
-                        this.gameState = 'gameover';
-                        setTimeout(() => {
-                            this.showGameOver();
-                        }, 50);
-                    }
-                }
+                this.handleChickenDamage();
             }
         });
+    }
 
+    /**
+     * Checks collision with end boss
+     */
+    checkEndbossCollision() {
         if (this.level.endboss.length > 0) {
             let endboss = this.level.endboss[0];
             if (this.character.isColliding(endboss) && endboss.state === 'attacking') {
-                let currentTime = Date.now();
-                if (currentTime - this.lastHitTime > 1000) {
-                    this.character.healthPoints -= 20;
-                    this.healthStatusBar.setHealthPercentage(this.character.healthPoints, this.ctx);
-                    this.lastHitTime = currentTime;
-                }
+                this.handleEndbossDamage();
             }
         }
-    };
+    }
+
+    /**
+     * Handles damage from chicken collisions
+     */
+    handleChickenDamage() {
+        let currentTime = Date.now();
+        if (currentTime - this.lastHitTime > 1000) {
+            this.character.getHit();
+            this.healthStatusBar.setHealthPercentage(this.character.healthPoints, this.ctx);
+            this.lastHitTime = currentTime;
+            this.checkGameOver();
+        }
+    }
+
+    /**
+     * Handles damage from end boss collisions
+     */
+    handleEndbossDamage() {
+        let currentTime = Date.now();
+        if (currentTime - this.lastHitTime > 1000) {
+            this.character.healthPoints -= 20;
+            this.healthStatusBar.setHealthPercentage(this.character.healthPoints, this.ctx);
+            this.lastHitTime = currentTime;
+        }
+    }
+
+    /**
+     * Checks if character health reaches zero
+     */
+    checkGameOver() {
+        if (this.character.healthPoints <= 0) {
+            this.character.healthPoints = 0;
+            this.gameState = 'gameover';
+            setTimeout(() => this.showGameOver(), 50);
+        }
+    }
 
     /**
      * Checks if character jumps on enemies
