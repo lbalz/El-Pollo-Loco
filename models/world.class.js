@@ -103,12 +103,12 @@ class World {
                 this.checkEndBossStatus();
             }
         }, 100);
-    
+
         setInterval(() => {
             if (this.gameState === 'running') this.checkCollisions();
         }, 1000 / 60);
     }
-    
+
     /**
      * Checks game status including character health and attacks
      */
@@ -119,7 +119,7 @@ class World {
             this.handleGameOver();
         }
     }
-    
+
     /**
      * Handles game over state
      */
@@ -128,7 +128,7 @@ class World {
         this.character.healthPoints = 0;
         setTimeout(() => this.showGameOver(), 50);
     }
-    
+
     /**
      * Checks end boss status and victory conditions
      */
@@ -139,7 +139,7 @@ class World {
             setTimeout(() => this.showWin(), 500);
         }
     }
-    
+
     /**
      * Checks all collision-related events
      */
@@ -171,7 +171,7 @@ class World {
         this.setupStartButton();
         this.updateUIElements();
     }
-    
+
     /**
      * Resets basic game state variables
      */
@@ -179,7 +179,7 @@ class World {
         this.gameState = 'start';
         this.gameRunning = false;
     }
-    
+
     /**
      * Clears all game objects
      */
@@ -191,14 +191,14 @@ class World {
         this.level.coins = [];
         this.level.bottles = [];
     }
-    
+
     /**
      * Resets camera position
      */
     resetCamera() {
         this.camPosX = 0;
     }
-    
+
     /**
      * Shows the start screen overlay
      */
@@ -210,7 +210,7 @@ class World {
         overlay.style.backgroundImage = `url(${this.startScreenImage.src})`;
         overlay.style.backgroundColor = 'transparent';
     }
-    
+
     /**
      * Updates UI element visibility
      */
@@ -219,7 +219,7 @@ class World {
         document.getElementById('gameplayInfoButton').style.display = 'flex';
         document.getElementById('volume').style.display = 'none';
     }
-    
+
     /**
      * Sets up the start button event listener
      */
@@ -232,86 +232,76 @@ class World {
     /**
      * Displays the game over screen
      */
-    /**
- * Displays the game over screen
- */
-showGameOver() {
-    this.gameRunning = false;
-    let overlay = document.getElementById('overlay');
-    this.setupOverlayBase(overlay);
-    this.setGameOverContent(overlay);
-    this.adjustOverlayMargin(overlay);
-    this.setupResetButton();
-}
-
-/**
- * Sets up base overlay styles
- * @param {HTMLElement} overlay - The overlay element
- */
-setupOverlayBase(overlay) {
-    overlay.style.display = 'flex';
-    overlay.style.flexDirection = 'column';
-    overlay.style.gap = '20px';
-    overlay.style.backgroundImage = 'none';
-    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-}
-
-/**
- * Sets game over content in overlay
- * @param {HTMLElement} overlay - The overlay element
- */
-setGameOverContent(overlay) {
-    overlay.innerHTML = `
-        <img src="${this.gameOverScreenImage.src}" alt="Game Over" style="width: 100%; height: 100%;">
-        <button id="resetButton">Reset Game</button>
-    `;
-}
-
-/**
- * Adjusts overlay margin based on orientation
- * @param {HTMLElement} overlay - The overlay element
- */
-adjustOverlayMargin(overlay) {
-    overlay.style.marginTop = window.matchMedia('(orientation: landscape)').matches ? '0px' : '78px';
-}
-
-/**
- * Sets up the reset button event listener
- */
-setupResetButton() {
-    let resetButton = document.getElementById('resetButton');
-    resetButton.style.display = 'block';
-    resetButton.addEventListener('click', () => this.resetGame());
-}
-
-    /**
-     * Displays the win screen
-     */
-    showWin() {
+    showGameOver() {
         this.gameRunning = false;
-
         let overlay = document.getElementById('overlay');
+        this.setupOverlayBase(overlay);
+        this.setGameOverContent(overlay);
+        this.adjustOverlayMargin(overlay);
+        this.setupResetButton();
+    }
+
+    /**
+     * Sets up base overlay styles
+     * @param {HTMLElement} overlay - The overlay element
+     */
+    setupOverlayBase(overlay) {
         overlay.style.display = 'flex';
         overlay.style.flexDirection = 'column';
         overlay.style.gap = '20px';
-        overlay.innerHTML = `
-        <img src="${this.winScreenImage.src}" alt="Game Over" style="width: 100%; height: 100%;">
-        <button id="resetButton">Reset Game</button>
-        `;
         overlay.style.backgroundImage = 'none';
         overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    }
 
-        if (window.matchMedia('(orientation: landscape)').matches) {
-            overlay.style.marginTop = '0px';
-        } else {
-            overlay.style.marginTop = '78px';
-        }
+    /**
+     * Sets game over content in overlay
+     * @param {HTMLElement} overlay - The overlay element
+     */
+    setGameOverContent(overlay) {
+        overlay.innerHTML = `
+        <img src="${this.gameOverScreenImage.src}" alt="Game Over" style="width: 100%; height: 100%;">
+        <button id="resetButton">Reset Game</button>
+    `;
+    }
 
+    /**
+     * Adjusts overlay margin based on orientation
+     * @param {HTMLElement} overlay - The overlay element
+     */
+    adjustOverlayMargin(overlay) {
+        overlay.style.marginTop = window.matchMedia('(orientation: landscape)').matches ? '0px' : '78px';
+    }
+
+    /**
+     * Sets up the reset button event listener
+     */
+    setupResetButton() {
         let resetButton = document.getElementById('resetButton');
         resetButton.style.display = 'block';
-        resetButton.addEventListener('click', () => {
-            this.resetGame();
-        });
+        resetButton.addEventListener('click', () => this.resetGame());
+    }
+
+    /**
+ * Displays the win screen
+ */
+    showWin() {
+        this.gameRunning = false;
+        let overlay = document.getElementById('overlay');
+        this.setupOverlayBase(overlay);
+        this.setWinContent(overlay);
+        this.adjustOverlayMargin(overlay);
+        this.setupResetButton();
+    }
+
+    /**
+     * Sets win screen content in overlay
+     * @param {HTMLElement} overlay - The overlay element
+     */
+    setWinContent(overlay) {
+        overlay.innerHTML = `
+        <img src="${this.winScreenImage.src}" alt="Win Screen" style="width: 100%; height: 100%;">
+        <button id="resetButton">Reset Game</button>
+    `;
     }
 
     /**
@@ -331,7 +321,7 @@ setupResetButton() {
                         this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
                         this.lastBottleThrow = currentTime;
                     }
-    
+
                 } else {
                     if (this.keyboard.THROW) {
                         let throwableBottle = new ThrowableObject(this.character.positionX + 125, this.character.positionY + 175, this.character.otherDirection);
