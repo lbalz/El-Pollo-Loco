@@ -308,31 +308,41 @@ class World {
      * Handles bottle throwing mechanics
      */
     checkThrowBottle() {
-        if (this.character.bottles > 0) {
-            const currentTime = new Date().getTime();
-            const throwCooldown = 1000;
+        if (!this.canThrowBottle()) return;
 
-            if (currentTime - this.lastBottleThrow > throwCooldown) {
-                if (this.character.otherDirection) {
-                    if (this.keyboard.THROW) {
-                        let throwableBottle = new ThrowableObject(this.character.positionX, this.character.positionY + 175, this.character.otherDirection);
-                        this.throwableObjects.push(throwableBottle);
-                        this.character.bottles -= 1;
-                        this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
-                        this.lastBottleThrow = currentTime;
-                    }
-
-                } else {
-                    if (this.keyboard.THROW) {
-                        let throwableBottle = new ThrowableObject(this.character.positionX + 125, this.character.positionY + 175, this.character.otherDirection);
-                        this.throwableObjects.push(throwableBottle);
-                        this.character.bottles -= 1;
-                        this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
-                        this.lastBottleThrow = currentTime;
-                    }
-                }
+        const currentTime = new Date().getTime();
+        if (currentTime - this.lastBottleThrow > 1000) {
+            if (this.keyboard.THROW) {
+                const throwPosX = this.character.otherDirection ?
+                    this.character.positionX :
+                    this.character.positionX + 125;
+                this.createAndThrowBottle(throwPosX);
             }
         }
+    }
+
+    /**
+     * Checks if character can throw a bottle
+     * @returns {boolean} Whether throwing is possible
+     */
+    canThrowBottle() {
+        return this.character.bottles > 0;
+    }
+
+    /**
+     * Creates and throws a bottle
+     * @param {number} throwPosX - X position to throw from
+     */
+    createAndThrowBottle(throwPosX) {
+        const bottle = new ThrowableObject(
+            throwPosX,
+            this.character.positionY + 175,
+            this.character.otherDirection
+        );
+        this.throwableObjects.push(bottle);
+        this.character.bottles--;
+        this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
+        this.lastBottleThrow = new Date().getTime();
     }
 
     /**
