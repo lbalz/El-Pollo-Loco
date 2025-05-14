@@ -543,7 +543,7 @@ class World {
         this.checkCoinCollisions();
         this.checkBottleCollisions();
     }
-    
+
     /**
      * Checks for coin collisions and handles collection
      */
@@ -554,7 +554,7 @@ class World {
             }
         });
     }
-    
+
     /**
      * Checks for bottle collisions and handles collection
      */
@@ -565,7 +565,7 @@ class World {
             }
         });
     }
-    
+
     /**
      * Handles coin collection
      * @param {Coin} coin - The coin to collect
@@ -576,7 +576,7 @@ class World {
         let coinIndex = this.level.coins.indexOf(coin);
         this.level.coins.splice(coinIndex, 1);
     }
-    
+
     /**
      * Handles bottle collection
      * @param {Bottle} bottle - The bottle to collect
@@ -592,63 +592,83 @@ class World {
      * Main drawing function for rendering the game
      */
     draw() {
-        this.ctx.clearRect(
-            0,
-            0,
-            this.canvas.width,
-            this.canvas.height
-        );
+        this.clearCanvas();
+        this.drawBackgroundElements();
+        this.drawStatusBars();
+        this.drawChickenCount();
+        this.drawEndbossStatus();
+        this.drawGameObjects();
+        requestAnimationFrame(() => this.draw());
+    }
 
+    /**
+     * Clears the canvas for the next frame
+     */
+    clearCanvas() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    /**
+     * Draws background elements with camera offset
+     */
+    drawBackgroundElements() {
         this.ctx.translate(this.camPosX, 0);
-
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
-
         this.ctx.translate(-this.camPosX, 0);
+    }
 
+    /**
+     * Draws all status bars and their values
+     */
+    drawStatusBars() {
         this.addToMap(this.healthStatusBar);
         this.drawStatusText(this.character.healthPoints, this.ctx, 250, 60);
-
         this.addToMap(this.coinStatusBar);
         this.drawStatusText(this.character.coins, this.ctx, 250, 135);
-
         this.addToMap(this.bottleStatusBar);
         this.drawStatusText(this.character.bottles, this.ctx, 250, 210);
+    }
 
+    /**
+     * Draws the current chicken count
+     */
+    drawChickenCount() {
         this.drawStatusText("Current chickens: " + this.level.enemies.length, this.ctx, 38, 250);
+    }
 
-        if (this.character.positionX >= 8350) { // 8350
+    /**
+     * Draws end boss status if in range
+     */
+    drawEndbossStatus() {
+        if (this.shouldShowEndbossStatus()) {
             this.addToMap(this.endbossStatusBar);
-            if (this.level.endboss[0].endbossHealth > 0) {
-                this.drawStatusText(this.level.endboss[0].endbossHealth, this.ctx, 1000, 60);
-            } else {
-                this.drawStatusText(0, this.ctx, 1000, 60);
-            }
+            const health = Math.max(0, this.level.endboss[0].endbossHealth);
+            this.drawStatusText(health, this.ctx, 1000, 60);
         }
+    }
 
-        if (this.level.endboss[0].hasFirstEncounterOccurred) {
-            this.addToMap(this.endbossStatusBar);
-            if (this.level.endboss[0].endbossHealth > 0) {
-                this.drawStatusText(this.level.endboss[0].endbossHealth, this.ctx, 1000, 60);
-            } else {
-                this.drawStatusText(0, this.ctx, 1000, 60);
-            }
-        }
+    /**
+     * Checks if end boss status should be shown
+     * @returns {boolean}
+     */
+    shouldShowEndbossStatus() {
+        return this.character.positionX >= 8350 ||
+            this.level.endboss[0].hasFirstEncounterOccurred;
+    }
 
+    /**
+     * Draws all game objects with camera offset
+     */
+    drawGameObjects() {
         this.ctx.translate(this.camPosX, 0);
-
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.endboss);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.throwableObjects);
-
         this.ctx.translate(-this.camPosX, 0);
-
-        requestAnimationFrame(() => {
-            this.draw();
-        });
     }
 
     /**
