@@ -477,26 +477,63 @@ class World {
      */
     checkCharacterJumpOnChicken() {
         this.level.enemies.forEach(enemy => {
-            if (this.character.isColliding(enemy) && this.character.isNotOnGround() && this.character.speedPosY < 0) { // speedY
-                this.chickenAudio.currentTime = 0.5;
-                this.chickenAudio.play();
-
-                let enemieIndex = this.level.enemies.indexOf(enemy);
-                this.level.enemies.splice(enemieIndex, 1);
-
-                let randomNumber = Math.round(Math.random() * 8); // Random num 1 - 8
-                if (randomNumber == 8) {
-                    this.character.bottles += 1;
-                }
+            if (this.isJumpingOnEnemy(enemy)) {
+                this.handleEnemyDeath(enemy);
             }
-
-            if (this.level.enemies.length == 0) {
-                for (let i = 0; i < 5; i++) {
-                    this.addToMap(new BigChicken());
-                    this.addToMap(new SmallChicken());
-                }
-            }
+            this.respawnEnemiesIfNeeded();
         });
+    }
+
+    /**
+     * Checks if character is jumping on an enemy
+     * @param {MovableObject} enemy - The enemy to check
+     * @returns {boolean} Whether character is jumping on enemy
+     */
+    isJumpingOnEnemy(enemy) {
+        return this.character.isColliding(enemy) &&
+            this.character.isNotOnGround() &&
+            this.character.speedPosY < 0;
+    }
+
+    /**
+     * Handles enemy death and possible bottle drops
+     * @param {MovableObject} enemy - The enemy that died
+     */
+    handleEnemyDeath(enemy) {
+        this.playChickenDeathSound();
+        let enemyIndex = this.level.enemies.indexOf(enemy);
+        this.level.enemies.splice(enemyIndex, 1);
+        this.checkBottleDrop();
+    }
+
+    /**
+     * Plays chicken death sound effect
+     */
+    playChickenDeathSound() {
+        this.chickenAudio.currentTime = 0.5;
+        this.chickenAudio.play();
+    }
+
+    /**
+     * Checks if enemy should drop a bottle
+     */
+    checkBottleDrop() {
+        let randomNumber = Math.round(Math.random() * 8);
+        if (randomNumber === 8) {
+            this.character.bottles += 1;
+        }
+    }
+
+    /**
+     * Respawns enemies if all are defeated
+     */
+    respawnEnemiesIfNeeded() {
+        if (this.level.enemies.length === 0) {
+            for (let i = 0; i < 5; i++) {
+                this.addToMap(new BigChicken());
+                this.addToMap(new SmallChicken());
+            }
+        }
     }
 
     /**
