@@ -540,25 +540,52 @@ class World {
      * Checks for collisions with collectible items
      */
     checkCollectables() {
+        this.checkCoinCollisions();
+        this.checkBottleCollisions();
+    }
+    
+    /**
+     * Checks for coin collisions and handles collection
+     */
+    checkCoinCollisions() {
         this.level.coins.forEach(coin => {
             if (this.character.isColliding(coin)) {
-                this.character.collectCoin();
-                this.coinStatusBar.setCoinsPercentage(this.character.coins);
-
-                let coinIndex = this.level.coins.indexOf(coin);
-                this.level.coins.splice(coinIndex, 1);
+                this.collectCoin(coin);
             }
         });
-
+    }
+    
+    /**
+     * Checks for bottle collisions and handles collection
+     */
+    checkBottleCollisions() {
         this.level.bottles.forEach(bottle => {
             if (this.character.isColliding(bottle)) {
-                this.character.collectBottle();
-                this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
-
-                let bottleIndex = this.level.bottles.indexOf(bottle);
-                this.level.bottles.splice(bottleIndex, 1);
+                this.collectBottle(bottle);
             }
         });
+    }
+    
+    /**
+     * Handles coin collection
+     * @param {Coin} coin - The coin to collect
+     */
+    collectCoin(coin) {
+        this.character.collectCoin();
+        this.coinStatusBar.setCoinsPercentage(this.character.coins);
+        let coinIndex = this.level.coins.indexOf(coin);
+        this.level.coins.splice(coinIndex, 1);
+    }
+    
+    /**
+     * Handles bottle collection
+     * @param {Bottle} bottle - The bottle to collect
+     */
+    collectBottle(bottle) {
+        this.character.collectBottle();
+        this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
+        let bottleIndex = this.level.bottles.indexOf(bottle);
+        this.level.bottles.splice(bottleIndex, 1);
     }
 
     /**
