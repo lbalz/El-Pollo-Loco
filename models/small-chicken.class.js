@@ -1,19 +1,34 @@
 /**
  * Class representing a small chicken enemy in the game
+ * A faster but weaker variant of the regular chicken
  * @extends Chicken
  */
 class SmallChicken extends Chicken {
-    /** @type {number} Vertical position of the small chicken */
+    /** 
+     * @type {number}
+     * @constant
+     * Vertical position of the small chicken in pixels from top
+     */
     positionY = 565;
 
-    /** @type {number} Height of the small chicken sprite in pixels */
+    /** 
+     * @type {number}
+     * @constant
+     * Height of the small chicken sprite in pixels
+     */
     height = 75;
 
-    /** @type {number} Width of the small chicken sprite in pixels */
+    /** 
+     * @type {number}
+     * @constant
+     * Width of the small chicken sprite in pixels
+     */
     width = 75;
 
     /** 
-     * @type {Object} Collision offset values for the small chicken
+     * @type {Object}
+     * @constant
+     * Collision offset values for the small chicken's hitbox in pixels
      * @property {number} top - Top offset for collision detection
      * @property {number} right - Right offset for collision detection
      * @property {number} bottom - Bottom offset for collision detection
@@ -27,7 +42,9 @@ class SmallChicken extends Chicken {
     };
 
     /** 
-     * @type {string[]} Array of image paths for walking animation
+     * @type {string[]}
+     * @constant
+     * Array of image paths for walking animation sequence
      * Contains three frames of walking animation
      */
     SMALL_CHICKEN_IMAGES_WALKING_PATH = [
@@ -39,6 +56,8 @@ class SmallChicken extends Chicken {
     /**
      * Creates a new small chicken enemy
      * Initializes position, speed, and starts walking animation
+     * @constructor
+     * @throws {Error} If image loading fails
      */
     constructor() {
         super().loadImage('./img/3_enemies_chicken/chicken_small/1_walk/1_w.png');
