@@ -1,13 +1,20 @@
 /**
  * Class representing the health status bar for the end boss
+ * Displays and updates the end boss's health percentage
  * @extends StatusBar
  */
 class EndbossStatusBar extends StatusBar {
-    /** @type {number} Current health percentage of the end boss */
+    /** 
+     * @type {number} 
+     * @default 0
+     * Current health percentage of the end boss (0-100)
+     */
     endbossHealthPercentage = 0;
 
     /** 
-     * @type {string[]} Array of image paths for different health bar states
+     * @type {string[]} 
+     * @constant
+     * Array of image paths for different health bar states
      * Images represent health states from 0% to 100% in 20% increments
      */
     ENDBOSS_HEALTH_POINTS_IMAGES = [
@@ -22,6 +29,8 @@ class EndbossStatusBar extends StatusBar {
     /**
      * Creates a new end boss status bar
      * Initializes position, dimensions, and initial health percentage
+     * @constructor
+     * @throws {Error} If image loading fails
      */
     constructor() {
         super();
