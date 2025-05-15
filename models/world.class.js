@@ -51,16 +51,31 @@ class World {
     /** @type {HTMLImageElement} Win screen image */
     winScreenImage = new Image();
 
-    /** @type {string} Current game state ('start', 'running', 'gameover', 'win') */
+    /** 
+     * @type {string} 
+     * @default 'start'
+     * Current game state ('start', 'running', 'gameover', 'win') 
+     */
     gameState = 'start';
 
-    /** @type {HTMLAudioElement} Sound effect for bottle breaking */
+    /** 
+     * @type {HTMLAudioElement} 
+     * Sound effect for bottle breaking
+     */
     bottleBreakSound = new Audio('./audio/glass_bottle_destroyed.mp3');
 
-    /** @type {HTMLAudioElement} Sound effect for chicken death */
+    /** 
+     * @type {HTMLAudioElement} 
+     * Sound effect for chicken death
+     */
     chickenAudio = new Audio('./audio/chicken.mp3');
 
-    lastBottleThrow;
+    /** 
+     * @type {number}
+     * @default 0
+     * Timestamp of last bottle throw in milliseconds
+     */
+    lastBottleThrow = 0;
 
     /**
      * Creates a new game world
