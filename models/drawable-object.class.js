@@ -3,29 +3,56 @@
  * Handles image loading, caching, and rendering
  */
 class DrawableObject {
-    /** @type {number} Horizontal position of the object */
+    /** 
+     * @type {number} 
+     * @default 120
+     * Horizontal position of the object in pixels 
+     */
     positionX = 120;
 
-    /** @type {number} Vertical position of the object */
+    /** 
+     * @type {number} 
+     * @default 280
+     * Vertical position of the object in pixels 
+     */
     positionY = 280;
 
-    /** @type {number} Height of the object in pixels */
+    /** 
+     * @type {number} 
+     * @default 150
+     * Height of the object in pixels 
+     */
     height = 150;
 
-    /** @type {number} Width of the object in pixels */
+    /** 
+     * @type {number} 
+     * @default 100
+     * Width of the object in pixels 
+     */
     width = 100;
 
-    /** @type {HTMLImageElement} Current image being displayed */
+    /** 
+     * @type {HTMLImageElement|undefined} 
+     * Current image being displayed 
+     */
     image;
 
-    /** @type {Object.<string, HTMLImageElement>} Cache of loaded images */
+    /** 
+     * @type {Object.<string, HTMLImageElement>} 
+     * Cache of loaded images indexed by file path
+     */
     imageCache = {};
 
-    /** @type {number} Index of the current image in animation sequence */
+    /** 
+     * @type {number} 
+     * @default 0
+     * Index of the current image in animation sequence 
+     */
     currentImage = 0;
 
     /** 
-     * @type {Object} Collision offset values for hit detection
+     * @type {Object} 
+     * Collision offset values for hit detection in pixels
      * @property {number} top - Top offset for collision detection
      * @property {number} right - Right offset for collision detection
      * @property {number} bottom - Bottom offset for collision detection
@@ -41,6 +68,8 @@ class DrawableObject {
     /**
      * Loads a single image from the specified path
      * @param {string} path - Path to the image file
+     * @throws {Error} If the image fails to load
+     * @returns {void}
      */
     loadImage(path) {
         this.image = new Image(); // creates new <img> Tag
@@ -50,6 +79,8 @@ class DrawableObject {
     /**
      * Loads multiple images and stores them in the image cache
      * @param {string[]} array - Array of image file paths
+     * @throws {Error} If any image fails to load
+     * @returns {void}
      */
     loadImages(array) {
         array.forEach(path => {
@@ -62,6 +93,8 @@ class DrawableObject {
     /**
      * Draws the object on the canvas
      * @param {CanvasRenderingContext2D} ctx - The canvas rendering context
+     * @returns {void}
+     * @throws {Error} If the image is not loaded or drawing fails
      */
     draw(ctx) {
         try {
@@ -81,6 +114,8 @@ class DrawableObject {
      * Draws the collision frame for debugging purposes
      * Only draws for specific game objects that need collision detection
      * @param {CanvasRenderingContext2D} ctx - The canvas rendering context
+     * @returns {void}
+     * @throws {Error} If drawing the frame fails
      */
     drawOffsetFrame(ctx) {
         if (this instanceof Character || 
