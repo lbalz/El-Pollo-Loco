@@ -1,13 +1,20 @@
 /**
  * Class representing the bottle collection status bar in the game
+ * Displays the percentage of bottles collected by the player
  * @extends StatusBar
  */
 class BottleStatusBar extends StatusBar {
-    /** @type {number} Current percentage of bottles collected */
+    /** 
+     * @type {number} 
+     * @default 0
+     * Current percentage of bottles collected (0-100)
+     */
     bottlePercentage = 0;
 
     /** 
-     * @type {string[]} Array of image paths for different bottle status bar states
+     * @type {string[]} 
+     * @constant
+     * Array of image paths for different bottle status bar states
      * Images represent 0%, 20%, 40%, 60%, 80%, and 100% states
      */
     BOTTLE_IMAGES = [
@@ -22,6 +29,8 @@ class BottleStatusBar extends StatusBar {
     /**
      * Creates a new bottle status bar
      * Initializes position, dimensions, and initial bottle percentage
+     * @constructor
+     * @throws {Error} If image loading fails
      */
     constructor() {
         super();
