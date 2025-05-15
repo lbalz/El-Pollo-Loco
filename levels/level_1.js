@@ -41,6 +41,7 @@ let level_1;
 /**
  * Initializes the game level by creating all game objects
  * Creates enemies, endboss, clouds, background objects, coins and bottles
+ * @returns {void}
  */
 function initLevel() {
     level_1 = new Level(
@@ -65,13 +66,6 @@ function initLevel() {
             ...generateBottles(numOfBottles)
         ]
     );
-}
-
-/**
- * Resets the level by reloading the page
- */
-function resetLevel() {
-    window.location.reload();
 }
 
 /**
@@ -162,7 +156,7 @@ function generatePlaygroundBackgroundObjectGroups(num) {
 /**
  * Generates coins at random positions in the level
  * @param {number} num - The number of coins to generate
- * @returns {Coin[]} Array of coin instances
+ * @returns {Coin[]} Array of coin instances at positions between (500-9000, 200-450)
  */
 function generateCoins(num) {
     const coins = []
@@ -180,7 +174,7 @@ function generateCoins(num) {
 /**
  * Generates bottles at random positions in the level
  * @param {number} num - The number of bottles to generate
- * @returns {Bottle[]} Array of bottle instances
+ * @returns {Bottle[]} Array of bottle instances at random X positions between 500-9000
  */
 function generateBottles(num) {
     const bottles = [];
@@ -195,7 +189,8 @@ function generateBottles(num) {
 
 /**
  * Generates a random X position for game objects
- * @returns {number} Random number between 500 and 9000
+ * @returns {number} Random X coordinate between 500 and 9000
+ * @description Used to position various game objects like coins and bottles in the level
  */
 function randomPosXNumber() {
     return Math.floor(500 + Math.random() * 8500);
