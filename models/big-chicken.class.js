@@ -1,23 +1,39 @@
 /**
+/**
  * Class representing a large chicken enemy in the game
+ * A stronger variant of the regular chicken with different sprites and attributes
  * @extends Chicken
  */
 class BigChicken extends Chicken {
-    /** @type {number} Vertical position of the big chicken */
+    /** 
+     * @type {number} 
+     * @constant
+     * Vertical position of the big chicken in pixels from the top 
+     */
     positionY = 540;
 
-    /** @type {number} Height of the big chicken sprite in pixels */
+    /** 
+     * @type {number} 
+     * @constant
+     * Height of the big chicken sprite in pixels 
+     */
     height = 100;
 
-    /** @type {number} Width of the big chicken sprite in pixels */
+    /** 
+     * @type {number} 
+     * @constant
+     * Width of the big chicken sprite in pixels 
+     */
     width = 100;
 
     /** 
-     * @type {Object} Collision offset values for the big chicken
-     * @property {number} top - Top offset for collision detection
-     * @property {number} right - Right offset for collision detection
-     * @property {number} bottom - Bottom offset for collision detection
-     * @property {number} left - Left offset for collision detection
+     * @type {Object} 
+     * @constant
+     * Collision offset values for the big chicken's hitbox
+     * @property {number} top - Top offset for collision detection in pixels
+     * @property {number} right - Right offset for collision detection in pixels
+     * @property {number} bottom - Bottom offset for collision detection in pixels
+     * @property {number} left - Left offset for collision detection in pixels
      */
     offset = {
         top: 5,
@@ -26,7 +42,11 @@ class BigChicken extends Chicken {
         left: 0
     };
 
-    /** @type {string[]} Array of image paths for the walking animation */
+    /** 
+     * @type {string[]} 
+     * @constant
+     * Array of image paths for the walking animation sequence
+     */
     BIG_CHICKEN_IMAGES_WALKING_PATH = [
     './img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
     './img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
@@ -36,6 +56,8 @@ class BigChicken extends Chicken {
     /**
      * Creates a new big chicken enemy
      * Initializes position, speed, and animations
+     * @constructor
+     * @throws {Error} If image loading fails
      */
     constructor() {
         super().loadImage('./img/3_enemies_chicken/chicken_normal/1_walk/1_w.png');
