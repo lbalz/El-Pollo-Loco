@@ -33,14 +33,14 @@ function startGame() {
     document.getElementById('volume').style.top = '24px';
     document.getElementById('gameplayInfoButton').style.display = 'none';
 
-    if (window.matchMedia('(orientation: portrait)').matches) {
-        hideMobileButtons();
-    } 
-    // else if (window.matchMedia('(orientation: landscape)').matches) {
-    //     showMobileButtons();
-    // } 
-    else {
-        showMobileButtons();
+    if (navigator.maxTouchPoints > 0) {
+        if (window.matchMedia('(orientation: portrait)').matches) {
+            hideMobileButtons();
+        } else {
+            showMobileButtons();
+        }
+    } else {
+        hideMobileButtons(); // Always hide on non-touch devices
     }
 
     backgroundSound.play();
