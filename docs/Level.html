@@ -30,7 +30,7 @@
     
         <h2><span class="attribs"><span class="type-signature"></span></span>Level<span class="signature">(enemies, endboss, clouds, backgroundObjects, coins, bottles)</span><span class="type-signature"></span></h2>
         
-            <div class="class-description">Class representing a game level containing all game objects and their positions</div>
+            <div class="class-description">Class representing a game level containing all game objects and their positionsManages level layout, enemies, collectibles, and environment objects</div>
         
     
 </header>
@@ -95,7 +95,7 @@
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;<a href="MovableObject.html">MovableObject</a>></span>
+<span class="param-type"><a href="global.html#Array">Array</a>.&lt;<a href="MovableObject.html">MovableObject</a>></span>
 
 
             
@@ -105,7 +105,7 @@
 
             
 
-            <td class="description last">Array of enemy objects</td>
+            <td class="description last">Array of enemy objects (chickens)</td>
         </tr>
 
     
@@ -118,7 +118,7 @@
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;<a href="MovableObject.html">MovableObject</a>></span>
+<span class="param-type"><a href="global.html#Array">Array</a>.&lt;<a href="MovableObject.html">MovableObject</a>></span>
 
 
             
@@ -141,7 +141,7 @@
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;<a href="Cloud.html">Cloud</a>></span>
+<span class="param-type"><a href="global.html#Array">Array</a>.&lt;<a href="Cloud.html">Cloud</a>></span>
 
 
             
@@ -151,7 +151,7 @@
 
             
 
-            <td class="description last">Array of cloud objects</td>
+            <td class="description last">Array of cloud objects for background</td>
         </tr>
 
     
@@ -164,7 +164,7 @@
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;<a href="BackgroundObject.html">BackgroundObject</a>></span>
+<span class="param-type"><a href="global.html#Array">Array</a>.&lt;<a href="BackgroundObject.html">BackgroundObject</a>></span>
 
 
             
@@ -174,7 +174,7 @@
 
             
 
-            <td class="description last">Array of background objects</td>
+            <td class="description last">Array of background scenery</td>
         </tr>
 
     
@@ -187,7 +187,7 @@
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;<a href="Coin.html">Coin</a>></span>
+<span class="param-type"><a href="global.html#Array">Array</a>.&lt;<a href="Coin.html">Coin</a>></span>
 
 
             
@@ -197,7 +197,7 @@
 
             
 
-            <td class="description last">Array of coin objects</td>
+            <td class="description last">Array of collectible coins</td>
         </tr>
 
     
@@ -210,7 +210,7 @@
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;<a href="Bottle.html">Bottle</a>></span>
+<span class="param-type"><a href="global.html#Array">Array</a>.&lt;<a href="Bottle.html">Bottle</a>></span>
 
 
             
@@ -220,7 +220,7 @@
 
             
 
-            <td class="description last">Array of bottle objects</td>
+            <td class="description last">Array of collectible bottles</td>
         </tr>
 
     
@@ -261,7 +261,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_level.class.js.html">models/level.class.js</a>, <a href="models_level.class.js.html#line4">line 4</a>
+        <a href="models_level.class.js.html">models/level.class.js</a>, <a href="models_level.class.js.html#line5">line 5</a>
     </li></ul></dd>
     
 
@@ -284,6 +284,35 @@
 
 
 
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        If required arrays are undefined or null
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">Error</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
 
 
 
@@ -311,13 +340,13 @@
 
         
             
-<h4 class="name" id="backgroundObjects"><span class="type-signature"></span>backgroundObjects<span class="type-signature"> :Array.&lt;<a href="BackgroundObject.html">BackgroundObject</a>></span></h4>
+<h4 class="name" id="backgroundObjects"><span class="type-signature"></span>backgroundObjects<span class="type-signature"> :<a href="global.html#Array">Array</a>.&lt;<a href="BackgroundObject.html">BackgroundObject</a>></span></h4>
 
 
 
 
 <div class="description">
-    Array of background objects
+    Array of background objects for level scenery
 </div>
 
 
@@ -326,7 +355,7 @@
     <ul>
         <li>
             
-<span class="param-type">Array.&lt;<a href="BackgroundObject.html">BackgroundObject</a>></span>
+<span class="param-type"><a href="global.html#Array">Array</a>.&lt;<a href="BackgroundObject.html">BackgroundObject</a>></span>
 
 
         </li>
@@ -365,7 +394,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_level.class.js.html">models/level.class.js</a>, <a href="models_level.class.js.html#line15">line 15</a>
+        <a href="models_level.class.js.html">models/level.class.js</a>, <a href="models_level.class.js.html#line28">line 28</a>
     </li></ul></dd>
     
 
@@ -383,13 +412,13 @@
 
         
             
-<h4 class="name" id="bottles"><span class="type-signature"></span>bottles<span class="type-signature"> :Array.&lt;<a href="Bottle.html">Bottle</a>></span></h4>
+<h4 class="name" id="bottles"><span class="type-signature"></span>bottles<span class="type-signature"> :<a href="global.html#Array">Array</a>.&lt;<a href="Bottle.html">Bottle</a>></span></h4>
 
 
 
 
 <div class="description">
-    Array of collectible bottle objects
+    Array of collectible bottle objects used as weapons
 </div>
 
 
@@ -398,7 +427,7 @@
     <ul>
         <li>
             
-<span class="param-type">Array.&lt;<a href="Bottle.html">Bottle</a>></span>
+<span class="param-type"><a href="global.html#Array">Array</a>.&lt;<a href="Bottle.html">Bottle</a>></span>
 
 
         </li>
@@ -437,7 +466,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_level.class.js.html">models/level.class.js</a>, <a href="models_level.class.js.html#line21">line 21</a>
+        <a href="models_level.class.js.html">models/level.class.js</a>, <a href="models_level.class.js.html#line40">line 40</a>
     </li></ul></dd>
     
 
@@ -455,13 +484,13 @@
 
         
             
-<h4 class="name" id="characterLevelEndPosX"><span class="type-signature"></span>characterLevelEndPosX<span class="type-signature"> :number</span></h4>
+<h4 class="name" id="clouds"><span class="type-signature"></span>clouds<span class="type-signature"> :<a href="global.html#Array">Array</a>.&lt;<a href="Cloud.html">Cloud</a>></span></h4>
 
 
 
 
 <div class="description">
-    X position where the character completes the level
+    Array of cloud objects for parallax background effect
 </div>
 
 
@@ -470,7 +499,7 @@
     <ul>
         <li>
             
-<span class="param-type">number</span>
+<span class="param-type"><a href="global.html#Array">Array</a>.&lt;<a href="Cloud.html">Cloud</a>></span>
 
 
         </li>
@@ -509,7 +538,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_level.class.js.html">models/level.class.js</a>, <a href="models_level.class.js.html#line24">line 24</a>
+        <a href="models_level.class.js.html">models/level.class.js</a>, <a href="models_level.class.js.html#line22">line 22</a>
     </li></ul></dd>
     
 
@@ -527,13 +556,13 @@
 
         
             
-<h4 class="name" id="clouds"><span class="type-signature"></span>clouds<span class="type-signature"> :Array.&lt;<a href="Cloud.html">Cloud</a>></span></h4>
+<h4 class="name" id="coins"><span class="type-signature"></span>coins<span class="type-signature"> :<a href="global.html#Array">Array</a>.&lt;<a href="Coin.html">Coin</a>></span></h4>
 
 
 
 
 <div class="description">
-    Array of cloud objects for background
+    Array of collectible coin objects for scoring
 </div>
 
 
@@ -542,7 +571,7 @@
     <ul>
         <li>
             
-<span class="param-type">Array.&lt;<a href="Cloud.html">Cloud</a>></span>
+<span class="param-type"><a href="global.html#Array">Array</a>.&lt;<a href="Coin.html">Coin</a>></span>
 
 
         </li>
@@ -581,7 +610,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_level.class.js.html">models/level.class.js</a>, <a href="models_level.class.js.html#line12">line 12</a>
+        <a href="models_level.class.js.html">models/level.class.js</a>, <a href="models_level.class.js.html#line34">line 34</a>
     </li></ul></dd>
     
 
@@ -599,13 +628,13 @@
 
         
             
-<h4 class="name" id="coins"><span class="type-signature"></span>coins<span class="type-signature"> :Array.&lt;<a href="Coin.html">Coin</a>></span></h4>
+<h4 class="name" id="endboss"><span class="type-signature"></span>endboss<span class="type-signature"> :<a href="global.html#Array">Array</a>.&lt;<a href="MovableObject.html">MovableObject</a>></span></h4>
 
 
 
 
 <div class="description">
-    Array of collectible coin objects
+    Array of end boss objects (typically contains single boss)
 </div>
 
 
@@ -614,7 +643,7 @@
     <ul>
         <li>
             
-<span class="param-type">Array.&lt;<a href="Coin.html">Coin</a>></span>
+<span class="param-type"><a href="global.html#Array">Array</a>.&lt;<a href="MovableObject.html">MovableObject</a>></span>
 
 
         </li>
@@ -653,7 +682,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_level.class.js.html">models/level.class.js</a>, <a href="models_level.class.js.html#line18">line 18</a>
+        <a href="models_level.class.js.html">models/level.class.js</a>, <a href="models_level.class.js.html#line16">line 16</a>
     </li></ul></dd>
     
 
@@ -671,13 +700,13 @@
 
         
             
-<h4 class="name" id="endboss"><span class="type-signature"></span>endboss<span class="type-signature"> :Array.&lt;<a href="MovableObject.html">MovableObject</a>></span></h4>
+<h4 class="name" id="enemies"><span class="type-signature"></span>enemies<span class="type-signature"> :<a href="global.html#Array">Array</a>.&lt;<a href="MovableObject.html">MovableObject</a>></span></h4>
 
 
 
 
 <div class="description">
-    Array of end boss objects
+    Array of enemy objects (chickens) in the level
 </div>
 
 
@@ -686,7 +715,7 @@
     <ul>
         <li>
             
-<span class="param-type">Array.&lt;<a href="MovableObject.html">MovableObject</a>></span>
+<span class="param-type"><a href="global.html#Array">Array</a>.&lt;<a href="MovableObject.html">MovableObject</a>></span>
 
 
         </li>
@@ -725,79 +754,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_level.class.js.html">models/level.class.js</a>, <a href="models_level.class.js.html#line9">line 9</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="enemies"><span class="type-signature"></span>enemies<span class="type-signature"> :Array.&lt;<a href="MovableObject.html">MovableObject</a>></span></h4>
-
-
-
-
-<div class="description">
-    Array of enemy objects in the level
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">Array.&lt;<a href="MovableObject.html">MovableObject</a>></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_level.class.js.html">models/level.class.js</a>, <a href="models_level.class.js.html#line6">line 6</a>
+        <a href="models_level.class.js.html">models/level.class.js</a>, <a href="models_level.class.js.html#line10">line 10</a>
     </li></ul></dd>
     
 
@@ -831,13 +788,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BackgroundObject.html">BackgroundObject</a></li><li><a href="BigChicken.html">BigChicken</a></li><li><a href="Bottle.html">Bottle</a></li><li><a href="BottleStatusBar.html">BottleStatusBar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Cloud.html">Cloud</a></li><li><a href="Coin.html">Coin</a></li><li><a href="CoinStatusBar.html">CoinStatusBar</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossStatusBar.html">EndbossStatusBar</a></li><li><a href="HealthStatusBar.html">HealthStatusBar</a></li><li><a href="Keyboard.html">Keyboard</a></li><li><a href="Level.html">Level</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="SmallChicken.html">SmallChicken</a></li><li><a href="StatusBar.html">StatusBar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#generateBigChicken">generateBigChicken</a></li><li><a href="global.html#generateBottles">generateBottles</a></li><li><a href="global.html#generateClouds">generateClouds</a></li><li><a href="global.html#generateCoins">generateCoins</a></li><li><a href="global.html#generateEnemies">generateEnemies</a></li><li><a href="global.html#generateFirstPlaygroundBGObjectGroupLayer">generateFirstPlaygroundBGObjectGroupLayer</a></li><li><a href="global.html#generatePlaygroundBackgroundObjectGroups">generatePlaygroundBackgroundObjectGroups</a></li><li><a href="global.html#generateSmallChicken">generateSmallChicken</a></li><li><a href="global.html#hideMobileButtons">hideMobileButtons</a></li><li><a href="global.html#imagePositionX">imagePositionX</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initKeyboardListeners">initKeyboardListeners</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initTouchListeners">initTouchListeners</a></li><li><a href="global.html#keyDownListeners">keyDownListeners</a></li><li><a href="global.html#keyPressListeners">keyPressListeners</a></li><li><a href="global.html#keyUpListeners">keyUpListeners</a></li><li><a href="global.html#level_1">level_1</a></li><li><a href="global.html#muteGame">muteGame</a></li><li><a href="global.html#numOfBackgroundObjectGroups">numOfBackgroundObjectGroups</a></li><li><a href="global.html#numOfBigChicken">numOfBigChicken</a></li><li><a href="global.html#numOfBottles">numOfBottles</a></li><li><a href="global.html#numOfClouds">numOfClouds</a></li><li><a href="global.html#numOfCoins">numOfCoins</a></li><li><a href="global.html#numOfLittleChicken">numOfLittleChicken</a></li><li><a href="global.html#randomPosXNumber">randomPosXNumber</a></li><li><a href="global.html#resetLevel">resetLevel</a></li><li><a href="global.html#showMobileButtons">showMobileButtons</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#toggleGameplayInfoOverlay">toggleGameplayInfoOverlay</a></li><li><a href="global.html#toggleSounds">toggleSounds</a></li><li><a href="global.html#touchendListeners">touchendListeners</a></li><li><a href="global.html#touchstartListeners">touchstartListeners</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BackgroundObject.html">BackgroundObject</a></li><li><a href="BigChicken.html">BigChicken</a></li><li><a href="Bottle.html">Bottle</a></li><li><a href="BottleStatusBar.html">BottleStatusBar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Cloud.html">Cloud</a></li><li><a href="Coin.html">Coin</a></li><li><a href="CoinStatusBar.html">CoinStatusBar</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossStatusBar.html">EndbossStatusBar</a></li><li><a href="HealthStatusBar.html">HealthStatusBar</a></li><li><a href="Keyboard.html">Keyboard</a></li><li><a href="Level.html">Level</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="SmallChicken.html">SmallChicken</a></li><li><a href="StatusBar.html">StatusBar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Array">Array</a></li><li><a href="global.html#Collision">Collision</a></li><li><a href="global.html#Height">Height</a></li><li><a href="global.html#Initial">Initial</a></li><li><a href="global.html#Sound">Sound</a></li><li><a href="global.html#Vertical">Vertical</a></li><li><a href="global.html#Width">Width</a></li><li><a href="global.html#X">X</a></li><li><a href="global.html#backgroundSound">backgroundSound</a></li><li><a href="global.html#canvas">canvas</a></li><li><a href="global.html#generateBigChicken">generateBigChicken</a></li><li><a href="global.html#generateBottles">generateBottles</a></li><li><a href="global.html#generateClouds">generateClouds</a></li><li><a href="global.html#generateCoins">generateCoins</a></li><li><a href="global.html#generateEnemies">generateEnemies</a></li><li><a href="global.html#generateFirstPlaygroundBGObjectGroupLayer">generateFirstPlaygroundBGObjectGroupLayer</a></li><li><a href="global.html#generatePlaygroundBackgroundObjectGroups">generatePlaygroundBackgroundObjectGroups</a></li><li><a href="global.html#generateSmallChicken">generateSmallChicken</a></li><li><a href="global.html#handleMobileButtons">handleMobileButtons</a></li><li><a href="global.html#hideMobileButtons">hideMobileButtons</a></li><li><a href="global.html#imagePositionX">imagePositionX</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initKeyboardListeners">initKeyboardListeners</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initTouchListeners">initTouchListeners</a></li><li><a href="global.html#keyDownListeners">keyDownListeners</a></li><li><a href="global.html#keyPressListeners">keyPressListeners</a></li><li><a href="global.html#keyUpListeners">keyUpListeners</a></li><li><a href="global.html#keyboard">keyboard</a></li><li><a href="global.html#level_1">level_1</a></li><li><a href="global.html#muteGame">muteGame</a></li><li><a href="global.html#numOfBackgroundObjectGroups">numOfBackgroundObjectGroups</a></li><li><a href="global.html#numOfBigChicken">numOfBigChicken</a></li><li><a href="global.html#numOfBottles">numOfBottles</a></li><li><a href="global.html#numOfClouds">numOfClouds</a></li><li><a href="global.html#numOfCoins">numOfCoins</a></li><li><a href="global.html#numOfLittleChicken">numOfLittleChicken</a></li><li><a href="global.html#randomPosXNumber">randomPosXNumber</a></li><li><a href="global.html#showMobileButtons">showMobileButtons</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#toggleGameplayInfoOverlay">toggleGameplayInfoOverlay</a></li><li><a href="global.html#toggleSounds">toggleSounds</a></li><li><a href="global.html#touchendListeners">touchendListeners</a></li><li><a href="global.html#touchstartListeners">touchstartListeners</a></li><li><a href="global.html#world">world</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Apr 24 2025 18:32:31 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu May 15 2025 11:38:04 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -28,6 +28,7 @@
         <article>
             <pre class="prettyprint source linenums"><code>/**
  * Class representing the main playable character in the game
+ * Handles movement, animations, sound effects and collision detection
  * @extends MovableObject
  */
 class Character extends MovableObject {
@@ -186,76 +187,140 @@ class Character extends MovableObject {
      * Handles walking, jumping, and idle animations
      */
     animate() {
+        this.initializeSounds();
+        this.setupSoundLoops();
+        
+        setInterval(() => {
+            this.handleMovement();
+            this.updateCameraPosition();
+        }, 1000 / 60);
+    
+        setInterval(() => {
+            this.updateCharacterState();
+        }, this.IDLE_ANIMATION_SPEED);
+    }
+    
+    /**
+     * Initializes sound settings for walking and jumping
+     */
+    initializeSounds() {
         this.walkingSound.currentTime = this.walkingSoundLoopStart;
         this.walkingSound.playbackRate = 2.0;
-
         this.jumpingSound.currentTime = this.jumpingSoundLoopStart;
         this.jumpingSound.playbackRate = 1.5;
-        
+    }
+    
+    /**
+     * Sets up sound loop event listeners
+     */
+    setupSoundLoops() {
         this.walkingSound.addEventListener('timeupdate', () => {
             if (this.walkingSound.currentTime >= this.walkingSoundLoopEnd) {
                 this.walkingSound.currentTime = this.walkingSoundLoopStart;
             }
         });
-
+    
         this.jumpingSound.addEventListener('timeupdate', () => {
             if (this.jumpingSound.currentTime >= this.jumpingSoundLoopEnd) {
                 this.jumpingSound.currentTime = this.jumpingSoundLoopStart;
             }
-        })
-
-        setInterval(() => {
-            this.walkingSound.pause();
-
-            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.UP || this.world.keyboard.SPACE) {
-                this.lastMovement = new Date().getTime();
-                this.currentAnimation = 'walking';
-            }
-
-            if (this.world.keyboard.RIGHT &amp;&amp; this.positionX &lt; this.world.level.characterLevelEndPosX) {
-                // Character moving to the right
-                this.movingRight();
-                this.otherDirection = false;
-                if (!this.isNotOnGround()) {
-                    this.walkingSound.play();
-                }
-            }
-            
-            if (this.world.keyboard.LEFT &amp;&amp; this.positionX > 0) {
-                // Character moving to the left
-                this.movingLeft();
-                this.otherDirection = true;
-                if (!this.isNotOnGround()) {
-                    this.walkingSound.play();
-                }
-            }
-            
-            if ((this.world.keyboard.UP || this.world.keyboard.SPACE) &amp;&amp; !this.isNotOnGround()) {
-                this.jumpingSound.play();
-                this.jump();
-                
-            }
-
-            this.world.camPosX = -this.positionX + 150;
-        }, 1000 / 60);
-
-        setInterval(() => {
-
-            if (this.isDead()) {
-                this.playAnimation(this.PEPE_DYING_IMAGE_PATHS);
-            } else if (this.isHurt()) {
-                this.playAnimation(this.PEPE_HURT_IMAGE_PATHS);
-            } else if(this.isNotOnGround()) {
-                this.playAnimation(this.PEPE_JUMPING_IMAGE_PATHS);
-            } else {
-                this.updateIdleAnimations();
-            }
-        }, this.IDLE_ANIMATION_SPEED);
+        });
+    }
+    
+    /**
+     * Handles character movement and related animations
+     * Manages walking sounds and keyboard input checks
+     * @returns {void}
+     */
+    handleMovement() {
+        this.walkingSound.pause();
+        this.checkKeyboardInput();
+        this.handleRightMovement();
+        this.handleLeftMovement();
+        this.handleJump();
+    }
+    
+    /**
+     * Checks keyboard input and updates animation state
+     * Updates lastMovement timestamp and current animation
+     * @returns {void}
+     */
+    checkKeyboardInput() {
+        if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || 
+            this.world.keyboard.UP || this.world.keyboard.SPACE) {
+            this.lastMovement = new Date().getTime();
+            this.currentAnimation = 'walking';
+        }
+    }
+    
+    /**
+     * Handles right movement logic for the character
+     * Plays walking sound and updates direction if character is within level bounds
+     * @returns {void}
+     */
+    handleRightMovement() {
+        if (this.world.keyboard.RIGHT &amp;&amp; this.positionX &lt; this.world.level.characterLevelEndPosX) {
+            this.movingRight();
+            this.otherDirection = false;
+            if (!this.isNotOnGround()) this.walkingSound.play();
+        }
+    }
+    
+    /**
+     * Handles left movement logic for the character
+     * Plays walking sound and updates direction if character is within level bounds
+     * @returns {void}
+     */
+    handleLeftMovement() {
+        if (this.world.keyboard.LEFT &amp;&amp; this.positionX > 0) {
+            this.movingLeft();
+            this.otherDirection = true;
+            if (!this.isNotOnGround()) this.walkingSound.play();
+        }
+    }
+    
+    /**
+     * Handles jump logic for the character
+     * Plays jumping sound and initiates jump if character is on ground
+     * @returns {void}
+     */
+    handleJump() {
+        if ((this.world.keyboard.UP || this.world.keyboard.SPACE) &amp;&amp; !this.isNotOnGround()) {
+            this.jumpingSound.play();
+            this.jump();
+        }
+    }
+    
+    /**
+     * Updates camera position relative to character
+     * Centers the camera 150 pixels to the right of character
+     * @returns {void}
+     */
+    updateCameraPosition() {
+        this.world.camPosX = -this.positionX + 150;
+    }
+    
+    /**
+     * Updates character state and plays corresponding animations
+     * Handles dying, hurt, jumping, and idle animations based on character state
+     * @returns {void}
+     */
+    updateCharacterState() {
+        if (this.isDead()) {
+            this.playAnimation(this.PEPE_DYING_IMAGE_PATHS);
+        } else if (this.isHurt()) {
+            this.playAnimation(this.PEPE_HURT_IMAGE_PATHS);
+        } else if (this.isNotOnGround()) {
+            this.playAnimation(this.PEPE_JUMPING_IMAGE_PATHS);
+        } else {
+            this.updateIdleAnimations();
+        }
     }
     
     /**
      * Updates the character's idle animations based on movement state
-     * Switches between normal idle and long idle animations
+     * Switches between normal idle and long idle animations after delay
+     * @returns {void}
      */
     updateIdleAnimations() {
         let currentTime = new Date().getTime();
@@ -280,6 +345,7 @@ class Character extends MovableObject {
 
     /**
      * Makes the character jump if they're alive
+     * Sets vertical speed for jump movement
      * @returns {void}
      */
     jump() {
@@ -289,7 +355,8 @@ class Character extends MovableObject {
 
     /**
      * Activates god mode for development/testing
-     * Gives infinite health and bottles
+     * Gives infinite health and bottles, increases movement speed
+     * @returns {void}
      */
     godMode() {
         this.bottles = 20;
@@ -309,13 +376,13 @@ class Character extends MovableObject {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BackgroundObject.html">BackgroundObject</a></li><li><a href="BigChicken.html">BigChicken</a></li><li><a href="Bottle.html">Bottle</a></li><li><a href="BottleStatusBar.html">BottleStatusBar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Cloud.html">Cloud</a></li><li><a href="Coin.html">Coin</a></li><li><a href="CoinStatusBar.html">CoinStatusBar</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossStatusBar.html">EndbossStatusBar</a></li><li><a href="HealthStatusBar.html">HealthStatusBar</a></li><li><a href="Keyboard.html">Keyboard</a></li><li><a href="Level.html">Level</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="SmallChicken.html">SmallChicken</a></li><li><a href="StatusBar.html">StatusBar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#generateBigChicken">generateBigChicken</a></li><li><a href="global.html#generateBottles">generateBottles</a></li><li><a href="global.html#generateClouds">generateClouds</a></li><li><a href="global.html#generateCoins">generateCoins</a></li><li><a href="global.html#generateEnemies">generateEnemies</a></li><li><a href="global.html#generateFirstPlaygroundBGObjectGroupLayer">generateFirstPlaygroundBGObjectGroupLayer</a></li><li><a href="global.html#generatePlaygroundBackgroundObjectGroups">generatePlaygroundBackgroundObjectGroups</a></li><li><a href="global.html#generateSmallChicken">generateSmallChicken</a></li><li><a href="global.html#hideMobileButtons">hideMobileButtons</a></li><li><a href="global.html#imagePositionX">imagePositionX</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initKeyboardListeners">initKeyboardListeners</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initTouchListeners">initTouchListeners</a></li><li><a href="global.html#keyDownListeners">keyDownListeners</a></li><li><a href="global.html#keyPressListeners">keyPressListeners</a></li><li><a href="global.html#keyUpListeners">keyUpListeners</a></li><li><a href="global.html#level_1">level_1</a></li><li><a href="global.html#muteGame">muteGame</a></li><li><a href="global.html#numOfBackgroundObjectGroups">numOfBackgroundObjectGroups</a></li><li><a href="global.html#numOfBigChicken">numOfBigChicken</a></li><li><a href="global.html#numOfBottles">numOfBottles</a></li><li><a href="global.html#numOfClouds">numOfClouds</a></li><li><a href="global.html#numOfCoins">numOfCoins</a></li><li><a href="global.html#numOfLittleChicken">numOfLittleChicken</a></li><li><a href="global.html#randomPosXNumber">randomPosXNumber</a></li><li><a href="global.html#resetLevel">resetLevel</a></li><li><a href="global.html#showMobileButtons">showMobileButtons</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#toggleGameplayInfoOverlay">toggleGameplayInfoOverlay</a></li><li><a href="global.html#toggleSounds">toggleSounds</a></li><li><a href="global.html#touchendListeners">touchendListeners</a></li><li><a href="global.html#touchstartListeners">touchstartListeners</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BackgroundObject.html">BackgroundObject</a></li><li><a href="BigChicken.html">BigChicken</a></li><li><a href="Bottle.html">Bottle</a></li><li><a href="BottleStatusBar.html">BottleStatusBar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Cloud.html">Cloud</a></li><li><a href="Coin.html">Coin</a></li><li><a href="CoinStatusBar.html">CoinStatusBar</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossStatusBar.html">EndbossStatusBar</a></li><li><a href="HealthStatusBar.html">HealthStatusBar</a></li><li><a href="Keyboard.html">Keyboard</a></li><li><a href="Level.html">Level</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="SmallChicken.html">SmallChicken</a></li><li><a href="StatusBar.html">StatusBar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Array">Array</a></li><li><a href="global.html#Collision">Collision</a></li><li><a href="global.html#Height">Height</a></li><li><a href="global.html#Initial">Initial</a></li><li><a href="global.html#Sound">Sound</a></li><li><a href="global.html#Vertical">Vertical</a></li><li><a href="global.html#Width">Width</a></li><li><a href="global.html#X">X</a></li><li><a href="global.html#backgroundSound">backgroundSound</a></li><li><a href="global.html#canvas">canvas</a></li><li><a href="global.html#generateBigChicken">generateBigChicken</a></li><li><a href="global.html#generateBottles">generateBottles</a></li><li><a href="global.html#generateClouds">generateClouds</a></li><li><a href="global.html#generateCoins">generateCoins</a></li><li><a href="global.html#generateEnemies">generateEnemies</a></li><li><a href="global.html#generateFirstPlaygroundBGObjectGroupLayer">generateFirstPlaygroundBGObjectGroupLayer</a></li><li><a href="global.html#generatePlaygroundBackgroundObjectGroups">generatePlaygroundBackgroundObjectGroups</a></li><li><a href="global.html#generateSmallChicken">generateSmallChicken</a></li><li><a href="global.html#handleMobileButtons">handleMobileButtons</a></li><li><a href="global.html#hideMobileButtons">hideMobileButtons</a></li><li><a href="global.html#imagePositionX">imagePositionX</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initKeyboardListeners">initKeyboardListeners</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initTouchListeners">initTouchListeners</a></li><li><a href="global.html#keyDownListeners">keyDownListeners</a></li><li><a href="global.html#keyPressListeners">keyPressListeners</a></li><li><a href="global.html#keyUpListeners">keyUpListeners</a></li><li><a href="global.html#keyboard">keyboard</a></li><li><a href="global.html#level_1">level_1</a></li><li><a href="global.html#muteGame">muteGame</a></li><li><a href="global.html#numOfBackgroundObjectGroups">numOfBackgroundObjectGroups</a></li><li><a href="global.html#numOfBigChicken">numOfBigChicken</a></li><li><a href="global.html#numOfBottles">numOfBottles</a></li><li><a href="global.html#numOfClouds">numOfClouds</a></li><li><a href="global.html#numOfCoins">numOfCoins</a></li><li><a href="global.html#numOfLittleChicken">numOfLittleChicken</a></li><li><a href="global.html#randomPosXNumber">randomPosXNumber</a></li><li><a href="global.html#showMobileButtons">showMobileButtons</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#toggleGameplayInfoOverlay">toggleGameplayInfoOverlay</a></li><li><a href="global.html#toggleSounds">toggleSounds</a></li><li><a href="global.html#touchendListeners">touchendListeners</a></li><li><a href="global.html#touchstartListeners">touchstartListeners</a></li><li><a href="global.html#world">world</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Apr 24 2025 18:32:31 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu May 15 2025 11:38:04 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -28,20 +28,35 @@
         <article>
             <pre class="prettyprint source linenums"><code>/**
  * Class representing the end boss enemy in the game
+ * Handles boss behavior, animations, and combat mechanics
  * @extends MovableObject
  */
 class Endboss extends MovableObject {
-    /** @type {number} Height of the end boss sprite in pixels */
+    /** 
+     * @type {number}
+     * @constant
+     * Height of the end boss sprite in pixels 
+     */
     height = 650;
 
-    /** @type {number} Width of the end boss sprite in pixels */
+    /** 
+     * @type {number}
+     * @constant
+     * Width of the end boss sprite in pixels 
+     */
     width = 450;
 
-    /** @type {number} Vertical position of the end boss */
+    /** 
+     * @type {number}
+     * @constant
+     * Initial vertical position of the end boss in pixels 
+     */
     positionY = 50;
 
     /** 
-     * @type {Object} Collision offset values for the end boss
+     * @type {Object}
+     * @constant
+     * Collision offset values for the end boss's hitbox in pixels
      * @property {number} top - Top offset for collision detection
      * @property {number} right - Right offset for collision detection
      * @property {number} bottom - Bottom offset for collision detection
@@ -54,10 +69,18 @@ class Endboss extends MovableObject {
         left: 30
     };
 
-    /** @type {string} Current state of the end boss (waiting, alert, chasing, hurt, attacking, dead) */
+    /** 
+     * @type {string}
+     * @default 'waiting'
+     * Current state of the end boss (waiting, alert, chasing, hurt, attacking, dead) 
+     */
     state = 'waiting';
 
-    /** @type {boolean} Whether this is the first encounter with the player */
+    /** 
+     * @type {boolean}
+     * @default true
+     * Whether this is the first encounter with the player 
+     */
     firstEncounter = true;
 
     /** @type {number} Timestamp of the last attack */
@@ -109,14 +132,14 @@ class Endboss extends MovableObject {
 
     /** @type {string[]} Array of image paths for attack animation */
     ENDBOSS_IMAGES_ATTACK_PATH = [
-        '../img/4_enemie_boss_chicken/3_attack/G13.png',
-        '../img/4_enemie_boss_chicken/3_attack/G14.png',
-        '../img/4_enemie_boss_chicken/3_attack/G15.png',
-        '../img/4_enemie_boss_chicken/3_attack/G16.png',
-        '../img/4_enemie_boss_chicken/3_attack/G17.png',
-        '../img/4_enemie_boss_chicken/3_attack/G18.png',
-        '../img/4_enemie_boss_chicken/3_attack/G19.png',
-        '../img/4_enemie_boss_chicken/3_attack/G20.png'
+        './img/4_enemie_boss_chicken/3_attack/G13.png',
+        './img/4_enemie_boss_chicken/3_attack/G14.png',
+        './img/4_enemie_boss_chicken/3_attack/G15.png',
+        './img/4_enemie_boss_chicken/3_attack/G16.png',
+        './img/4_enemie_boss_chicken/3_attack/G17.png',
+        './img/4_enemie_boss_chicken/3_attack/G18.png',
+        './img/4_enemie_boss_chicken/3_attack/G19.png',
+        './img/4_enemie_boss_chicken/3_attack/G20.png'
     ];
 
     /** @type {string[]} Array of image paths for hurt animation */
@@ -135,6 +158,8 @@ class Endboss extends MovableObject {
 
     /**
      * Creates a new end boss instance and initializes animations
+     * @constructor
+     * @throws {Error} If image loading fails
      */
     constructor() {
         super();
@@ -151,35 +176,50 @@ class Endboss extends MovableObject {
     /**
      * Main animation loop for the end boss
      * Handles state changes and corresponding behaviors
+     * @returns {void}
      */
     animate() {
         setInterval(() => {
             if (this.state === 'dead') return;
-
-            if (world.character.positionX > 9000 &amp;&amp; this.firstEncounter) {
-                this.playAlertSequence();
-                this.firstEncounter = false;
-            }
-
-            switch (this.state) {
-                case 'chasing':
-                    this.chaseCharacter();
-                    this.checkAttackOpportunity();
-                    break;
-
-                case 'attacking':
-                    if (!this.isPlayingOneTimeAnimation) {
-                        this.attackCharacter();
-                    }
-                    break;
-
-                case 'hurt':
-                    if (!this.isPlayingOneTimeAnimation) {
-                        this.playHurtAnimation();
-                    }
-                    break;
-            }
+            this.checkFirstEncounter();
+            this.handleState();
         }, 50);
+    }
+    
+    /**
+     * Checks for first encounter with player
+     * Triggers alert sequence when player gets close enough
+     * @returns {void}
+     */
+    checkFirstEncounter() {
+        if (world.character.positionX > 9000 &amp;&amp; this.firstEncounter) {
+            this.playAlertSequence();
+            this.firstEncounter = false;
+        }
+    }
+    
+    /**
+     * Handles the current state of the end boss
+     * Manages different behavior states (chasing, attacking, hurt)
+     * @returns {void}
+     */
+    handleState() {
+        const stateActions = {
+            'chasing': () => {
+                this.chaseCharacter();
+                this.checkAttackOpportunity();
+            },
+            'attacking': () => {
+                if (!this.isPlayingOneTimeAnimation) this.attackCharacter();
+            },
+            'hurt': () => {
+                if (!this.isPlayingOneTimeAnimation) this.playHurtAnimation();
+            }
+        };
+    
+        if (stateActions[this.state]) {
+            stateActions[this.state]();
+        }
     }
 
     /**
@@ -232,53 +272,112 @@ class Endboss extends MovableObject {
     /**
      * Executes the attack animation and damage calculation
      * Includes jump arc calculation and collision detection
+     * @returns {void}
+     * @throws {Error} If animation frames cannot be loaded
      */
     attackCharacter() {
         if (!this.isJumping) {
-            this.isPlayingOneTimeAnimation = true;
-            this.isJumping = true;
+            this.initializeAttack();
             let currentFrame = 0;
-            let jumpHeight = 0;
-            let targetPosX = world.character.positionX;
-            let jumpDirection = targetPosX > this.positionX ? 1 : -1;
-
             let attackInterval = setInterval(() => {
                 this.playAnimation([this.ENDBOSS_IMAGES_ATTACK_PATH[currentFrame]]);
                 currentFrame++;
-
-                if (currentFrame &lt; this.ENDBOSS_IMAGES_ATTACK_PATH.length / 2) {
-                    jumpHeight = (currentFrame / (this.ENDBOSS_IMAGES_ATTACK_PATH.length / 2)) * this.attackJumpHeight;
-                    this.positionY = this.initialAttackPosY - jumpHeight;
-                } else {
-                    let fallProgress = (currentFrame - this.ENDBOSS_IMAGES_ATTACK_PATH.length / 2) / (this.ENDBOSS_IMAGES_ATTACK_PATH.length / 2);
-                    jumpHeight = (1 - fallProgress) * this.attackJumpHeight;
-                    this.positionY = this.initialAttackPosY - jumpHeight;
-                }
-
-                this.positionX += jumpDirection * (this.attackJumpDistance / this.ENDBOSS_IMAGES_ATTACK_PATH.length);
-
-                if (currentFrame === Math.floor(this.ENDBOSS_IMAGES_ATTACK_PATH.length / 2)) {
-                    if (this.isColliding(world.character)) {
-                        world.character.healthPoints -= 20;
-                        world.healthStatusBar.setHealthPercentage(world.character.healthPoints);
-
-                        if (world.character.healthPoints &lt;= 0) {
-                            world.character.healthPoints = 0;  // Prevent negative health
-                            world.gameState = 'lose';
-                            clearInterval(attackInterval);  // Stop attack animation
-                        }
-                    }
-                }
-    
-                if (currentFrame >= this.ENDBOSS_IMAGES_ATTACK_PATH.length) {
-                    clearInterval(attackInterval);
-                    this.positionY = this.initialAttackPosY;
-                    this.state = 'chasing';
-                    this.isPlayingOneTimeAnimation = false;
-                    this.isJumping = false;
-                }
-            }, 200);
+                this.updateJumpPosition(currentFrame);
+                this.checkDamageFrame(currentFrame, attackInterval);
+                this.checkEndOfAttack(currentFrame, attackInterval);
+            }, 175);
         }
+    }
+    
+    /**
+     * Initializes attack state variables
+     */
+    initializeAttack() {
+        this.isPlayingOneTimeAnimation = true;
+        this.isJumping = true;
+        this.targetPosX = world.character.positionX;
+        this.jumpDirection = this.targetPosX > this.positionX ? 1 : -1;
+    }
+    
+    /**
+     * Updates jump height and position during attack
+     * @param {number} currentFrame - Current animation frame number (0 to animation length)
+     * @returns {void}
+     */
+    updateJumpPosition(currentFrame) {
+        const halfLength = this.ENDBOSS_IMAGES_ATTACK_PATH.length / 2;
+        let jumpHeight;
+    
+        if (currentFrame &lt; halfLength) {
+            jumpHeight = (currentFrame / halfLength) * this.attackJumpHeight;
+        } else {
+            let fallProgress = (currentFrame - halfLength) / halfLength;
+            jumpHeight = (1 - fallProgress) * this.attackJumpHeight;
+        }
+    
+        this.positionY = this.initialAttackPosY - jumpHeight;
+        this.positionX += this.jumpDirection * (this.attackJumpDistance / this.ENDBOSS_IMAGES_ATTACK_PATH.length);
+    }
+    
+    /**
+     * Checks if current frame should deal damage to player
+     * @param {number} currentFrame - Current animation frame number
+     * @param {number} attackInterval - Interval ID for clearing animation
+     * @returns {void}
+     */
+    checkDamageFrame(currentFrame, attackInterval) {
+        if (currentFrame === Math.floor(this.ENDBOSS_IMAGES_ATTACK_PATH.length / 2)) {
+            if (this.isColliding(world.character)) {
+                this.dealDamageToCharacter(attackInterval);
+            }
+        }
+    }
+    
+    /**
+     * Deals damage to the character and checks for game over
+     * @param {number} attackInterval - Interval ID for clearing animation
+     * @returns {void}
+     */
+    dealDamageToCharacter(attackInterval) {
+        world.character.healthPoints = Math.max(0, world.character.healthPoints - 20);
+        world.healthStatusBar.setHealthPercentage(world.character.healthPoints);
+    
+        if (world.character.healthPoints &lt;= 0) {
+            this.handleCharacterDeath(attackInterval);
+        }
+    }
+    
+    /**
+     * Handles character death and game over state
+     * @param {number} attackInterval - Interval ID for clearing
+     */
+    handleCharacterDeath(attackInterval) {
+        world.character.healthPoints = 0;
+        world.gameState = 'gameover';
+        clearInterval(attackInterval);
+        setTimeout(() => world.showGameOver(), 50);
+    }
+    
+    /**
+     * Checks if attack animation is complete
+     * @param {number} currentFrame - Current animation frame
+     * @param {number} attackInterval - Interval ID for clearing
+     */
+    checkEndOfAttack(currentFrame, attackInterval) {
+        if (currentFrame >= this.ENDBOSS_IMAGES_ATTACK_PATH.length) {
+            clearInterval(attackInterval);
+            this.resetAfterAttack();
+        }
+    }
+    
+    /**
+     * Resets boss state after attack
+     */
+    resetAfterAttack() {
+        this.positionY = this.initialAttackPosY;
+        this.state = 'chasing';
+        this.isPlayingOneTimeAnimation = false;
+        this.isJumping = false;
     }
 
     /**
@@ -325,6 +424,7 @@ class Endboss extends MovableObject {
     /**
      * Handles damage taken by the end boss
      * Triggers hurt state and checks for death condition
+     * @returns {void}
      */
     hit() {
         if (this.state !== 'dead') {
@@ -390,13 +490,13 @@ class Endboss extends MovableObject {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BackgroundObject.html">BackgroundObject</a></li><li><a href="BigChicken.html">BigChicken</a></li><li><a href="Bottle.html">Bottle</a></li><li><a href="BottleStatusBar.html">BottleStatusBar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Cloud.html">Cloud</a></li><li><a href="Coin.html">Coin</a></li><li><a href="CoinStatusBar.html">CoinStatusBar</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossStatusBar.html">EndbossStatusBar</a></li><li><a href="HealthStatusBar.html">HealthStatusBar</a></li><li><a href="Keyboard.html">Keyboard</a></li><li><a href="Level.html">Level</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="SmallChicken.html">SmallChicken</a></li><li><a href="StatusBar.html">StatusBar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#generateBigChicken">generateBigChicken</a></li><li><a href="global.html#generateBottles">generateBottles</a></li><li><a href="global.html#generateClouds">generateClouds</a></li><li><a href="global.html#generateCoins">generateCoins</a></li><li><a href="global.html#generateEnemies">generateEnemies</a></li><li><a href="global.html#generateFirstPlaygroundBGObjectGroupLayer">generateFirstPlaygroundBGObjectGroupLayer</a></li><li><a href="global.html#generatePlaygroundBackgroundObjectGroups">generatePlaygroundBackgroundObjectGroups</a></li><li><a href="global.html#generateSmallChicken">generateSmallChicken</a></li><li><a href="global.html#hideMobileButtons">hideMobileButtons</a></li><li><a href="global.html#imagePositionX">imagePositionX</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initKeyboardListeners">initKeyboardListeners</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initTouchListeners">initTouchListeners</a></li><li><a href="global.html#keyDownListeners">keyDownListeners</a></li><li><a href="global.html#keyPressListeners">keyPressListeners</a></li><li><a href="global.html#keyUpListeners">keyUpListeners</a></li><li><a href="global.html#level_1">level_1</a></li><li><a href="global.html#muteGame">muteGame</a></li><li><a href="global.html#numOfBackgroundObjectGroups">numOfBackgroundObjectGroups</a></li><li><a href="global.html#numOfBigChicken">numOfBigChicken</a></li><li><a href="global.html#numOfBottles">numOfBottles</a></li><li><a href="global.html#numOfClouds">numOfClouds</a></li><li><a href="global.html#numOfCoins">numOfCoins</a></li><li><a href="global.html#numOfLittleChicken">numOfLittleChicken</a></li><li><a href="global.html#randomPosXNumber">randomPosXNumber</a></li><li><a href="global.html#resetLevel">resetLevel</a></li><li><a href="global.html#showMobileButtons">showMobileButtons</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#toggleGameplayInfoOverlay">toggleGameplayInfoOverlay</a></li><li><a href="global.html#toggleSounds">toggleSounds</a></li><li><a href="global.html#touchendListeners">touchendListeners</a></li><li><a href="global.html#touchstartListeners">touchstartListeners</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BackgroundObject.html">BackgroundObject</a></li><li><a href="BigChicken.html">BigChicken</a></li><li><a href="Bottle.html">Bottle</a></li><li><a href="BottleStatusBar.html">BottleStatusBar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Cloud.html">Cloud</a></li><li><a href="Coin.html">Coin</a></li><li><a href="CoinStatusBar.html">CoinStatusBar</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossStatusBar.html">EndbossStatusBar</a></li><li><a href="HealthStatusBar.html">HealthStatusBar</a></li><li><a href="Keyboard.html">Keyboard</a></li><li><a href="Level.html">Level</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="SmallChicken.html">SmallChicken</a></li><li><a href="StatusBar.html">StatusBar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Array">Array</a></li><li><a href="global.html#Collision">Collision</a></li><li><a href="global.html#Height">Height</a></li><li><a href="global.html#Initial">Initial</a></li><li><a href="global.html#Sound">Sound</a></li><li><a href="global.html#Vertical">Vertical</a></li><li><a href="global.html#Width">Width</a></li><li><a href="global.html#X">X</a></li><li><a href="global.html#backgroundSound">backgroundSound</a></li><li><a href="global.html#canvas">canvas</a></li><li><a href="global.html#generateBigChicken">generateBigChicken</a></li><li><a href="global.html#generateBottles">generateBottles</a></li><li><a href="global.html#generateClouds">generateClouds</a></li><li><a href="global.html#generateCoins">generateCoins</a></li><li><a href="global.html#generateEnemies">generateEnemies</a></li><li><a href="global.html#generateFirstPlaygroundBGObjectGroupLayer">generateFirstPlaygroundBGObjectGroupLayer</a></li><li><a href="global.html#generatePlaygroundBackgroundObjectGroups">generatePlaygroundBackgroundObjectGroups</a></li><li><a href="global.html#generateSmallChicken">generateSmallChicken</a></li><li><a href="global.html#handleMobileButtons">handleMobileButtons</a></li><li><a href="global.html#hideMobileButtons">hideMobileButtons</a></li><li><a href="global.html#imagePositionX">imagePositionX</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initKeyboardListeners">initKeyboardListeners</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initTouchListeners">initTouchListeners</a></li><li><a href="global.html#keyDownListeners">keyDownListeners</a></li><li><a href="global.html#keyPressListeners">keyPressListeners</a></li><li><a href="global.html#keyUpListeners">keyUpListeners</a></li><li><a href="global.html#keyboard">keyboard</a></li><li><a href="global.html#level_1">level_1</a></li><li><a href="global.html#muteGame">muteGame</a></li><li><a href="global.html#numOfBackgroundObjectGroups">numOfBackgroundObjectGroups</a></li><li><a href="global.html#numOfBigChicken">numOfBigChicken</a></li><li><a href="global.html#numOfBottles">numOfBottles</a></li><li><a href="global.html#numOfClouds">numOfClouds</a></li><li><a href="global.html#numOfCoins">numOfCoins</a></li><li><a href="global.html#numOfLittleChicken">numOfLittleChicken</a></li><li><a href="global.html#randomPosXNumber">randomPosXNumber</a></li><li><a href="global.html#showMobileButtons">showMobileButtons</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#toggleGameplayInfoOverlay">toggleGameplayInfoOverlay</a></li><li><a href="global.html#toggleSounds">toggleSounds</a></li><li><a href="global.html#touchendListeners">touchendListeners</a></li><li><a href="global.html#touchstartListeners">touchstartListeners</a></li><li><a href="global.html#world">world</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Apr 24 2025 18:32:31 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu May 15 2025 11:38:04 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

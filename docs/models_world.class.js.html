@@ -79,14 +79,31 @@ class World {
     /** @type {HTMLImageElement} Win screen image */
     winScreenImage = new Image();
 
-    /** @type {string} Current game state ('start', 'running', 'gameover', 'win') */
+    /** 
+     * @type {string} 
+     * @default 'start'
+     * Current game state ('start', 'running', 'gameover', 'win') 
+     */
     gameState = 'start';
 
-    /** @type {HTMLAudioElement} Sound effect for bottle breaking */
+    /** 
+     * @type {HTMLAudioElement} 
+     * Sound effect for bottle breaking
+     */
     bottleBreakSound = new Audio('./audio/glass_bottle_destroyed.mp3');
 
-    /** @type {HTMLAudioElement} Sound effect for chicken death */
+    /** 
+     * @type {HTMLAudioElement} 
+     * Sound effect for chicken death
+     */
     chickenAudio = new Audio('./audio/chicken.mp3');
+
+    /** 
+     * @type {number}
+     * @default 0
+     * Timestamp of last bottle throw in milliseconds
+     */
+    lastBottleThrow = 0;
 
     /**
      * Creates a new game world
@@ -100,6 +117,7 @@ class World {
         this.loadStartAndEndImages();
         this.setWorld();
         this.checkingFunctionLoop();
+        this.lastBottleThrow = 0;
     }
 
     /**
@@ -124,35 +142,56 @@ class World {
     checkingFunctionLoop() {
         setInterval(() => {
             if (this.gameState === 'running') {
-                this.checkThrowBottle();
-                this.checkCharacterGotChickenHit();
-
-                if (this.character.isDead()) {
-                    this.gameState = 'gameover';
-                    setTimeout(() => {
-                        this.showGameOver();
-                    }, 50);
-                }
-
-                if (this.level.endboss.length > 0 &amp;&amp; this.level.endboss[0].endbossHealth &lt;= 0) {
-                    this.gameState = 'win';
-                    this.level.endboss[0].playDeadAnimation();
-                    setTimeout(() => {
-                        this.showWin();
-                    }, 500);
-                }
+                this.checkGameStatus();
+                this.checkEndBossStatus();
             }
         }, 100);
 
         setInterval(() => {
-            if (this.gameState === 'running') {
-                this.checkCharacterJumpOnChicken();
-                this.checkBottleCollisionWithGround();
-                this.checkCollectables();
-                this.checkBottleCollisionWithChicken();
-                this.checkBottleCollisionWithEndboss();
-            }
+            if (this.gameState === 'running') this.checkCollisions();
         }, 1000 / 60);
+    }
+
+    /**
+     * Checks game status including character health and attacks
+     */
+    checkGameStatus() {
+        this.checkThrowBottle();
+        this.checkCharacterGotChickenHit();
+        if (this.character.isDead() || this.character.healthPoints &lt;= 0) {
+            this.handleGameOver();
+        }
+    }
+
+    /**
+     * Handles game over state
+     */
+    handleGameOver() {
+        this.gameState = 'gameover';
+        this.character.healthPoints = 0;
+        setTimeout(() => this.showGameOver(), 50);
+    }
+
+    /**
+     * Checks end boss status and victory conditions
+     */
+    checkEndBossStatus() {
+        if (this.level.endboss.length > 0 &amp;&amp; this.level.endboss[0].endbossHealth &lt;= 0) {
+            this.gameState = 'win';
+            this.level.endboss[0].playDeadAnimation();
+            setTimeout(() => this.showWin(), 500);
+        }
+    }
+
+    /**
+     * Checks all collision-related events
+     */
+    checkCollisions() {
+        this.checkCharacterJumpOnChicken();
+        this.checkBottleCollisionWithGround();
+        this.checkCollectables();
+        this.checkBottleCollisionWithChicken();
+        this.checkBottleCollisionWithEndboss();
     }
 
     /**
@@ -168,7 +207,92 @@ class World {
      * Resets the game by reloading the page
      */
     resetGame() {
-        window.location.reload();
+        this.resetGameState();
+        this.clearGameObjects();
+        this.resetCamera();
+        this.initializeLevel();
+        this.resetCharacter();
+        this.resetStatusBars();
+        this.showStartScreen();
+        this.setupStartButton();
+        this.updateUIElements();
+    }
+
+    /**
+     * Resets basic game state variables
+     */
+    resetGameState() {
+        this.gameState = 'start';
+        this.gameRunning = false;
+    }
+
+    /**
+     * Clears all game objects
+     */
+    clearGameObjects() {
+        this.throwableObjects = [];
+        this.level.enemies = [];
+        this.level.endboss = [];
+        this.level.clouds = [];
+        this.level.coins = [];
+        this.level.bottles = [];
+    }
+
+    /**
+     * Resets camera position
+     */
+    resetCamera() {
+        this.camPosX = 0;
+    }
+
+    initializeLevel() {
+        initLevel();
+        this.level = level_1;
+    }
+
+    resetCharacter() {
+        this.character = new Character();
+        this.character.world = this;
+        this.character.healthPoints = 100;
+        this.character.bottles = 0;
+        this.character.coins = 0;
+    }
+
+    resetStatusBars() {
+        this.healthStatusBar.setHealthPercentage(100);
+        this.coinStatusBar.setCoinsPercentage(0);
+        this.bottleStatusBar.setBottlesPercentage(0);
+        this.endbossStatusBar.setEndbossHealthPercentage(250);
+    }
+
+    /**
+     * Shows the start screen overlay
+     */
+    showStartScreen() {
+        let overlay = document.getElementById('overlay');
+        overlay.style.display = 'flex';
+        overlay.style.marginTop = '78px';
+        overlay.innerHTML = `&lt;button id="startButton">Start Game&lt;/button>`;
+        overlay.style.backgroundImage = `url(${this.startScreenImage.src})`;
+        overlay.style.backgroundColor = 'transparent';
+    }
+
+    /**
+     * Updates UI element visibility
+     */
+    updateUIElements() {
+        document.getElementById('footer').style.display = 'flex';
+        document.getElementById('gameplayInfoButton').style.display = 'flex';
+        document.getElementById('volume').style.display = 'none';
+    }
+
+    /**
+     * Sets up the start button event listener
+     */
+    setupStartButton() {
+        document.getElementById('startButton').addEventListener('click', () => {
+            window.startGame();
+        });
     }
 
     /**
@@ -176,71 +300,105 @@ class World {
      */
     showGameOver() {
         this.gameRunning = false;
-
         let overlay = document.getElementById('overlay');
+        this.setupOverlayBase(overlay);
+        this.setGameOverContent(overlay);
+        this.setupResetButton();
+    }
+
+    /**
+     * Sets up base overlay styles
+     * @param {HTMLElement} overlay - The overlay element
+     */
+    setupOverlayBase(overlay) {
         overlay.style.display = 'flex';
         overlay.style.flexDirection = 'column';
         overlay.style.gap = '20px';
+        overlay.style.backgroundImage = 'none';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    }
+
+    /**
+     * Sets game over content in overlay
+     * @param {HTMLElement} overlay - The overlay element
+     */
+    setGameOverContent(overlay) {
         overlay.innerHTML = `
         &lt;img src="${this.gameOverScreenImage.src}" alt="Game Over" style="width: 100%; height: 100%;">
         &lt;button id="resetButton">Reset Game&lt;/button>
-        `;
-        overlay.style.backgroundImage = 'none';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    `;
+    }
 
+    /**
+     * Sets up the reset button event listener
+     */
+    setupResetButton() {
         let resetButton = document.getElementById('resetButton');
         resetButton.style.display = 'block';
-        resetButton.addEventListener('click', () => {
-            this.resetGame();
-        });
+        resetButton.addEventListener('click', () => this.resetGame());
     }
-    
+
     /**
-     * Displays the win screen
-     */
+ * Displays the win screen
+ */
     showWin() {
         this.gameRunning = false;
-
         let overlay = document.getElementById('overlay');
-        overlay.style.display = 'flex';
-        overlay.style.flexDirection = 'column';
-        overlay.style.gap = '20px';
-        overlay.innerHTML = `
-        &lt;img src="${this.winScreenImage.src}" alt="Game Over" style="width: 100%; height: 100%;">
-        &lt;button id="resetButton">Reset Game&lt;/button>
-        `;
-        overlay.style.backgroundImage = 'none';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        this.setupOverlayBase(overlay);
+        this.setWinContent(overlay);
+        this.setupResetButton();
+    }
 
-        let resetButton = document.getElementById('resetButton');
-        resetButton.style.display = 'block';
-        resetButton.addEventListener('click', () => {
-            this.resetGame();
-        });
+    /**
+     * Sets win screen content in overlay
+     * @param {HTMLElement} overlay - The overlay element
+     */
+    setWinContent(overlay) {
+        overlay.innerHTML = `
+        &lt;img src="${this.winScreenImage.src}" alt="Win Screen" style="width: 100%; height: 100%;">
+        &lt;button id="resetButton">Reset Game&lt;/button>
+    `;
     }
 
     /**
      * Handles bottle throwing mechanics
      */
     checkThrowBottle() {
-        if (this.character.bottles > 0) {
-            if (this.character.otherDirection) {
-                if (this.keyboard.THROW) {
-                    let throwableBottle = new ThrowableObject(this.character.positionX, this.character.positionY + 175, this.character.otherDirection);
-                    this.throwableObjects.push(throwableBottle);
-                    this.character.bottles -= 1;
-                    this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
-                }
+        if (!this.canThrowBottle()) return;
 
-            } else {
-                if (this.keyboard.THROW) {
-                    let throwableBottle = new ThrowableObject(this.character.positionX + 125, this.character.positionY + 175, this.character.otherDirection);
-                    this.throwableObjects.push(throwableBottle);
-                    this.character.bottles -= 1;
-                    this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
-                }
+        const currentTime = new Date().getTime();
+        if (currentTime - this.lastBottleThrow > 1000) {
+            if (this.keyboard.THROW) {
+                const throwPosX = this.character.otherDirection ?
+                    this.character.positionX :
+                    this.character.positionX + 125;
+                this.createAndThrowBottle(throwPosX);
             }
         }
+    }
+
+    /**
+     * Checks if character can throw a bottle
+     * @returns {boolean} Whether throwing is possible
+     */
+    canThrowBottle() {
+        return this.character.bottles > 0;
+    }
+
+    /**
+     * Creates and throws a bottle
+     * @param {number} throwPosX - X position to throw from
+     */
+    createAndThrowBottle(throwPosX) {
+        const bottle = new ThrowableObject(
+            throwPosX,
+            this.character.positionY + 175,
+            this.character.otherDirection
+        );
+        this.throwableObjects.push(bottle);
+        this.character.bottles--;
+        this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
+        this.lastBottleThrow = new Date().getTime();
     }
 
     /**
@@ -293,7 +451,7 @@ class World {
             this.throwableObjects.forEach(bottle => {
                 if (bottle.isColliding(this.level.endboss[0])) {
                     this.chickenAudio.play();
-                    
+
                     let bottleIndex = this.throwableObjects.indexOf(bottle);
                     this.throwableObjects.splice(bottleIndex, 1);
                     this.level.endboss[0].hit();
@@ -307,143 +465,266 @@ class World {
      * Checks if character takes damage from enemies
      */
     checkCharacterGotChickenHit() {
+        this.checkChickenCollisions();
+        this.checkEndbossCollision();
+    }
+
+    /**
+     * Checks collisions with regular chickens
+     */
+    checkChickenCollisions() {
         this.level.enemies.forEach(enemy => {
             if (this.character.isColliding(enemy)) {
-                let currentTime = Date.now();
-                if (currentTime - this.lastHitTime > 1000) {
-                    this.character.getHit();
-                    this.healthStatusBar.setHealthPercentage(this.character.healthPoints, this.ctx);
-                    this.lastHitTime = currentTime;
-                }
+                this.handleChickenDamage();
             }
         });
+    }
 
+    /**
+     * Checks collision with end boss
+     */
+    checkEndbossCollision() {
         if (this.level.endboss.length > 0) {
             let endboss = this.level.endboss[0];
             if (this.character.isColliding(endboss) &amp;&amp; endboss.state === 'attacking') {
-                let currentTime = Date.now();
-                if (currentTime - this.lastHitTime > 1000) {
-                    this.character.healthPoints -= 20;
-                    this.healthStatusBar.setHealthPercentage(this.character.healthPoints, this.ctx);
-                    this.lastHitTime = currentTime;
-                }
+                this.handleEndbossDamage();
             }
         }
-    };
+    }
+
+    /**
+     * Handles damage from chicken collisions
+     */
+    handleChickenDamage() {
+        let currentTime = Date.now();
+        if (currentTime - this.lastHitTime > 1000) {
+            this.character.getHit();
+            this.healthStatusBar.setHealthPercentage(this.character.healthPoints, this.ctx);
+            this.lastHitTime = currentTime;
+            this.checkGameOver();
+        }
+    }
+
+    /**
+     * Handles damage from end boss collisions
+     */
+    handleEndbossDamage() {
+        let currentTime = Date.now();
+        if (currentTime - this.lastHitTime > 1000) {
+            this.character.healthPoints -= 20;
+            this.healthStatusBar.setHealthPercentage(this.character.healthPoints, this.ctx);
+            this.lastHitTime = currentTime;
+        }
+    }
+
+    /**
+     * Checks if character health reaches zero
+     */
+    checkGameOver() {
+        if (this.character.healthPoints &lt;= 0) {
+            this.character.healthPoints = 0;
+            this.gameState = 'gameover';
+            setTimeout(() => this.showGameOver(), 50);
+        }
+    }
 
     /**
      * Checks if character jumps on enemies
      */
     checkCharacterJumpOnChicken() {
         this.level.enemies.forEach(enemy => {
-            if (this.character.isColliding(enemy) &amp;&amp; this.character.isNotOnGround() &amp;&amp; this.character.speedPosY &lt; 0) { // speedY
-                this.chickenAudio.currentTime = 0.5;
-                this.chickenAudio.play();
-                
-                let enemieIndex = this.level.enemies.indexOf(enemy);
-                this.level.enemies.splice(enemieIndex, 1);
-
-                let randomNumber = Math.round(Math.random() * 8); // Random num 1 - 8
-                if (randomNumber == 8) {
-                    this.character.bottles += 1;
-                }
+            if (this.isJumpingOnEnemy(enemy)) {
+                this.handleEnemyDeath(enemy);
             }
-
-            if (this.level.enemies.length == 0) {
-                for (let i = 0; i &lt; 5; i++) {
-                    this.addToMap(new BigChicken());
-                    this.addToMap(new SmallChicken());
-                }
-            }
+            this.respawnEnemiesIfNeeded();
         });
+    }
+
+    /**
+     * Checks if character is jumping on an enemy
+     * @param {MovableObject} enemy - The enemy to check
+     * @returns {boolean} Whether character is jumping on enemy
+     */
+    isJumpingOnEnemy(enemy) {
+        return this.character.isColliding(enemy) &amp;&amp;
+            this.character.isNotOnGround() &amp;&amp;
+            this.character.speedPosY &lt; 0;
+    }
+
+    /**
+     * Handles enemy death and possible bottle drops
+     * @param {MovableObject} enemy - The enemy that died
+     */
+    handleEnemyDeath(enemy) {
+        this.playChickenDeathSound();
+        let enemyIndex = this.level.enemies.indexOf(enemy);
+        this.level.enemies.splice(enemyIndex, 1);
+        this.checkBottleDrop();
+    }
+
+    /**
+     * Plays chicken death sound effect
+     */
+    playChickenDeathSound() {
+        this.chickenAudio.currentTime = 0.5;
+        this.chickenAudio.play();
+    }
+
+    /**
+     * Checks if enemy should drop a bottle
+     */
+    checkBottleDrop() {
+        let randomNumber = Math.round(Math.random() * 8);
+        if (randomNumber === 8) {
+            this.character.bottles += 1;
+        }
+    }
+
+    /**
+     * Respawns enemies if all are defeated
+     */
+    respawnEnemiesIfNeeded() {
+        if (this.level.enemies.length === 0) {
+            for (let i = 0; i &lt; 5; i++) {
+                this.addToMap(new BigChicken());
+                this.addToMap(new SmallChicken());
+            }
+        }
     }
 
     /**
      * Checks for collisions with collectible items
      */
     checkCollectables() {
+        this.checkCoinCollisions();
+        this.checkBottleCollisions();
+    }
+
+    /**
+     * Checks for coin collisions and handles collection
+     */
+    checkCoinCollisions() {
         this.level.coins.forEach(coin => {
             if (this.character.isColliding(coin)) {
-                this.character.collectCoin();
-                this.coinStatusBar.setCoinsPercentage(this.character.coins);
-
-                let coinIndex = this.level.coins.indexOf(coin);
-                this.level.coins.splice(coinIndex, 1);
+                this.collectCoin(coin);
             }
         });
+    }
 
+    /**
+     * Checks for bottle collisions and handles collection
+     */
+    checkBottleCollisions() {
         this.level.bottles.forEach(bottle => {
             if (this.character.isColliding(bottle)) {
-                this.character.collectBottle();
-                this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
-
-                let bottleIndex = this.level.bottles.indexOf(bottle);
-                this.level.bottles.splice(bottleIndex, 1);
+                this.collectBottle(bottle);
             }
         });
+    }
+
+    /**
+     * Handles coin collection
+     * @param {Coin} coin - The coin to collect
+     */
+    collectCoin(coin) {
+        this.character.collectCoin();
+        this.coinStatusBar.setCoinsPercentage(this.character.coins);
+        let coinIndex = this.level.coins.indexOf(coin);
+        this.level.coins.splice(coinIndex, 1);
+    }
+
+    /**
+     * Handles bottle collection
+     * @param {Bottle} bottle - The bottle to collect
+     */
+    collectBottle(bottle) {
+        this.character.collectBottle();
+        this.bottleStatusBar.setBottlesPercentage(this.character.bottles);
+        let bottleIndex = this.level.bottles.indexOf(bottle);
+        this.level.bottles.splice(bottleIndex, 1);
     }
 
     /**
      * Main drawing function for rendering the game
      */
     draw() {
-        this.ctx.clearRect(
-            0,
-            0,
-            this.canvas.width,
-            this.canvas.height
-        );
+        this.clearCanvas();
+        this.drawBackgroundElements();
+        this.drawStatusBars();
+        this.drawChickenCount();
+        this.drawEndbossStatus();
+        this.drawGameObjects();
+        requestAnimationFrame(() => this.draw());
+    }
 
+    /**
+     * Clears the canvas for the next frame
+     */
+    clearCanvas() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    /**
+     * Draws background elements with camera offset
+     */
+    drawBackgroundElements() {
         this.ctx.translate(this.camPosX, 0);
-
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
-
         this.ctx.translate(-this.camPosX, 0);
+    }
 
+    /**
+     * Draws all status bars and their values
+     */
+    drawStatusBars() {
         this.addToMap(this.healthStatusBar);
         this.drawStatusText(this.character.healthPoints, this.ctx, 250, 60);
-
         this.addToMap(this.coinStatusBar);
         this.drawStatusText(this.character.coins, this.ctx, 250, 135);
-
         this.addToMap(this.bottleStatusBar);
         this.drawStatusText(this.character.bottles, this.ctx, 250, 210);
+    }
 
+    /**
+     * Draws the current chicken count
+     */
+    drawChickenCount() {
         this.drawStatusText("Current chickens: " + this.level.enemies.length, this.ctx, 38, 250);
+    }
 
-        if (this.character.positionX >= 8350) { // 8350
+    /**
+     * Draws end boss status if in range
+     */
+    drawEndbossStatus() {
+        if (this.shouldShowEndbossStatus()) {
             this.addToMap(this.endbossStatusBar);
-            if (this.level.endboss[0].endbossHealth > 0) {
-                this.drawStatusText(this.level.endboss[0].endbossHealth, this.ctx, 1000, 60);
-            } else {
-                this.drawStatusText(0, this.ctx, 1000, 60);
-            }
+            const health = Math.max(0, this.level.endboss[0].endbossHealth);
+            this.drawStatusText(health, this.ctx, 1000, 60);
         }
+    }
 
-        if (this.level.endboss[0].hasFirstEncounterOccurred) {
-            this.addToMap(this.endbossStatusBar);
-            if (this.level.endboss[0].endbossHealth > 0) {
-                this.drawStatusText(this.level.endboss[0].endbossHealth, this.ctx, 1000, 60);
-            } else {
-                this.drawStatusText(0, this.ctx, 1000, 60);
-            }
-        }
+    /**
+     * Checks if end boss status should be shown
+     * @returns {boolean}
+     */
+    shouldShowEndbossStatus() {
+        return this.character.positionX >= 8350 ||
+            this.level.endboss[0].hasFirstEncounterOccurred;
+    }
 
+    /**
+     * Draws all game objects with camera offset
+     */
+    drawGameObjects() {
         this.ctx.translate(this.camPosX, 0);
-
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.endboss);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.throwableObjects);
-
         this.ctx.translate(-this.camPosX, 0);
-
-        requestAnimationFrame(() => {
-            this.draw();
-        });
     }
 
     /**
@@ -514,13 +795,13 @@ class World {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BackgroundObject.html">BackgroundObject</a></li><li><a href="BigChicken.html">BigChicken</a></li><li><a href="Bottle.html">Bottle</a></li><li><a href="BottleStatusBar.html">BottleStatusBar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Cloud.html">Cloud</a></li><li><a href="Coin.html">Coin</a></li><li><a href="CoinStatusBar.html">CoinStatusBar</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossStatusBar.html">EndbossStatusBar</a></li><li><a href="HealthStatusBar.html">HealthStatusBar</a></li><li><a href="Keyboard.html">Keyboard</a></li><li><a href="Level.html">Level</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="SmallChicken.html">SmallChicken</a></li><li><a href="StatusBar.html">StatusBar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#generateBigChicken">generateBigChicken</a></li><li><a href="global.html#generateBottles">generateBottles</a></li><li><a href="global.html#generateClouds">generateClouds</a></li><li><a href="global.html#generateCoins">generateCoins</a></li><li><a href="global.html#generateEnemies">generateEnemies</a></li><li><a href="global.html#generateFirstPlaygroundBGObjectGroupLayer">generateFirstPlaygroundBGObjectGroupLayer</a></li><li><a href="global.html#generatePlaygroundBackgroundObjectGroups">generatePlaygroundBackgroundObjectGroups</a></li><li><a href="global.html#generateSmallChicken">generateSmallChicken</a></li><li><a href="global.html#hideMobileButtons">hideMobileButtons</a></li><li><a href="global.html#imagePositionX">imagePositionX</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initKeyboardListeners">initKeyboardListeners</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initTouchListeners">initTouchListeners</a></li><li><a href="global.html#keyDownListeners">keyDownListeners</a></li><li><a href="global.html#keyPressListeners">keyPressListeners</a></li><li><a href="global.html#keyUpListeners">keyUpListeners</a></li><li><a href="global.html#level_1">level_1</a></li><li><a href="global.html#muteGame">muteGame</a></li><li><a href="global.html#numOfBackgroundObjectGroups">numOfBackgroundObjectGroups</a></li><li><a href="global.html#numOfBigChicken">numOfBigChicken</a></li><li><a href="global.html#numOfBottles">numOfBottles</a></li><li><a href="global.html#numOfClouds">numOfClouds</a></li><li><a href="global.html#numOfCoins">numOfCoins</a></li><li><a href="global.html#numOfLittleChicken">numOfLittleChicken</a></li><li><a href="global.html#randomPosXNumber">randomPosXNumber</a></li><li><a href="global.html#resetLevel">resetLevel</a></li><li><a href="global.html#showMobileButtons">showMobileButtons</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#toggleGameplayInfoOverlay">toggleGameplayInfoOverlay</a></li><li><a href="global.html#toggleSounds">toggleSounds</a></li><li><a href="global.html#touchendListeners">touchendListeners</a></li><li><a href="global.html#touchstartListeners">touchstartListeners</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BackgroundObject.html">BackgroundObject</a></li><li><a href="BigChicken.html">BigChicken</a></li><li><a href="Bottle.html">Bottle</a></li><li><a href="BottleStatusBar.html">BottleStatusBar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Cloud.html">Cloud</a></li><li><a href="Coin.html">Coin</a></li><li><a href="CoinStatusBar.html">CoinStatusBar</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossStatusBar.html">EndbossStatusBar</a></li><li><a href="HealthStatusBar.html">HealthStatusBar</a></li><li><a href="Keyboard.html">Keyboard</a></li><li><a href="Level.html">Level</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="SmallChicken.html">SmallChicken</a></li><li><a href="StatusBar.html">StatusBar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Array">Array</a></li><li><a href="global.html#Collision">Collision</a></li><li><a href="global.html#Height">Height</a></li><li><a href="global.html#Initial">Initial</a></li><li><a href="global.html#Sound">Sound</a></li><li><a href="global.html#Vertical">Vertical</a></li><li><a href="global.html#Width">Width</a></li><li><a href="global.html#X">X</a></li><li><a href="global.html#backgroundSound">backgroundSound</a></li><li><a href="global.html#canvas">canvas</a></li><li><a href="global.html#generateBigChicken">generateBigChicken</a></li><li><a href="global.html#generateBottles">generateBottles</a></li><li><a href="global.html#generateClouds">generateClouds</a></li><li><a href="global.html#generateCoins">generateCoins</a></li><li><a href="global.html#generateEnemies">generateEnemies</a></li><li><a href="global.html#generateFirstPlaygroundBGObjectGroupLayer">generateFirstPlaygroundBGObjectGroupLayer</a></li><li><a href="global.html#generatePlaygroundBackgroundObjectGroups">generatePlaygroundBackgroundObjectGroups</a></li><li><a href="global.html#generateSmallChicken">generateSmallChicken</a></li><li><a href="global.html#handleMobileButtons">handleMobileButtons</a></li><li><a href="global.html#hideMobileButtons">hideMobileButtons</a></li><li><a href="global.html#imagePositionX">imagePositionX</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initKeyboardListeners">initKeyboardListeners</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initTouchListeners">initTouchListeners</a></li><li><a href="global.html#keyDownListeners">keyDownListeners</a></li><li><a href="global.html#keyPressListeners">keyPressListeners</a></li><li><a href="global.html#keyUpListeners">keyUpListeners</a></li><li><a href="global.html#keyboard">keyboard</a></li><li><a href="global.html#level_1">level_1</a></li><li><a href="global.html#muteGame">muteGame</a></li><li><a href="global.html#numOfBackgroundObjectGroups">numOfBackgroundObjectGroups</a></li><li><a href="global.html#numOfBigChicken">numOfBigChicken</a></li><li><a href="global.html#numOfBottles">numOfBottles</a></li><li><a href="global.html#numOfClouds">numOfClouds</a></li><li><a href="global.html#numOfCoins">numOfCoins</a></li><li><a href="global.html#numOfLittleChicken">numOfLittleChicken</a></li><li><a href="global.html#randomPosXNumber">randomPosXNumber</a></li><li><a href="global.html#showMobileButtons">showMobileButtons</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#toggleGameplayInfoOverlay">toggleGameplayInfoOverlay</a></li><li><a href="global.html#toggleSounds">toggleSounds</a></li><li><a href="global.html#touchendListeners">touchendListeners</a></li><li><a href="global.html#touchstartListeners">touchstartListeners</a></li><li><a href="global.html#world">world</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Apr 24 2025 18:32:31 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu May 15 2025 11:38:04 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>
