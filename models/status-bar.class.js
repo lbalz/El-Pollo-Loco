@@ -6,6 +6,9 @@
 class StatusBar extends DrawableObject {
     /**
      * Creates a new status bar instance
+     * Initializes display values and loads required images
+     * @constructor
+     * @throws {Error} If image loading fails
      */
     constructor() {
         super();
@@ -14,6 +17,8 @@ class StatusBar extends DrawableObject {
     /**
      * Updates the health percentage display
      * @param {number} healthPercentage - Current health percentage (0-100)
+     * @throws {Error} If percentage is not a number or outside valid range
+     * @returns {void}
      */
     setHealthPercentage(healthPercentage) {
         this.healthPercentage = healthPercentage;
@@ -25,6 +30,8 @@ class StatusBar extends DrawableObject {
     /**
      * Updates the coins collected display
      * @param {number} coinsPercentage - Number of coins collected (0-20)
+     * @throws {Error} If count is not a number or outside valid range
+     * @returns {void}
      */
     setCoinsPercentage(coinsPercentage) {
         this.coinsPercentage = coinsPercentage;
@@ -36,6 +43,8 @@ class StatusBar extends DrawableObject {
     /**
      * Updates the bottles collected display
      * @param {number} bottlesPercentage - Number of bottles collected (0-10)
+     * @throws {Error} If count is not a number or outside valid range
+     * @returns {void}
      */
     setBottlesPercentage(bottlesPercentage) {
         this.bottlesPercentage = bottlesPercentage;
@@ -47,6 +56,8 @@ class StatusBar extends DrawableObject {
     /**
      * Updates the end boss health display
      * @param {number} endbossHealthPercentage - Current boss health (0-250)
+     * @throws {Error} If health is not a number or outside valid range
+     * @returns {void}
      */
     setEndbossHealthPercentage(endbossHealthPercentage) {
         this.endbossHealthPercentage = endbossHealthPercentage;
@@ -58,6 +69,7 @@ class StatusBar extends DrawableObject {
     /**
      * Calculates the appropriate health bar image index based on current health
      * @returns {number} Index of the health bar image (0-5)
+     * @private
      */
     getHealthImageIndex() {
         if (this.healthPercentage >= 100) {
@@ -78,6 +90,7 @@ class StatusBar extends DrawableObject {
     /**
      * Calculates the appropriate coin counter image index based on coins collected
      * @returns {number} Index of the coin counter image (0-5)
+     * @private
      */
     getCoinImageIndex() {
         if (this.coinsPercentage >= 20) {
@@ -98,6 +111,7 @@ class StatusBar extends DrawableObject {
     /**
      * Calculates the appropriate bottle counter image index based on bottles collected
      * @returns {number} Index of the bottle counter image (0-5)
+     * @private
      */
     getBottleImageIndex() {
         if (this.bottlesPercentage >= 10) {
@@ -118,6 +132,7 @@ class StatusBar extends DrawableObject {
     /**
      * Calculates the appropriate boss health bar image index based on boss health
      * @returns {number} Index of the boss health bar image (0-5)
+     * @private
      */
     getEndbossHealthImageIndex() {
         if (this.endbossHealthPercentage >= 200) {
