@@ -6,9 +6,11 @@
 class ThrowableObject extends MovableObject {
     /**
      * Creates a new throwable object
-     * @param {number} posX - Initial X position of the throw
-     * @param {number} posY - Initial Y position of the throw
+     * @param {number} posX - Initial X position of the throw in pixels
+     * @param {number} posY - Initial Y position of the throw in pixels
      * @param {boolean} characterDirection - Direction of throw (true for left, false for right)
+     * @throws {Error} If image loading fails
+     * @constructor
      */
     constructor(posX, posY, characterDirection) {
         super();
@@ -28,8 +30,9 @@ class ThrowableObject extends MovableObject {
     /**
      * Throws the bottle to the right
      * Applies gravity and horizontal movement
-     * @param {number} posX - Starting X position
-     * @param {number} posY - Starting Y position
+     * @param {number} posX - Starting X position in pixels
+     * @param {number} posY - Starting Y position in pixels
+     * @returns {void}
      */
     throwBottleRight(posX, posY) {
         this.positionX = posX;
@@ -44,8 +47,9 @@ class ThrowableObject extends MovableObject {
     /**
      * Throws the bottle to the left
      * Applies gravity and horizontal movement
-     * @param {number} posX - Starting X position
-     * @param {number} posY - Starting Y position
+     * @param {number} posX - Starting X position in pixels
+     * @param {number} posY - Starting Y position in pixels
+     * @returns {void}
      */
     throwBottleLeft(posX, posY) {
         this.positionX = posX;
