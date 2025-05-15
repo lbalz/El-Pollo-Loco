@@ -4,50 +4,107 @@
  * @extends DrawableObject
  */
 class MovableObject extends DrawableObject {
-    /** @type {number} Base movement speed of the object */
+    /** 
+     * @type {number}
+     * @default 0.25
+     * Base movement speed of the object in pixels per frame 
+     */
     movingSpeed = 0.25;
 
-    /** @type {boolean} Whether the object is facing the opposite direction */
+    /** 
+     * @type {boolean}
+     * @default false
+     * Whether the object is facing the opposite direction 
+     */
     otherDirection = false;
 
-    /** @type {number} Vertical speed/velocity of the object */
+    /** 
+     * @type {number}
+     * @default 0
+     * Vertical speed/velocity of the object in pixels per frame 
+     */
     speedPosY = 0;
 
-    /** @type {number} Gravity/acceleration applied to the object */
+    /** 
+     * @type {number}
+     * @default 2.5
+     * Gravity/acceleration applied to the object in pixels per frame squared
+     */
     characterAcceleration = 2.5;
 
-    /** @type {number} Current health points of the object */
+    /** 
+     * @type {number}
+     * @default 100
+     * Current health points of the object (0-100)
+     */
     healthPoints = 100;
 
-    /** @type {number} Timestamp of the last hit taken */
+    /** 
+     * @type {number}
+     * @default 0
+     * Timestamp of the last hit taken in milliseconds
+     */
     lastHit = 0;
 
-    /** @type {number} Number of coins collected */
+    /** 
+     * @type {number}
+     * @default 0
+     * Number of coins collected by the object
+     */
     coins = 0;
 
-    /** @type {number} Timestamp of the last coin collected */
+    /** 
+     * @type {number}
+     * @default 0
+     * Timestamp of the last coin collected in milliseconds
+     */
     lastCoinHit = 0;
 
-    /** @type {number} Number of bottles collected */
+    /** 
+     * @type {number}
+     * @default 0
+     * Number of bottles collected by the object
+     */
     bottles = 0;
 
-    /** @type {number} Timestamp of the last bottle collected */
+    /** 
+     * @type {number}
+     * @default 0
+     * Timestamp of the last bottle collected in milliseconds
+     */
     lastBottlesHit = 0;
 
-    /** @type {number} Health points of the end boss */
+    /** 
+     * @type {number}
+     * @default 250
+     * Health points of the end boss (0-250)
+     */
     endbossHealth = 250;
 
-    /** @type {number} Damage dealt by bottle hits */
+    /** 
+     * @type {number}
+     * @default 25
+     * Damage dealt by bottle hits in health points
+     */
     bottleDamage = 25;
 
-    /** @type {HTMLAudioElement} Sound effect for collecting coins */
+    /** 
+     * @type {HTMLAudioElement}
+     * @constant
+     * Sound effect for collecting coins
+     */
     collectCoinAudio = new Audio('./audio/collect_coin.mp3');
 
-    /** @type {HTMLAudioElement} Sound effect for collecting bottles */
+    /** 
+     * @type {HTMLAudioElement}
+     * @constant
+     * Sound effect for collecting bottles
+     */
     collectBottleAudio = new Audio('./audio/collect_bottle.mp3');
 
     /**
-     * Creates a new movable object
+     * Creates a new movable object with default values
+     * @constructor
      */
     constructor() {
         super();
