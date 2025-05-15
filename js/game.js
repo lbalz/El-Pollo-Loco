@@ -1,7 +1,25 @@
+/**
+ * Global canvas element used for rendering the game
+ * @type {HTMLCanvasElement}
+ */
 let canvas;
+
+/**
+ * Global world instance that manages the game state
+ * @type {World}
+ */
 let world;
+
+/**
+ * Global keyboard instance to handle input controls
+ * @type {Keyboard}
+ */
 let keyboard = new Keyboard();
 
+/**
+ * Background music for the game
+ * @type {HTMLAudioElement}
+ */
 let backgroundSound = new Audio('./audio/mexican_song_background.mp3');
 backgroundSound.volume = 0.3;
 backgroundSound.loop = true;
@@ -33,6 +51,19 @@ function startGame() {
     document.getElementById('volume').style.top = '24px';
     document.getElementById('gameplayInfoButton').style.display = 'none';
 
+    this.handleMobileButtons();
+
+    backgroundSound.play();
+    world.startGame();
+}
+
+/**
+ * Shows or hides mobile control buttons based on device orientation
+ * If device has touch support and is in landscape mode, shows the buttons
+ * Otherwise hides them
+ * @returns {void}
+ */
+function handleMobileButtons() {
     if (navigator.maxTouchPoints > 0) {
         if (window.matchMedia('(orientation: portrait)').matches) {
             hideMobileButtons();
@@ -42,27 +73,29 @@ function startGame() {
     } else {
         hideMobileButtons();
     }
-
-    backgroundSound.play();
-    world.startGame();
 }
 
 /**
- * Hides the mobile control buttons
+ * Hides the mobile control buttons by setting their container display to none
+ * @returns {void}
  */
 function hideMobileButtons() {
     document.getElementById('mobileButtonsContainer').style.display = 'none';
 }
 
 /**
- * Shows the mobile control buttons
+ * Shows the mobile control buttons by setting their container display to flex
+ * @returns {void}
  */
 function showMobileButtons() {
     document.getElementById('mobileButtonsContainer').style.display = 'flex';
 }
 
 /**
- * Toggles the game audio on/off and updates the volume button icon
+ * Toggles the game audio state and updates the volume button icon accordingly
+ * When toggled on, plays background music and unmutes all game sounds
+ * When toggled off, pauses background music and mutes all game sounds
+ * @returns {void}
  */
 function muteGame() {
     let volumeBtn = document.getElementById('volume');
@@ -83,7 +116,9 @@ function muteGame() {
 }
 
 /**
- * Toggles all game sound effects between muted and unmuted states
+ * Toggles the mute state of all game sound effects
+ * Affects walking, jumping, collecting items, bottle breaking, and chicken sounds
+ * @returns {void}
  */
 function toggleSounds() {
     let walkingSound = world.character.walkingSound;
@@ -103,6 +138,8 @@ function toggleSounds() {
 
 /**
  * Toggles the visibility of the gameplay information overlay
+ * Switches between 'flex' and 'none' display states
+ * @returns {void}
  */
 function toggleGameplayInfoOverlay() {
     let gameplayInfoOverlay = document.getElementById('gameplayInfoOverlay');
@@ -116,8 +153,8 @@ function toggleGameplayInfoOverlay() {
 }
 
 /**
- * Initializes keyboard event listeners for the game
- * Sets up keypress, keydown, and keyup event handlers
+ * Sets up event listeners for keyboard input using all three types of keyboard events
+ * @returns {void}
  */
 function initKeyboardListeners() {
     keyPressListeners();
@@ -126,7 +163,9 @@ function initKeyboardListeners() {
 }
 
 /**
- * Sets up keypress event listeners for WASD controls, space bar, and throw action
+ * Sets up keypress event listeners for WASD controls, spacebar, and throw action
+ * Updates keyboard state based on key presses
+ * @returns {void}
  * @listens keypress
  */
 function keyPressListeners() {
@@ -164,7 +203,9 @@ function keyPressListeners() {
 
 
 /**
- * Sets up keydown event listeners for arrow key controls and space bar
+ * Sets up keydown event listeners for arrow key controls and spacebar
+ * Updates keyboard state based on key down events
+ * @returns {void}
  * @listens keydown
  */
 function keyDownListeners() {
@@ -197,8 +238,9 @@ function keyDownListeners() {
 
 
 /**
- * Sets up keyup event listeners for all keyboard controls
- * Resets control states when keys are released
+ * Sets up keyup event listeners for both WASD and arrow key controls
+ * Resets keyboard state when keys are released
+ * @returns {void}
  * @listens keyup
  */
 function keyUpListeners() {
@@ -250,7 +292,9 @@ function keyUpListeners() {
 }
 
 /**
- * Initializes all touch event listeners for mobile controls
+ * Initializes touch event listeners for mobile device controls
+ * Sets up both touchstart and touchend event handlers
+ * @returns {void}
  */
 function initTouchListeners() {
     touchstartListeners();
@@ -258,7 +302,10 @@ function initTouchListeners() {
 }
 
 /**
- * Sets up touch start event listeners for mobile control buttons
+ * Sets up touchstart event listeners for mobile control buttons
+ * Prevents default touch behavior and updates keyboard state
+ * @returns {void}
+ * @listens touchstart
  */
 function touchstartListeners() {
     document.getElementById('leftButton').addEventListener('touchstart', event => {
@@ -283,7 +330,10 @@ function touchstartListeners() {
 }
 
 /**
- * Sets up touch end event listeners for mobile control buttons
+ * Sets up touchend event listeners for mobile control buttons
+ * Prevents default touch behavior and resets keyboard state
+ * @returns {void}
+ * @listens touchend
  */
 function touchendListeners() {
     document.getElementById('leftButton').addEventListener('touchend', event => {
