@@ -1,5 +1,6 @@
 /**
  * Class representing the main playable character in the game
+ * Handles movement, animations, sound effects and collision detection
  * @extends MovableObject
  */
 class Character extends MovableObject {
@@ -200,6 +201,8 @@ class Character extends MovableObject {
     
     /**
      * Handles character movement and related animations
+     * Manages walking sounds and keyboard input checks
+     * @returns {void}
      */
     handleMovement() {
         this.walkingSound.pause();
@@ -211,6 +214,8 @@ class Character extends MovableObject {
     
     /**
      * Checks keyboard input and updates animation state
+     * Updates lastMovement timestamp and current animation
+     * @returns {void}
      */
     checkKeyboardInput() {
         if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || 
@@ -221,7 +226,9 @@ class Character extends MovableObject {
     }
     
     /**
-     * Handles right movement logic
+     * Handles right movement logic for the character
+     * Plays walking sound and updates direction if character is within level bounds
+     * @returns {void}
      */
     handleRightMovement() {
         if (this.world.keyboard.RIGHT && this.positionX < this.world.level.characterLevelEndPosX) {
@@ -232,7 +239,9 @@ class Character extends MovableObject {
     }
     
     /**
-     * Handles left movement logic
+     * Handles left movement logic for the character
+     * Plays walking sound and updates direction if character is within level bounds
+     * @returns {void}
      */
     handleLeftMovement() {
         if (this.world.keyboard.LEFT && this.positionX > 0) {
@@ -243,7 +252,9 @@ class Character extends MovableObject {
     }
     
     /**
-     * Handles jump logic
+     * Handles jump logic for the character
+     * Plays jumping sound and initiates jump if character is on ground
+     * @returns {void}
      */
     handleJump() {
         if ((this.world.keyboard.UP || this.world.keyboard.SPACE) && !this.isNotOnGround()) {
@@ -254,13 +265,17 @@ class Character extends MovableObject {
     
     /**
      * Updates camera position relative to character
+     * Centers the camera 150 pixels to the right of character
+     * @returns {void}
      */
     updateCameraPosition() {
         this.world.camPosX = -this.positionX + 150;
     }
     
     /**
-     * Updates character state and animations
+     * Updates character state and plays corresponding animations
+     * Handles dying, hurt, jumping, and idle animations based on character state
+     * @returns {void}
      */
     updateCharacterState() {
         if (this.isDead()) {
@@ -276,7 +291,8 @@ class Character extends MovableObject {
     
     /**
      * Updates the character's idle animations based on movement state
-     * Switches between normal idle and long idle animations
+     * Switches between normal idle and long idle animations after delay
+     * @returns {void}
      */
     updateIdleAnimations() {
         let currentTime = new Date().getTime();
@@ -301,6 +317,7 @@ class Character extends MovableObject {
 
     /**
      * Makes the character jump if they're alive
+     * Sets vertical speed for jump movement
      * @returns {void}
      */
     jump() {
@@ -310,7 +327,8 @@ class Character extends MovableObject {
 
     /**
      * Activates god mode for development/testing
-     * Gives infinite health and bottles
+     * Gives infinite health and bottles, increases movement speed
+     * @returns {void}
      */
     godMode() {
         this.bottles = 20;
