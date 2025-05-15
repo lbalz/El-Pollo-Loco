@@ -51,7 +51,7 @@ function startGame() {
     document.getElementById('volume').style.top = '24px';
     document.getElementById('gameplayInfoButton').style.display = 'none';
 
-    this.handleMobileButtons();
+    handleMobileButtons();
 
     backgroundSound.play();
     world.startGame();
