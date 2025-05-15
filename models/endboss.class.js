@@ -1,19 +1,34 @@
 /**
  * Class representing the end boss enemy in the game
+ * Handles boss behavior, animations, and combat mechanics
  * @extends MovableObject
  */
 class Endboss extends MovableObject {
-    /** @type {number} Height of the end boss sprite in pixels */
+    /** 
+     * @type {number}
+     * @constant
+     * Height of the end boss sprite in pixels 
+     */
     height = 650;
 
-    /** @type {number} Width of the end boss sprite in pixels */
+    /** 
+     * @type {number}
+     * @constant
+     * Width of the end boss sprite in pixels 
+     */
     width = 450;
 
-    /** @type {number} Vertical position of the end boss */
+    /** 
+     * @type {number}
+     * @constant
+     * Initial vertical position of the end boss in pixels 
+     */
     positionY = 50;
 
     /** 
-     * @type {Object} Collision offset values for the end boss
+     * @type {Object}
+     * @constant
+     * Collision offset values for the end boss's hitbox in pixels
      * @property {number} top - Top offset for collision detection
      * @property {number} right - Right offset for collision detection
      * @property {number} bottom - Bottom offset for collision detection
@@ -26,10 +41,18 @@ class Endboss extends MovableObject {
         left: 30
     };
 
-    /** @type {string} Current state of the end boss (waiting, alert, chasing, hurt, attacking, dead) */
+    /** 
+     * @type {string}
+     * @default 'waiting'
+     * Current state of the end boss (waiting, alert, chasing, hurt, attacking, dead) 
+     */
     state = 'waiting';
 
-    /** @type {boolean} Whether this is the first encounter with the player */
+    /** 
+     * @type {boolean}
+     * @default true
+     * Whether this is the first encounter with the player 
+     */
     firstEncounter = true;
 
     /** @type {number} Timestamp of the last attack */
@@ -107,6 +130,8 @@ class Endboss extends MovableObject {
 
     /**
      * Creates a new end boss instance and initializes animations
+     * @constructor
+     * @throws {Error} If image loading fails
      */
     constructor() {
         super();
@@ -123,6 +148,7 @@ class Endboss extends MovableObject {
     /**
      * Main animation loop for the end boss
      * Handles state changes and corresponding behaviors
+     * @returns {void}
      */
     animate() {
         setInterval(() => {
@@ -134,6 +160,8 @@ class Endboss extends MovableObject {
     
     /**
      * Checks for first encounter with player
+     * Triggers alert sequence when player gets close enough
+     * @returns {void}
      */
     checkFirstEncounter() {
         if (world.character.positionX > 9000 && this.firstEncounter) {
@@ -144,6 +172,8 @@ class Endboss extends MovableObject {
     
     /**
      * Handles the current state of the end boss
+     * Manages different behavior states (chasing, attacking, hurt)
+     * @returns {void}
      */
     handleState() {
         const stateActions = {
@@ -214,6 +244,8 @@ class Endboss extends MovableObject {
     /**
      * Executes the attack animation and damage calculation
      * Includes jump arc calculation and collision detection
+     * @returns {void}
+     * @throws {Error} If animation frames cannot be loaded
      */
     attackCharacter() {
         if (!this.isJumping) {
@@ -241,7 +273,8 @@ class Endboss extends MovableObject {
     
     /**
      * Updates jump height and position during attack
-     * @param {number} currentFrame - Current animation frame
+     * @param {number} currentFrame - Current animation frame number (0 to animation length)
+     * @returns {void}
      */
     updateJumpPosition(currentFrame) {
         const halfLength = this.ENDBOSS_IMAGES_ATTACK_PATH.length / 2;
@@ -259,9 +292,10 @@ class Endboss extends MovableObject {
     }
     
     /**
-     * Checks if current frame should deal damage
-     * @param {number} currentFrame - Current animation frame
-     * @param {number} attackInterval - Interval ID for clearing
+     * Checks if current frame should deal damage to player
+     * @param {number} currentFrame - Current animation frame number
+     * @param {number} attackInterval - Interval ID for clearing animation
+     * @returns {void}
      */
     checkDamageFrame(currentFrame, attackInterval) {
         if (currentFrame === Math.floor(this.ENDBOSS_IMAGES_ATTACK_PATH.length / 2)) {
@@ -273,7 +307,8 @@ class Endboss extends MovableObject {
     
     /**
      * Deals damage to the character and checks for game over
-     * @param {number} attackInterval - Interval ID for clearing
+     * @param {number} attackInterval - Interval ID for clearing animation
+     * @returns {void}
      */
     dealDamageToCharacter(attackInterval) {
         world.character.healthPoints = Math.max(0, world.character.healthPoints - 20);
@@ -361,6 +396,7 @@ class Endboss extends MovableObject {
     /**
      * Handles damage taken by the end boss
      * Triggers hurt state and checks for death condition
+     * @returns {void}
      */
     hit() {
         if (this.state !== 'dead') {
