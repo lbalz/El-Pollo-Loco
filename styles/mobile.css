@@ -1,10 +1,10 @@
-@media screen and (max-width: 1366px) and (orientation: portrait) {
+@media (hover: none) and (orientation: portrait) {
     .turn-device-overlay {
         display: flex;
     }
 }
 
-@media screen and (max-width: 1366px) and (orientation: landscape) {
+@media (hover: none) and (orientation: landscape) {
     /* index.html mobile styles */
     body {
         height: auto;
