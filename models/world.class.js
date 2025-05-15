@@ -260,7 +260,6 @@ class World {
         let overlay = document.getElementById('overlay');
         this.setupOverlayBase(overlay);
         this.setGameOverContent(overlay);
-        this.adjustOverlayMargin(overlay);
         this.setupResetButton();
     }
 
@@ -288,14 +287,6 @@ class World {
     }
 
     /**
-     * Adjusts overlay margin based on orientation
-     * @param {HTMLElement} overlay - The overlay element
-     */
-    adjustOverlayMargin(overlay) {
-        overlay.style.marginTop = window.matchMedia('(orientation: landscape)').matches ? '0px' : '78px';
-    }
-
-    /**
      * Sets up the reset button event listener
      */
     setupResetButton() {
@@ -312,7 +303,6 @@ class World {
         let overlay = document.getElementById('overlay');
         this.setupOverlayBase(overlay);
         this.setWinContent(overlay);
-        this.adjustOverlayMargin(overlay);
         this.setupResetButton();
     }
 

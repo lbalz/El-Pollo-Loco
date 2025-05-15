@@ -40,7 +40,7 @@ function startGame() {
             showMobileButtons();
         }
     } else {
-        hideMobileButtons(); // Always hide on non-touch devices
+        hideMobileButtons();
     }
 
     backgroundSound.play();
