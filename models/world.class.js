@@ -167,6 +167,9 @@ class World {
         this.resetGameState();
         this.clearGameObjects();
         this.resetCamera();
+        this.initializeLevel();
+        this.resetCharacter();
+        this.resetStatusBars();
         this.showStartScreen();
         this.setupStartButton();
         this.updateUIElements();
@@ -197,6 +200,26 @@ class World {
      */
     resetCamera() {
         this.camPosX = 0;
+    }
+
+    initializeLevel() {
+        initLevel();
+        this.level = level_1;
+    }
+
+    resetCharacter() {
+        this.character = new Character();
+        this.character.world = this;
+        this.character.healthPoints = 100;
+        this.character.bottles = 0;
+        this.character.coins = 0;
+    }
+
+    resetStatusBars() {
+        this.healthStatusBar.setHealthPercentage(100);
+        this.coinStatusBar.setCoinsPercentage(0);
+        this.bottleStatusBar.setBottlesPercentage(0);
+        this.endbossStatusBar.setEndbossHealthPercentage(250);
     }
 
     /**
